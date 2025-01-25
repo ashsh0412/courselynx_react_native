@@ -1,8 +1,13 @@
-#Setup Instructions
-
+# Setup Instructions
 # 1. Clone the github repo courselynx/courselync_react_native to VS Code or your preferred IDE
 # 2. Install the latest node.js here: https://nodejs.org/en
-# 3. In CMD Prompt, cd to the project directory.
+# 3. In CMD Prompt, cd to the project directory courselynx_react_native/courselynx
 # 4. To install the latest npm, run: npm install -g npm@latest
-# 5. Go to: https://docs.expo.dev/get-started/set-up-your-environment/
-# 6. Follow the steps to set up Expo on your mobile device.
+# 6. Go to: https://docs.expo.dev/get-started/set-up-your-environment/
+# 7. Follow the steps on page 1 to set up Expo on your mobile device.
+# 8. Continue reading here before proceeding to the second (development) page
+
+
+# Running the App
+# 1. Run npm expo start
+# 2. If on public network and the app does not load: npm export start --tunnel
