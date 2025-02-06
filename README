@@ -9,5 +9,5 @@
 
 
 # Running the App
-# 1. Run npm expo start
+# 1. Run npx expo start
 # 2. If on public network and the app does not load: npm export start --tunnel
