@@ -7,17 +7,20 @@ export default function ChatLayout() {
     <>
       <StatusBar barStyle="dark-content" />
       <Stack>
-        <Stack.Screen name="index" options={{ title: "" }} />
         <Stack.Screen
-          name="detail"
+          name="index"
           options={{
-            headerTintColor: "#02102E",
-            headerBackButtonDisplayMode: "minimal",
-            headerTitle: () => (
-              <Header title="Details" hasShare={true} path={"/chat/detail"} />
+            header: () => (
+              <Header
+                title="Business and Finance"
+                colorSquare="#E47F7F"
+                hasSearch={true}
+                toDetail={true}
+              />
             ),
           }}
         />
+        <Stack.Screen name="detail" options={{ headerShown: false }} />
       </Stack>
     </>
   );
