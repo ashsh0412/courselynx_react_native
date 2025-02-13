@@ -1,8 +1,9 @@
 import Header from "@/components/Header";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "react-native";
 
 export default function ChatLayout() {
+  const { title, color } = useLocalSearchParams();
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -12,10 +13,11 @@ export default function ChatLayout() {
           options={{
             header: () => (
               <Header
-                title="Business and Finance"
-                colorSquare="#E47F7F"
+                title={title as string}
+                colorSquare={color as string}
                 hasSearch={true}
                 toDetail={true}
+                withBorder={true}
               />
             ),
           }}

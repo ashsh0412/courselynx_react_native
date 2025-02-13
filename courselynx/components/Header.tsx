@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Search from "../assets/svg/searchChat.svg";
 import Share from "../assets/svg/shareChat.svg";
-import { Link, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { LinkProps, Href } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
@@ -12,6 +12,7 @@ export type Props = {
   hasSearch?: boolean;
   hasShare?: boolean;
   toDetail?: boolean;
+  withBorder?: boolean;
 };
 
 const Header: React.FC<Props> = ({
@@ -20,33 +21,51 @@ const Header: React.FC<Props> = ({
   hasSearch = false,
   hasShare = false,
   toDetail = false,
+  withBorder = false,
 }) => {
   const router = useRouter();
-  console.log(toDetail);
   return (
     <>
-      <View style={styles.container}>
+      <View
+        style={[styles.container, { borderBottomWidth: withBorder ? 1 : 0 }]}
+      >
         <View style={styles.leftContainer}>
           <TouchableOpacity onPress={() => router.back()} style={styles.back}>
             <FontAwesome6 name="chevron-left" size={24} color="#02102E" />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              if (toDetail) {
-                router.push("/chat/detail");
-              }
-            }}
-          >
+          <TouchableOpacity disabled={!toDetail}>
             <View style={styles.detailButton}>
-              <>
-                {colorSquare && (
-                  <View
-                    style={[styles.square, { backgroundColor: colorSquare }]}
-                  ></View>
-                )}
+              {toDetail ? (
+                <Link
+                  href={{
+                    pathname: "/chat/detail",
+                    params: { title: title, color: colorSquare },
+                  }}
+                >
+                  <View style={styles.detailButton}>
+                    {colorSquare && (
+                      <View
+                        style={[
+                          styles.square,
+                          { backgroundColor: colorSquare },
+                        ]}
+                      ></View>
+                    )}
 
-                {title && <Text style={styles.headerTitle}>{title}</Text>}
-              </>
+                    {title && <Text style={styles.headerTitle}>{title}</Text>}
+                  </View>
+                </Link>
+              ) : (
+                <>
+                  {colorSquare && (
+                    <View
+                      style={[styles.square, { backgroundColor: colorSquare }]}
+                    ></View>
+                  )}
+
+                  {title && <Text style={styles.headerTitle}>{title}</Text>}
+                </>
+              )}
             </View>
           </TouchableOpacity>
         </View>
@@ -78,7 +97,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderBottomWidth: 1,
   },
   back: {
     marginRight: 10,

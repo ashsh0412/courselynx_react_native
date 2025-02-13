@@ -1,8 +1,10 @@
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 export default function DetailScreen() {
+  const { title, color } = useLocalSearchParams();
+
   return (
     <View
       style={{
@@ -12,13 +14,31 @@ export default function DetailScreen() {
       }}
     >
       <View>
-        <Link href={"/chat/detail/notification"} style={styles.detailLink}>
+        <Link
+          href={{
+            pathname: "/chat/detail/notification",
+            params: { title: title, color: color },
+          }}
+          style={styles.detailLink}
+        >
           To Notifications Page
         </Link>
-        <Link href={"/chat/detail/member"} style={styles.detailLink}>
+        <Link
+          href={{
+            pathname: "/chat/detail/member",
+            params: { title: title, color: color },
+          }}
+          style={styles.detailLink}
+        >
           To Members Page
         </Link>
-        <Link href={"/chat/detail/media"} style={styles.detailLink}>
+        <Link
+          href={{
+            pathname: "/chat/detail/media",
+            params: { title: title, color: color },
+          }}
+          style={styles.detailLink}
+        >
           To Media Page
         </Link>
       </View>

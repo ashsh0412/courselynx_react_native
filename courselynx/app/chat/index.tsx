@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -14,10 +14,7 @@ import Person from "../../assets/svg/person.svg";
 import { Interaction } from "@/components/ChatComponents/ChatMessage";
 import ChatMessage from "@/components/ChatComponents/ChatMessage";
 import ChatDate from "@/components/ChatComponents/ChatDate";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useAnimatedKeyboard } from "react-native-reanimated";
 
 const getRandomInteractions = () => {
@@ -107,7 +104,6 @@ const interactions: Interaction[] = [
 
 export default function GroupChatScreen() {
   const messageRef = useRef<TextInput | null>(null);
-  const keyboardOffset = useSharedValue(0);
   const keyboard = useAnimatedKeyboard();
 
   const animatedInputStyle = useAnimatedStyle(() => {
@@ -125,11 +121,9 @@ export default function GroupChatScreen() {
         keyboardVerticalOffset={Platform.OS === "ios" ? 190 : 38}
       >
         <FlatList
-          data={chatMessages
-            .sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-            )
-            .reverse()} // now ordered from oldest at top to newest at bottom
+          data={chatMessages.sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          )} // now ordered from oldest at top to newest at bottom
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item, index }) => {
             const currentDate = new Date(item.date);
@@ -166,6 +160,7 @@ export default function GroupChatScreen() {
             paddingTop: 25,
           }}
           keyboardShouldPersistTaps="handled"
+          inverted={true}
         />
       </KeyboardAvoidingView>
 

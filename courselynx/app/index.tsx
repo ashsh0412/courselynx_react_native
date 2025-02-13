@@ -11,7 +11,12 @@ export default function Index() {
       }}
     >
       <TouchableOpacity style={styles.devButton}>
-        <Link href={"/chat"}>
+        <Link
+          href={{
+            pathname: "/chat",
+            params: { title: "Business and Finance", color: "#E47F7F" },
+          }}
+        >
           <Text>Group Chat Page</Text>
         </Link>
       </TouchableOpacity>
