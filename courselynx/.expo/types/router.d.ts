@@ -1,0 +1,14 @@
+/* eslint-disable */
+import * as Router from 'expo-router';
+
+export * from 'expo-router';
+
+declare module 'expo-router' {
+  export namespace ExpoRouter {
+    export interface __routes<T extends string | object = string> {
+      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `/chat`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail/media`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail/member`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail/notification`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail/search`; params?: Router.UnknownInputParams; };
+      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/`; params?: Router.UnknownOutputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `/chat`; params?: Router.UnknownOutputParams; } | { pathname: `/chat/detail`; params?: Router.UnknownOutputParams; } | { pathname: `/chat/detail/media`; params?: Router.UnknownOutputParams; } | { pathname: `/chat/detail/member`; params?: Router.UnknownOutputParams; } | { pathname: `/chat/detail/notification`; params?: Router.UnknownOutputParams; } | { pathname: `/chat/detail/search`; params?: Router.UnknownOutputParams; };
+      href: Router.RelativePathString | Router.ExternalPathString | `/${`?${string}` | `#${string}` | ''}` | `/_sitemap${`?${string}` | `#${string}` | ''}` | `/chat${`?${string}` | `#${string}` | ''}` | `/chat/detail${`?${string}` | `#${string}` | ''}` | `/chat/detail/media${`?${string}` | `#${string}` | ''}` | `/chat/detail/member${`?${string}` | `#${string}` | ''}` | `/chat/detail/notification${`?${string}` | `#${string}` | ''}` | `/chat/detail/search${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `/chat`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail/media`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail/member`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail/notification`; params?: Router.UnknownInputParams; } | { pathname: `/chat/detail/search`; params?: Router.UnknownInputParams; };
+    }
+  }
+}
