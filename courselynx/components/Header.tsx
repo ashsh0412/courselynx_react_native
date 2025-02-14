@@ -30,9 +30,11 @@ const Header: React.FC<Props> = ({
         style={[styles.container, { borderBottomWidth: withBorder ? 1 : 0 }]}
       >
         <View style={styles.leftContainer}>
+          {/* Back Button */}
           <TouchableOpacity onPress={() => router.back()} style={styles.back}>
             <FontAwesome6 name="chevron-left" size={24} color="#02102E" />
           </TouchableOpacity>
+          {/* Allows navigation to chat detail page if needed, otherwise displays title */}
           <TouchableOpacity disabled={!toDetail}>
             <View style={styles.detailButton}>
               {toDetail ? (
@@ -71,6 +73,7 @@ const Header: React.FC<Props> = ({
         </View>
         {(hasSearch || hasShare) && (
           <View style={styles.headerIcons}>
+            {/* Links to desired header icon pages */}
             <Link href={"/chat/detail/search"} asChild>
               <TouchableOpacity>
                 {hasSearch && <Search width={24} height={24} />}

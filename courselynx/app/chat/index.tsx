@@ -106,6 +106,9 @@ export default function GroupChatScreen() {
   const messageRef = useRef<TextInput | null>(null);
   const keyboard = useAnimatedKeyboard();
 
+  {
+    /* Allows smooth movement of text input in chat on keyboard open */
+  }
   const animatedInputStyle = useAnimatedStyle(() => {
     return {
       bottom: keyboard.height.value > 32 ? keyboard.height.value : 32,
@@ -120,10 +123,11 @@ export default function GroupChatScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 190 : 38}
       >
+        {/* Scrollable chat container that renders chat */}
         <FlatList
           data={chatMessages.sort(
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          )} // now ordered from oldest at top to newest at bottom
+          )}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item, index }) => {
             const currentDate = new Date(item.date);
@@ -164,6 +168,7 @@ export default function GroupChatScreen() {
         />
       </KeyboardAvoidingView>
 
+      {/* Container for chat input and group chat interaction */}
       <Animated.View style={[styles.bottomChatContainer, animatedInputStyle]}>
         <View style={styles.inputContainer}>
           <TouchableOpacity style={styles.addButton}>
@@ -180,6 +185,7 @@ export default function GroupChatScreen() {
           </View>
         </View>
         <View style={styles.typingContainer}>
+          {/* Maps currently typing people */}
           {Array.from({ length: 3 }).map((_, index) => (
             <View key={index} style={[styles.typingIcon, { zIndex: index }]}>
               <Person width={40} height={40} />

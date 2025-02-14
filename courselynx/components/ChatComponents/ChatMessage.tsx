@@ -26,6 +26,7 @@ const ChatMessage: React.FC<Props> = ({
         <Text style={styles.messageText}>{message}</Text>
         <View style={styles.interactionsContainer}>
           <Text style={styles.interaction}>
+            {/* Display chat emoji interactions */}
             {interactions?.map(
               (inter, index) => `${inter.emoji}  ${inter.count}`
             )}

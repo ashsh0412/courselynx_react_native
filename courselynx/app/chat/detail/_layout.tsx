@@ -9,7 +9,7 @@ export default function DetailLayout() {
       <Stack>
         <Stack.Screen
           name="index"
-          options={{ header: () => <Header title="Details" hasShare={true} /> }}
+          options={{ header: () => <Header title="Details" /> }}
         />
         <Stack.Screen
           name="notification"

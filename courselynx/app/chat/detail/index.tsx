@@ -1,55 +1,112 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import Detail from "@/components/ChatComponents/DetailComponents/Detail";
+import Share from "../../../assets/svg/shareDetail.svg";
+import Media from "../../../assets/svg/media.svg";
+import Notification from "../../../assets/svg/notification.svg";
+import Member from "../../../assets/svg/group.svg";
+
+const DESC_TEXT =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et";
 
 export default function DetailScreen() {
   const { title, color } = useLocalSearchParams();
+  const [descriptionText, setDescriptionText] = useState(DESC_TEXT);
 
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        backgroundColor: color as string,
       }}
     >
-      <View>
-        <Link
-          href={{
-            pathname: "/chat/detail/notification",
-            params: { title: title, color: color },
-          }}
-          style={styles.detailLink}
-        >
-          To Notifications Page
-        </Link>
-        <Link
-          href={{
-            pathname: "/chat/detail/member",
-            params: { title: title, color: color },
-          }}
-          style={styles.detailLink}
-        >
-          To Members Page
-        </Link>
-        <Link
-          href={{
-            pathname: "/chat/detail/media",
-            params: { title: title, color: color },
-          }}
-          style={styles.detailLink}
-        >
-          To Media Page
-        </Link>
+      <View style={styles.container}>
+        <Text style={styles.titleText}>{title}</Text>
+        <Text style={styles.description}>{descriptionText}</Text>
+        <Detail
+          title={title as string}
+          color={color as string}
+          text="Share"
+          SVG={Share}
+          path={"/chat/detail"}
+        />
+        <Detail
+          title={title as string}
+          color={color as string}
+          text="Media"
+          SVG={Media}
+          path={"/chat/detail/media"}
+        />
+        <Detail
+          title={title as string}
+          color={color as string}
+          text={`Member [${123}]`}
+          SVG={Member}
+          path={"/chat/detail/member"}
+        />
+        <Detail
+          title={title as string}
+          color={color as string}
+          text="Notifications"
+          SVG={Notification}
+          path={"/chat/detail/notification"}
+        />
+        <TouchableOpacity style={styles.leaveButton}>
+          <Text style={styles.leaveText}>Leave</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    flex: 1,
+    marginTop: 154,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    textAlign: "center",
+    alignItems: "center",
+  },
+  titleText: {
+    fontFamily: "SF Pro Display",
+    fontWeight: "bold",
+    fontSize: 24,
+    marginTop: 30,
+    marginBottom: 19,
+    textAlign: "center",
+    color: "02102E",
+  },
   detailLink: {
     paddingVertical: 10,
     textAlign: "center",
     fontWeight: "bold",
+  },
+  description: {
+    marginBottom: 31,
+    marginHorizontal: 22,
+    fontSize: 15,
+    lineHeight: 15.5,
+    fontFamily: "SF Pro Display",
+    fontWeight: 300,
+    textAlign: "center",
+  },
+  leaveButton: {
+    backgroundColor: "#2D8AFB",
+    width: 327,
+    height: 48,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 31,
+  },
+  leaveText: {
+    fontFamily: "SF Pro Display",
+    fontSize: 16,
+    fontWeight: 500,
+    color: "#FFF",
+    lineHeight: 50,
   },
 });
