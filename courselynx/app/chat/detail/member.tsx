@@ -138,9 +138,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ddd",
   },
   circle: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     marginRight: 10,
   },
   memberName: {
