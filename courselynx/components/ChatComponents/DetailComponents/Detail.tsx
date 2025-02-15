@@ -10,9 +10,17 @@ export type Props = {
   path?: Href;
   text: string;
   SVG: React.FC<SvgProps>;
+  shareFunction?: () => void;
 };
 
-const Detail: React.FC<Props> = ({ title, color, path, text, SVG }) => {
+const Detail: React.FC<Props> = ({
+  title,
+  color,
+  path,
+  text,
+  SVG,
+  shareFunction,
+}) => {
   {
     return (
       <Link
@@ -26,7 +34,7 @@ const Detail: React.FC<Props> = ({ title, color, path, text, SVG }) => {
         }}
         asChild
       >
-        <TouchableOpacity style={styles.detailButton}>
+        <TouchableOpacity style={styles.detailButton} onPress={shareFunction}>
           <View style={styles.detailContent}>
             <SVG height={22} width={22} style={{ margin: 16 }} />
             <Text style={styles.detailText}>{text}</Text>

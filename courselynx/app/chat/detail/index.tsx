@@ -1,8 +1,8 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Share } from "react-native";
 import Detail from "@/components/ChatComponents/DetailComponents/Detail";
-import Share from "../../../assets/svg/shareDetail.svg";
+import ShareIcon from "../../../assets/svg/shareDetail.svg";
 import Media from "../../../assets/svg/media.svg";
 import Notification from "../../../assets/svg/notification.svg";
 import Member from "../../../assets/svg/group.svg";
@@ -13,6 +13,29 @@ const DESC_TEXT =
 export default function DetailScreen() {
   const { title, color } = useLocalSearchParams();
   const [descriptionText, setDescriptionText] = useState(DESC_TEXT);
+
+  {
+    /* Function to bring up share menu */
+  }
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `Join ${title}`,
+        url: "https://courselynx/join/12345",
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          `Shared via activity type: ${result.activityType}`;
+        } else {
+          console.log("Content Shared Successfully!");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Share Dialog Dismissed");
+      }
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
 
   return (
     <View
@@ -28,8 +51,9 @@ export default function DetailScreen() {
           title={title as string}
           color={color as string}
           text="Share"
-          SVG={Share}
+          SVG={ShareIcon}
           path={"/chat/detail"}
+          shareFunction={onShare}
         />
         <Detail
           title={title as string}
