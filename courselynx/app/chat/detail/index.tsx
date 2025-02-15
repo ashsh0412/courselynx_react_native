@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Share,
   Modal,
+  TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
 import Detail from "@/components/ChatComponents/DetailComponents/Detail";
 import ShareIcon from "../../../assets/svg/shareDetail.svg";
@@ -100,6 +102,7 @@ export default function DetailScreen() {
           <Text style={styles.leaveText}>Leave</Text>
         </TouchableOpacity>
       </View>
+      {/* Creation of modal with blur and recognizer for swipe interactions */}
       {isModal && (
         <BlurView
           intensity={15}
@@ -107,7 +110,7 @@ export default function DetailScreen() {
           experimentalBlurMethod="dimezisBlurView"
         >
           <GestureRecognizer
-            style={{ flex: 1, zIndex: 2 }}
+            style={{ flex: 1, zIndex: 1 }}
             onSwipeDown={() => setIsModal(false)}
           >
             <Modal
@@ -116,28 +119,36 @@ export default function DetailScreen() {
               animationType="slide"
               onRequestClose={() => setIsModal(false)}
             >
-              <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                  <View style={styles.modalBar} />
-                  <Text style={styles.modalText}>
-                    Are you sure you want to leave this group?
-                  </Text>
-                  <View style={styles.modalButtonContainer}>
-                    <TouchableOpacity
-                      style={styles.modalButton}
-                      onPress={() => setIsModal(false)}
-                    >
-                      <Text style={styles.modalButtonText}>No</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.modalButton}
-                      onPress={() => leaveChat()}
-                    >
-                      <Text style={styles.modalButtonText}>Yes</Text>
-                    </TouchableOpacity>
+              {/* Handles clicks to close modal on click outside of the modal */}
+              <Pressable
+                onPress={(event) =>
+                  event.target == event.currentTarget && setIsModal(false)
+                }
+                style={{ flex: 1 }}
+              >
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <View style={styles.modalBar} />
+                    <Text style={styles.modalText}>
+                      Are you sure you want to leave this group?
+                    </Text>
+                    <View style={styles.modalButtonContainer}>
+                      <TouchableOpacity
+                        style={styles.modalButton}
+                        onPress={() => setIsModal(false)}
+                      >
+                        <Text style={styles.modalButtonText}>No</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.modalButton}
+                        onPress={() => leaveChat()}
+                      >
+                        <Text style={styles.modalButtonText}>Yes</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
-              </View>
+              </Pressable>
             </Modal>
           </GestureRecognizer>
         </BlurView>
@@ -212,6 +223,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     height: 142,
+    zIndex: 1,
   },
   modalContent: {
     flex: 1,
