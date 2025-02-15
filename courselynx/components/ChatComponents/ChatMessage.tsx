@@ -44,9 +44,15 @@ const styles = StyleSheet.create({
     marginRight: 25,
   },
   messageText: {},
-  messageTitle: {},
+  messageTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 3
+  },
   interactionsContainer: {},
-  interaction: {},
+  interaction: {
+    paddingVertical: 5,
+  },
 });
 
 export default ChatMessage;

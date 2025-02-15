@@ -16,6 +16,7 @@ import ChatMessage from "@/components/ChatComponents/ChatMessage";
 import ChatDate from "@/components/ChatComponents/ChatDate";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useAnimatedKeyboard } from "react-native-reanimated";
+import { ScrollView } from "react-native";
 
 const getRandomInteractions = () => {
   if (Math.random() > 0.5) return undefined; // 50% chance of no interactions
@@ -165,6 +166,7 @@ export default function GroupChatScreen() {
           }}
           keyboardShouldPersistTaps="handled"
           inverted={true}
+          keyboardDismissMode={"on-drag"} // Swipe down to exit keyboard
         />
       </KeyboardAvoidingView>
 
