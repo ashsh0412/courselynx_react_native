@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   FlatList,
+  Modal,
 } from "react-native";
 import Incognito from "../../assets/svg/incognito.svg";
 import Person from "../../assets/svg/person.svg";
@@ -16,7 +17,7 @@ import ChatMessage from "@/components/ChatComponents/ChatMessage";
 import ChatDate from "@/components/ChatComponents/ChatDate";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useAnimatedKeyboard } from "react-native-reanimated";
-import { ScrollView } from "react-native";
+import { BlurView } from "expo-blur";
 
 const getRandomInteractions = () => {
   if (Math.random() > 0.5) return undefined; // 50% chance of no interactions

@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "react-native";
-import { View } from 'react-native'
 
 export default function ChatLayout() {
   const { title, color } = useLocalSearchParams();
@@ -13,15 +12,13 @@ export default function ChatLayout() {
           name="index"
           options={{
             header: () => (
-              <View style={{ paddingVertical: 25, paddingHorizontal: 0}}> // Adds space above course title
-                <Header
-                  title={title as string}
-                  colorSquare={color as string}
-                  hasSearch={true}
-                  toDetail={true}
-                  withBorder={true}
-                />
-              </View>
+              <Header
+                title={title as string}
+                colorSquare={color as string}
+                hasSearch={true}
+                toDetail={true}
+                withBorder={true}
+              />
             ),
           }}
         />

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 41,
+    paddingTop: 55,
     paddingBottom: 9,
     width: "100%",
     textAlign: "left",
