@@ -1,10 +1,13 @@
 import { Link } from "expo-router";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import HomeScreen from "./home/homescreen";
 
 export default function Index() {
   return (
-    <HomeScreen />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <HomeScreen />
+    </GestureHandlerRootView>
   );
 }
 

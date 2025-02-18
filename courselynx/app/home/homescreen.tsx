@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { TouchableWithoutFeedback } from 'react-native';
 
 interface Chat {
   id: number;
@@ -22,59 +24,67 @@ const chats: Chat[] = [
 ];
 
 export default function HomeScreen() {
-    return (
-        <View style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            source={require('@/assets/images/CourseLynxLogo.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-          <View style={styles.iconContainer}>
-            <MaterialIcons name="notifications-none" size={34} color="#000" />
-            <MaterialIcons name="account-circle" size={38} color="#000" />
-          </View>
+  const renderRightActions = () => (
+    <View style={styles.swipeActions}>
+      <TouchableOpacity style={styles.actionButton}>
+        <MaterialIcons name="more-horiz" size={24} color="#fff" />
+        <Text style={styles.actionText}>More</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.actionButton, styles.muteButton]}>
+        <MaterialIcons name="notifications-off" size={24} color="#fff" />
+        <Text style={styles.actionText}>Mute</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Image
+          source={require('@/assets/images/CourseLynxLogo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <View style={styles.iconContainer}>
+          <MaterialIcons name="notifications-none" size={34} color="#000" />
+          <MaterialIcons name="account-circle" size={38} color="#000" />
         </View>
-  
-        <ScrollView style={styles.chatList}>
-          {chats.map((chat) => (
-            <Link
-              key={chat.id}
-              href={{
-                pathname: '/chat',
-                params: { title: chat.name, color: chat.color },
-              }}
-              asChild
+      </View>
+
+      <ScrollView style={styles.chatList}>
+      {chats.map((chat) => (
+        <Swipeable key={chat.id} renderRightActions={renderRightActions}>
+            <TouchableWithoutFeedback
+            onPress={() => router.push({ pathname: '/chat', params: { title: chat.name, color: chat.color } })}
             >
-              <TouchableOpacity style={styles.chatItem}>
+            <View style={[styles.chatItem, { backgroundColor: '#fff' }]}>
                 <View style={[styles.chatIcon, { backgroundColor: chat.color || '#000' }]} />
                 <View style={styles.chatInfo}>
-                  <Text style={styles.chatName}>{chat.name}</Text>
-                  <Text style={styles.chatMessage}>{chat.message}</Text>
+                <Text style={styles.chatName}>{chat.name}</Text>
+                <Text style={styles.chatMessage}>{chat.message}</Text>
                 </View>
                 <View style={styles.chatMeta}>
-                  <Text style={styles.chatTime}>{chat.time}</Text>
-                  <View style={styles.unreadBadge}>
+                <Text style={styles.chatTime}>{chat.time}</Text>
+                <View style={styles.unreadBadge}>
                     <Text style={styles.unreadText}>{chat.unread}</Text>
-                  </View>
                 </View>
-              </TouchableOpacity>
-            </Link>
-          ))}
-        </ScrollView>
-      </View>
-    );
-  }
-  
+                </View>
+            </View>
+            </TouchableWithoutFeedback>
+        </Swipeable>
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16 },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#3b82f6' },
-  logo: { width: 165, height: 30 },
-  iconContainer: { flexDirection: 'row', alignItems: 'center' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 14 },
+  logo: { width: 190, height: 55 },
+  iconContainer: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   chatList: { padding: 16 },
-  chatItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  chatItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, backgroundColor: '#fff' },  // White background added
   chatIcon: { width: 48, height: 48, borderRadius: 12, marginRight: 16 },
   chatInfo: { flex: 1 },
   chatName: { fontSize: 18, fontWeight: '600' },
@@ -83,4 +93,14 @@ const styles = StyleSheet.create({
   chatTime: { color: '#9ca3af' },
   unreadBadge: { backgroundColor: '#3b82f6', width: 24, height: 24, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginTop: 8 },
   unreadText: { color: '#fff', fontSize: 12, fontWeight: '600' },
+  swipeActions: { flexDirection: 'row', alignItems: 'center' },
+  actionButton: {
+    backgroundColor: '#555',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+    height: '100%',
+  },
+  muteButton: { backgroundColor: '#ff6666' },  // Lighter red
+  actionText: { color: '#fff', fontSize: 14, marginTop: 4 },
 });
