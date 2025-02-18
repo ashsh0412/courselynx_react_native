@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   logo: { width: 190, height: 55 },
   iconContainer: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   chatList: { padding: 16 },
-  chatItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, backgroundColor: '#fff' },  // White background added
+  chatItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, backgroundColor: '#fff' },
   chatIcon: { width: 48, height: 48, borderRadius: 12, marginRight: 16 },
   chatInfo: { flex: 1 },
   chatName: { fontSize: 18, fontWeight: '600' },
