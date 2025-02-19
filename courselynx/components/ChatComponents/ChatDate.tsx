@@ -19,7 +19,14 @@ const ChatDate: React.FC<Props> = ({ date = "" }) => {
 
 const styles = StyleSheet.create({
   dateWrapper: { width: "100%" },
-  dateText: { paddingVertical: 8, textAlign: "center" },
+  dateText: {
+    fontFamily: "Inter",
+    fontWeight: 500,
+    marginVertical: 10,
+    textAlign: "center",
+    color: "#909093",
+    fontSize: 10,
+  },
 });
 
 const formatTimestamp = (dateString: string): string => {

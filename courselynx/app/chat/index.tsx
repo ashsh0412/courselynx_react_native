@@ -9,15 +9,22 @@ import {
   Platform,
   FlatList,
   Modal,
+  TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
 import Incognito from "../../assets/svg/incognito.svg";
 import Person from "../../assets/svg/person.svg";
+import Camera from "../../assets/svg/appleCamera.svg";
+import Photo from "../../assets/svg/applePhoto.svg";
+import File from "../../assets/svg/file.svg";
+import Audio from "../../assets/svg/audio.svg";
 import { Interaction } from "@/components/ChatComponents/ChatMessage";
 import ChatMessage from "@/components/ChatComponents/ChatMessage";
 import ChatDate from "@/components/ChatComponents/ChatDate";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useAnimatedKeyboard } from "react-native-reanimated";
 import { BlurView } from "expo-blur";
+import GestureRecognizer from "react-native-swipe-gestures";
 
 const getRandomInteractions = () => {
   if (Math.random() > 0.5) return undefined; // 50% chance of no interactions
@@ -25,13 +32,14 @@ const getRandomInteractions = () => {
   return shuffled.slice(0, Math.floor(Math.random() * 2) + 1); // Pick 1 or 2
 };
 
-// MOCK DATA
+// MOCK DATA WITH COLORS
 const chatMessages = [
   {
     id: 1,
     sender: "Emily Johnson",
     message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     date: new Date().toISOString(),
+    color: "#833C3C",
   },
   {
     id: 2,
@@ -39,6 +47,7 @@ const chatMessages = [
     message:
       "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     date: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+    color: "#F97316",
   },
   {
     id: 3,
@@ -46,6 +55,7 @@ const chatMessages = [
     message:
       "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
     date: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+    color: "#833C3C",
   },
   {
     id: 4,
@@ -53,6 +63,7 @@ const chatMessages = [
     message:
       "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.",
     date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    color: "#80BD72",
   },
   {
     id: 5,
@@ -60,12 +71,14 @@ const chatMessages = [
     message:
       "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.",
     date: new Date(Date.now() - 23 * 60 * 60 * 1000).toISOString(),
+    color: "#B48BE9",
   },
   {
     id: 6,
     sender: "Alice Walker",
     message: "Curabitur pretium tincidunt lacus. Nulla gravida orci a odio.",
     date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    color: "#4CAF50",
   },
   {
     id: 7,
@@ -74,6 +87,7 @@ const chatMessages = [
     date: new Date(
       Date.now() - 3 * 24 * 60 * 60 * 1000 + 45 * 60 * 1000
     ).toISOString(),
+    color: "#F97316",
   },
   {
     id: 8,
@@ -83,18 +97,21 @@ const chatMessages = [
     date: new Date(
       Date.now() - 3 * 24 * 60 * 60 * 1000 + 1 * 60 * 60 * 1000
     ).toISOString(),
+    color: "#80BD72",
   },
   {
     id: 9,
     sender: "David Brown",
     message: "Maecenas malesuada elit lectus felis, malesuada ultricies.",
     date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+    color: "#B48BE9",
   },
   {
     id: 10,
     sender: "Sophia Martinez",
     message: "Donec in velit vel ipsum auctor pulvinar.",
     date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    color: "#80BD72",
   },
 ];
 
@@ -107,6 +124,8 @@ const interactions: Interaction[] = [
 export default function GroupChatScreen() {
   const messageRef = useRef<TextInput | null>(null);
   const keyboard = useAnimatedKeyboard();
+  const [isAnon, setIsAnon] = useState(false);
+  const [isModal, setIsModal] = useState(false);
 
   {
     /* Allows smooth movement of text input in chat on keyboard open */
@@ -156,6 +175,7 @@ export default function GroupChatScreen() {
                   message={item.message}
                   titleName={item.sender}
                   interactions={selectedInteractions}
+                  iconColor={item.color}
                 />
               </View>
             );
@@ -174,7 +194,10 @@ export default function GroupChatScreen() {
       {/* Container for chat input and group chat interaction */}
       <Animated.View style={[styles.bottomChatContainer, animatedInputStyle]}>
         <View style={styles.inputContainer}>
-          <TouchableOpacity style={styles.addButton}>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => setIsModal(true)}
+          >
             <Text style={styles.addText}>+</Text>
           </TouchableOpacity>
           <TextInput
@@ -183,9 +206,21 @@ export default function GroupChatScreen() {
             placeholder="Type here..."
             placeholderTextColor={"#C5C5C7"}
           />
-          <View style={styles.incognitoWrapper}>
-            <Incognito width={15} height={15} color={"white"} />
-          </View>
+          <TouchableWithoutFeedback onPress={() => setIsAnon((prev) => !prev)}>
+            <View
+              style={[
+                styles.incognitoWrapper,
+                { backgroundColor: isAnon ? "#2D8AFB" : "#B4B8BF" },
+              ]}
+            >
+              <Incognito
+                width={15}
+                height={15}
+                color={"white"}
+                fill={"white"}
+              />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
         <View style={styles.typingContainer}>
           {/* Maps currently typing people */}
@@ -197,6 +232,98 @@ export default function GroupChatScreen() {
           <Text style={styles.typingDots}>...</Text>
         </View>
       </Animated.View>
+
+      {isModal && (
+        <BlurView
+          intensity={15}
+          style={styles.blur}
+          experimentalBlurMethod="dimezisBlurView"
+        >
+          <GestureRecognizer
+            style={{ flex: 1, zIndex: 1 }}
+            onSwipeDown={() => setIsModal(false)}
+          >
+            <Modal
+              transparent={true}
+              visible={isModal}
+              animationType="slide"
+              onRequestClose={() => setIsModal(false)}
+            >
+              {/* Handles clicks to close modal on click outside of the modal */}
+              <Pressable
+                onPress={(event) =>
+                  event.target == event.currentTarget && setIsModal(false)
+                }
+                style={{ flex: 1 }}
+              >
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <View style={styles.modalBar} />
+                    <View style={styles.modalButtonContainer}>
+                      <TouchableOpacity
+                        style={styles.modalChatButton}
+                        onPress={() => {}}
+                      >
+                        <View
+                          style={[
+                            styles.modalIcon,
+                            { backgroundColor: "#B4B8BF" },
+                          ]}
+                        >
+                          <Camera width={35} height={35} />
+                        </View>
+                        <Text style={styles.modalChatText}>Camera</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.modalChatButton}
+                        onPress={() => {}}
+                      >
+                        <View
+                          style={[
+                            styles.modalIcon,
+                            { backgroundColor: "#FFF" },
+                          ]}
+                        >
+                          <Photo width={35} height={35} />
+                        </View>
+                        <Text style={styles.modalChatText}>Photos</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.modalChatButton}
+                        onPress={() => {}}
+                      >
+                        <View
+                          style={[
+                            styles.modalIcon,
+                            { backgroundColor: "#7dabe7" },
+                          ]}
+                        >
+                          <File width={35} height={35} />
+                        </View>
+                        <Text style={styles.modalChatText}>Documents</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.modalChatButton}
+                        onPress={() => {}}
+                      >
+                        <View
+                          style={[
+                            styles.modalIcon,
+                            { backgroundColor: "#f9815e" },
+                          ]}
+                        >
+                          <Audio width={25} height={25} />
+                        </View>
+                        <Text style={styles.modalChatText}>Audio</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </Pressable>
+            </Modal>
+          </GestureRecognizer>
+        </BlurView>
+      )}
     </View>
   );
 }
@@ -270,7 +397,7 @@ const styles = StyleSheet.create({
   addText: {
     justifyContent: "center",
     alignItems: "center",
-    color: "#7D7F85",
+    color: "#2D8AFB",
     fontSize: 25,
     height: "100%",
   },
@@ -297,6 +424,60 @@ const styles = StyleSheet.create({
     bottom: 14,
     width: 20,
     height: 20,
-    backgroundColor: "#B4B8BF",
   },
+  blur: {
+    position: "absolute",
+    flexDirection: "column-reverse",
+    justifyContent: "flex-start",
+    top: -200,
+    left: 0,
+    right: 0,
+    height: "150%",
+    backgroundColor: "rgba(217, 217, 217, 0.05)",
+    zIndex: 1,
+  },
+  modalContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: 238,
+    zIndex: 1,
+  },
+  modalContent: {
+    flex: 1,
+    alignItems: "flex-start",
+    backgroundColor: "#2D8AFB",
+    opacity: 0.9,
+    borderRadius: 16,
+  },
+  modalBar: {
+    alignSelf: "center",
+    width: 30,
+    height: 3,
+    backgroundColor: "#FFFFFF",
+    opacity: 0.5,
+    borderRadius: 10,
+    marginTop: 9,
+  },
+  modalButtonContainer: {
+    flexDirection: "column",
+    marginLeft: 19,
+    marginTop: 9,
+  },
+  modalChatButton: {
+    flexDirection: "row",
+    marginBottom: 11,
+    alignItems: "center",
+    gap: 26,
+  },
+  modalIcon: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 35,
+    height: 35,
+    borderRadius: 500,
+    overflow: "hidden",
+  },
+  modalChatText: { fontFamily: "SF Pro", fontSize: 19, color: "#FFF" },
 });
