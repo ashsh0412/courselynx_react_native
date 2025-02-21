@@ -36,6 +36,13 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "We need access to your camera to take pictures and videos.",
+          "photosPermission": "We need access to your photos to allow you to select media."
+        }
       ]
     ],
     "experiments": {
