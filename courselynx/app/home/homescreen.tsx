@@ -17,9 +17,9 @@ interface Chat {
 const chats: Chat[] = [
   { id: 1, name: 'Business and Finance', message: 'Sara: What should I invest in?', time: '5:05 PM', unread: 3, color: '#f87171' },
   { id: 2, name: 'Statistics', message: 'John: Whats the answers to HW 5?', time: '4:15 PM', unread: 7, color: '#34d399' },
-  { id: 3, name: 'World History', message: 'Steve: What is the capital of Canada?', time: '3:02 PM', unread: 2, color: '#facc15' },
+  { id: 3, name: 'World History', message: 'Steve: What is the capital of Canada?', time: '3:02 PM', unread: 0, color: '#facc15' }, // No unread messages
   { id: 4, name: 'English', message: 'Brittany: Great Gatsby opinions?', time: '3:00 PM', unread: 5, color: '#f472b6' },
-  { id: 5, name: 'Music Theory', message: 'Tiana: I play the trumpet!', time: '2:15 PM', unread: 1, color: '#c084fc' },
+  { id: 5, name: 'Music Theory', message: 'Tiana: I play the trumpet!', time: '2:15 PM', unread: 0, color: '#c084fc' }, // No unread messages
   { id: 6, name: 'Sports', message: 'UF: Good home season!', time: '1:55 PM', unread: 3, color: '#60a5fa' },
 ];
 
@@ -52,26 +52,34 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView style={styles.chatList}>
-      {chats.map((chat) => (
-        <Swipeable key={chat.id} renderRightActions={renderRightActions}>
+        {chats.map((chat) => (
+          <Swipeable key={chat.id} renderRightActions={renderRightActions}>
             <TouchableWithoutFeedback
-            onPress={() => router.push({ pathname: '/chat', params: { title: chat.name, color: chat.color } })}
+              onPress={() => router.push({ pathname: '/chat', params: { title: chat.name, color: chat.color } })}
             >
-            <View style={[styles.chatItem, { backgroundColor: '#fff' }]}>
+              <View style={[styles.chatItem, { backgroundColor: '#fff' }]}>
                 <View style={[styles.chatIcon, { backgroundColor: chat.color || '#000' }]} />
                 <View style={styles.chatInfo}>
-                <Text style={styles.chatName}>{chat.name}</Text>
-                <Text style={styles.chatMessage}>{chat.message}</Text>
+                  <Text style={[styles.chatName, chat.unread > 0 ? styles.boldText : null]}>
+                    {chat.name}
+                  </Text>
+                  <Text style={[styles.chatMessage, chat.unread > 0 ? styles.boldText : null]}>
+                    {chat.message}
+                  </Text>
                 </View>
                 <View style={styles.chatMeta}>
-                <Text style={styles.chatTime}>{chat.time}</Text>
-                <View style={styles.unreadBadge}>
-                    <Text style={styles.unreadText}>{chat.unread}</Text>
+                  <Text style={[styles.chatTime, chat.unread > 0 ? styles.boldText : null]}>
+                    {chat.time}
+                  </Text>
+                  {chat.unread > 0 && (
+                    <View style={styles.unreadBadge}>
+                      <Text style={styles.unreadText}>{chat.unread}</Text>
+                    </View>
+                  )}
                 </View>
-                </View>
-            </View>
+              </View>
             </TouchableWithoutFeedback>
-        </Swipeable>
+          </Swipeable>
         ))}
       </ScrollView>
     </View>
@@ -83,24 +91,28 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 14 },
   logo: { width: 190, height: 55 },
   iconContainer: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  chatList: { padding: 16 },
+  chatList: { padding: 20 },
   chatItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, backgroundColor: '#fff' },
   chatIcon: { width: 48, height: 48, borderRadius: 12, marginRight: 16 },
   chatInfo: { flex: 1 },
-  chatName: { fontSize: 18, fontWeight: '600' },
-  chatMessage: { color: '#6b7280' },
-  chatMeta: { alignItems: 'flex-end' },
-  chatTime: { color: '#9ca3af' },
-  unreadBadge: { backgroundColor: '#3b82f6', width: 24, height: 24, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginTop: 8 },
+  chatName: { fontSize: 18 },
+  chatMessage: {},
+  chatMeta: { alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    height: 48,
+   },
+  chatTime: {},
+  unreadBadge: { backgroundColor: '#3b82f6', width: 24, height: 24, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 4 },
   unreadText: { color: '#fff', fontSize: 12, fontWeight: '600' },
   swipeActions: { flexDirection: 'row', alignItems: 'center' },
   actionButton: {
     backgroundColor: '#555',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 70,
-    height: '100%',
+    width: 60,
+    height: 60,
   },
-  muteButton: { backgroundColor: '#ff6666' },  // Lighter red
+  muteButton: { backgroundColor: '#ff6666' },
   actionText: { color: '#fff', fontSize: 14, marginTop: 4 },
+  boldText: { fontWeight: '600' },
 });
