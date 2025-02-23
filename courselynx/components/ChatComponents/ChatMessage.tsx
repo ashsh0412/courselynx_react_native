@@ -10,7 +10,9 @@ export type Props = {
   id: number;
   message: string;
   titleName: string;
+  iconColor: string;
   interactions?: Interaction[];
+  isUser?: boolean;
 };
 
 const ChatMessage: React.FC<Props> = ({
@@ -18,19 +20,37 @@ const ChatMessage: React.FC<Props> = ({
   id,
   titleName,
   interactions,
+  isUser,
+  iconColor,
 }) => {
   return (
     <>
-      <View style={styles.messageWrapper}>
-        <Text style={styles.messageTitle}>{titleName}</Text>
-        <Text style={styles.messageText}>{message}</Text>
-        <View style={styles.interactionsContainer}>
-          <Text style={styles.interaction}>
+      <View style={styles.messageContent}>
+        <View style={styles.iconContainer}>
+          <View style={styles.iconLeftBorder} />
+          <View style={[styles.messageIcon, { backgroundColor: iconColor }]} />
+        </View>
+        <View style={styles.messageWrapper}>
+          <Text style={styles.messageTitle}>{titleName}</Text>
+          <Text style={styles.messageText}>{message}</Text>
+          <View style={styles.interactionsContainer}>
             {/* Display chat emoji interactions */}
-            {interactions?.map(
-              (inter, index) => `${inter.emoji}  ${inter.count}`
-            )}
-          </Text>
+            {interactions?.map((inter, index) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginRight: 5,
+                  alignItems: "center",
+                }}
+                key={index}
+              >
+                <View style={styles.interaction}>
+                  <Text>{`${inter.emoji}`}</Text>
+                </View>
+                <Text>{`${inter.count}`}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
     </>
@@ -38,20 +58,60 @@ const ChatMessage: React.FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
-  messageWrapper: {
-    paddingVertical: 8,
-    marginLeft: 68,
+  messageContent: {
+    flexDirection: "row",
+    marginLeft: 6,
     marginRight: 25,
   },
-  messageText: {},
+  iconContainer: {
+    marginTop: 6,
+    width: 50,
+    height: 40,
+    flexDirection: "row",
+  },
+  iconLeftBorder: {
+    width: 4,
+    height: 40,
+    borderLeftWidth: 4,
+    borderColor: "#2D8AFB",
+    borderRadius: 2,
+    marginRight: 5,
+  },
+  messageIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+  },
+  messageWrapper: {
+    paddingVertical: 8,
+    marginLeft: 13,
+  },
+  messageText: {
+    fontFamily: "SF Pro Display",
+    fontSize: 15,
+    width: 300,
+  },
   messageTitle: {
     fontSize: 15,
-    fontWeight: 'bold',
-    marginBottom: 3
+    fontWeight: 500,
+    color: "#4F4F4F",
+    marginBottom: 3,
   },
-  interactionsContainer: {},
+  interactionsContainer: {
+    marginRight: 4,
+    flexDirection: "row",
+    marginTop: 6,
+    alignItems: "center",
+  },
   interaction: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#E9E9EB",
     paddingVertical: 5,
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    marginRight: 5,
   },
 });
 
