@@ -50,7 +50,7 @@ export const InputField: React.FC<InputFieldProps> = ({
           >
             <Icon
               name={isPasswordVisible ? "eye" : "eye-slash"}
-              size={24}
+              size={22}
               color="#999"
             />
           </TouchableOpacity>
