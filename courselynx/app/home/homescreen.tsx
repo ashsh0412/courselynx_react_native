@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   chatItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
+    paddingBottom: 16,
     backgroundColor: "#fff",
   },
   chatIcon: { width: 48, height: 48, borderRadius: 12, marginRight: 16 },
