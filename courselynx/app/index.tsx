@@ -6,33 +6,6 @@ import HomeScreen from "./home/homescreen";
 export default function Index() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <TouchableOpacity style={styles.devButton}>
-          <Link
-            href={{
-              pathname: "/chat",
-              params: { title: "Business and Finance", color: "#E47F7F" },
-            }}
-          >
-            <Text>Group Chat Page</Text>
-          </Link>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.devButton}>
-          <Link
-            href={{
-              pathname: "/login",
-            }}
-          >
-            <Text>Login Page</Text>
-          </Link>
-        </TouchableOpacity>
-      </View>
       <HomeScreen />
     </GestureHandlerRootView>
   );
