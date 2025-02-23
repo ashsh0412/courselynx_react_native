@@ -9,8 +9,12 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
-import Swipeable from "react-native-gesture-handler/Swipeable";
+import {
+  Swipeable,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler"
 import { TouchableWithoutFeedback } from "react-native";
+import { Animated } from "react-native";
 
 interface Chat {
   id: number;
@@ -74,107 +78,119 @@ const chats: Chat[] = [
 
 export default function HomeScreen() {
   const [activeSwipe, setActiveSwipe] = useState<number | null>(null);
-  const currentSwipeRef = useRef<Swipeable | null>(null);
+  const swipeRefs = useRef<{ [key: number]: Swipeable | null }>({});
 
-  const renderRightActions = () => (
-    <View style={styles.swipeActions}>
-      <TouchableOpacity style={styles.actionButton}>
-        <MaterialIcons name="more-horiz" size={24} color="#fff" />
-        <Text style={styles.actionText}>More</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.actionButton, styles.muteButton]}>
-        <MaterialIcons name="notifications-off" size={24} color="#fff" />
-        <Text style={styles.actionText}>Mute</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>
+  ) => {
+    const scale = progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0.6, 1],
+      extrapolate: "clamp",
+    });
+
+    return (
+      <View style={styles.swipeActions}>
+        <Animated.View style={[styles.actionButton, { transform: [{ scale }] }]}>
+          <MaterialIcons name="more-horiz" size={24} color="#fff" />
+          <Text style={styles.actionText}>More</Text>
+        </Animated.View>
+        <Animated.View
+          style={[styles.actionButton, styles.muteButton, { transform: [{ scale }] }]}
+        >
+          <MaterialIcons name="notifications-off" size={24} color="#fff" />
+          <Text style={styles.actionText}>Mute</Text>
+        </Animated.View>
+      </View>
+    );
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={require("@/assets/images/CourseLynxLogo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <View style={styles.iconContainer}>
-          <MaterialIcons name="notifications-none" size={34} color="#000" />
-          <Link href="/login">
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Image
+            source={require("@/assets/images/CourseLynxLogo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <View style={styles.iconContainer}>
+            <MaterialIcons name="notifications-none" size={34} color="#000" />
             <MaterialIcons name="account-circle" size={38} color="#000" />
-          </Link>
+          </View>
         </View>
-      </View>
 
-      <ScrollView style={styles.chatList}>
-        {chats.map((chat) => (
-          <Swipeable
-            key={chat.id}
-            ref={(ref) => (currentSwipeRef.current = ref)}
-            renderRightActions={renderRightActions}
-            onSwipeableWillOpen={() => {
-              if (currentSwipeRef.current) {
-                currentSwipeRef.current.close();
-              }
-              setActiveSwipe(chat.id);
-            }}
-            onSwipeableClose={() => setActiveSwipe(null)}
-          >
-            <TouchableWithoutFeedback
-              onPress={() => {
-                if (activeSwipe === null) {
-                  router.push({
-                    pathname: "/chat",
-                    params: { title: chat.name, color: chat.color },
-                  });
-                }
+        <ScrollView style={styles.chatList}>
+          {chats.map((chat) => (
+            <Swipeable
+              key={chat.id}
+              ref={(ref) => (swipeRefs.current[chat.id] = ref)}
+              renderRightActions={renderRightActions}
+              onSwipeableWillOpen={() => {
+                Object.keys(swipeRefs.current).forEach((key) => {
+                  if (parseInt(key) !== chat.id) {
+                    swipeRefs.current[parseInt(key)]?.close();
+                  }
+                });
+                setActiveSwipe(chat.id);
               }}
+              onSwipeableClose={() => setActiveSwipe(null)}
             >
-              <View style={[styles.chatItem, { backgroundColor: "#fff" }]}>
-                <View
-                  style={[
-                    styles.chatIcon,
-                    { backgroundColor: chat.color || "#000" },
-                  ]}
-                />
-                <View style={styles.chatInfo}>
-                  <Text
-                    style={[
-                      styles.chatName,
-                      chat.unread > 0 ? styles.boldText : null,
-                    ]}
-                  >
-                    {chat.name}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.chatMessage,
-                      chat.unread > 0 ? styles.boldText : null,
-                    ]}
-                  >
-                    {chat.message}
-                  </Text>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  if (activeSwipe === null) {
+                    router.push({
+                      pathname: "/chat",
+                      params: { title: chat.name, color: chat.color },
+                    });
+                  }
+                }}
+              >
+                <View style={[styles.chatItem, { backgroundColor: "#fff" }]}>
+                  <View
+                    style={[styles.chatIcon, { backgroundColor: chat.color || "#000" }]}
+                  />
+                  <View style={styles.chatInfo}>
+                    <Text
+                      style={[
+                        styles.chatName,
+                        chat.unread > 0 ? styles.boldText : null,
+                      ]}
+                    >
+                      {chat.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.chatMessage,
+                        chat.unread > 0 ? styles.boldText : null,
+                      ]}
+                    >
+                      {chat.message}
+                    </Text>
+                  </View>
+                  <View style={styles.chatMeta}>
+                    <Text
+                      style={[
+                        styles.chatTime,
+                        chat.unread > 0 ? styles.boldText : null,
+                      ]}
+                    >
+                      {chat.time}
+                    </Text>
+                    {chat.unread > 0 && (
+                      <View style={styles.unreadBadge}>
+                        <Text style={styles.unreadText}>{chat.unread}</Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
-                <View style={styles.chatMeta}>
-                  <Text
-                    style={[
-                      styles.chatTime,
-                      chat.unread > 0 ? styles.boldText : null,
-                    ]}
-                  >
-                    {chat.time}
-                  </Text>
-                  {chat.unread > 0 && (
-                    <View style={styles.unreadBadge}>
-                      <Text style={styles.unreadText}>{chat.unread}</Text>
-                    </View>
-                  )}
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </Swipeable>
-        ))}
-      </ScrollView>
-    </View>
+              </TouchableWithoutFeedback>
+            </Swipeable>
+          ))}
+        </ScrollView>
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -188,12 +204,14 @@ const styles = StyleSheet.create({
   },
   logo: { width: 190, height: 55 },
   iconContainer: { flexDirection: "row", alignItems: "center", gap: 10 },
-  chatList: { padding: 20 },
+  chatList: {},
   chatItem: {
     flexDirection: "row",
     alignItems: "center",
     paddingBottom: 16,
     backgroundColor: "#fff",
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   chatIcon: { width: 48, height: 48, borderRadius: 12, marginRight: 16 },
   chatInfo: { flex: 1 },
@@ -220,8 +238,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#555",
     justifyContent: "center",
     alignItems: "center",
-    width: 60,
-    height: 60,
+    width: 64,
+    height: 64,
   },
   muteButton: { backgroundColor: "#ff6666" },
   actionText: { color: "#fff", fontSize: 14, marginTop: 4 },
