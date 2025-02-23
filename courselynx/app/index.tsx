@@ -20,6 +20,15 @@ export default function Index() {
           <Text>Group Chat Page</Text>
         </Link>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.devButton}>
+        <Link
+          href={{
+            pathname: "/login",
+          }}
+        >
+          <Text>Login Page</Text>
+        </Link>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -28,6 +37,7 @@ const styles = StyleSheet.create({
   devButton: {
     color: "black",
     padding: 4,
+    margin: 10,
     borderWidth: 2,
     borderRadius: 10,
     backgroundColor: "lightGray",
