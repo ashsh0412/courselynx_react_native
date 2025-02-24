@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, FlatList, StyleSheet} from "react-native";
+import { View, Text, TextInput, FlatList, StyleSheet } from "react-native";
 import Entypo from "react-native-vector-icons/Entypo";
 import { useLocalSearchParams } from "expo-router";
 
@@ -52,7 +52,6 @@ export default function MembersScreen() {
     <View
       style={{
         flex: 1,
-        
         backgroundColor: Array.isArray(color) ? color[0] : (color as string),
       }}
     >
@@ -64,7 +63,7 @@ export default function MembersScreen() {
         <View style={styles.searchBarContainer}>
           <Entypo
             name="magnifying-glass"
-            size={20}
+            size={24}
             color="#aaa"
             style={styles.icon}
           />
@@ -81,7 +80,13 @@ export default function MembersScreen() {
           data={filteredMembers}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
+          indicatorStyle="black"
+          contentContainerStyle={{
+            paddingHorizontal: 22,
+          }}
+          scrollIndicatorInsets={{ right: 5 }}
+          showsVerticalScrollIndicator={true}
+          persistentScrollbar={true}
         />
       </View>
     </View>
@@ -95,8 +100,6 @@ const styles = StyleSheet.create({
     marginTop: 154,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    paddingHorizontal: 16,
-    paddingTop: 20,
   },
   titleText: {
     fontFamily: "SF Pro Display",
@@ -107,34 +110,34 @@ const styles = StyleSheet.create({
     color: "#02102E",
   },
   searchBarContainer: {
-    width: 372, 
-    height: 36, 
+    width: 352,
+    height: 36,
     backgroundColor: "rgba(45, 138, 251, .1)",
-    borderRadius: 8,
+    borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    alignSelf: "center", 
-    paddingHorizontal: 10,
+    alignSelf: "center",
+    marginHorizontal: 20,
     marginTop: 19,
     marginBottom: 10,
   },
   icon: {
-    marginRight: 8,
-    color: '#2D8AFB',
-    width: 24, 
-    height: 22, 
+    marginLeft: 6,
+    color: "#2D8AFB",
+    width: 24,
+    height: 24,
   },
   searchBar: {
+    paddingHorizontal: 10,
     flex: 1,
     fontSize: 16,
-    textAlign: "left", 
+    textAlign: "left",
   },
   memberItem: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 10,
-    
     borderBottomColor: "#ddd",
   },
   circle: {
