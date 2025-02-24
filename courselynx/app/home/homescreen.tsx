@@ -117,7 +117,9 @@ export default function HomeScreen() {
           />
           <View style={styles.iconContainer}>
             <MaterialIcons name="notifications-none" size={34} color="#000" />
-            <MaterialIcons name="account-circle" size={38} color="#000" />
+            <Link href="/settings">
+              <MaterialIcons name="account-circle" size={38} color="#000" />
+            </Link>
           </View>
         </View>
 
