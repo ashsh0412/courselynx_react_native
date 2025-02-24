@@ -133,15 +133,26 @@ const interactions: Interaction[] = [
 ];
 
 export default function GroupChatScreen() {
-  const messageRef = useRef<TextInput | null>(null);
+  const inputRef = useRef<TextInput | null>(null);
+  const messageRef = useRef<string>("");
   const keyboard = useAnimatedKeyboard();
   const [isAnon, setIsAnon] = useState(false);
+
   const [isModal, setIsModal] = useState(false);
+
   const [chatMedia, setChatMedia] = useState<string | undefined>("");
   const [chatMediaType, setChatMediaType] = useState<string | undefined>("");
   const [chatFile, setChatFile] = useState<
     DocumentPicker.DocumentPickerSuccessResult | undefined
   >(undefined);
+  {
+    /* MAKE SURE CHATS ARE SORTED EVERYTIME THEY ARE FETCHED */
+  }
+  const [chats, setChats] = useState(
+    chatMessages.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+  );
 
   const openCamera = async () => {
     const result = await ImagePicker.requestCameraPermissionsAsync();
@@ -307,37 +318,59 @@ export default function GroupChatScreen() {
   }
   const animatedInputStyle = useAnimatedStyle(() => {
     return {
-      bottom: keyboard.height.value > 32 ? keyboard.height.value : 32,
-      backgroundColor: keyboard.height.value > 0 ? "transparent" : "white",
+      bottom: keyboard.height.value > 24 ? keyboard.height.value : 24,
     };
   });
 
+  const animatedMessagesStyle = useAnimatedStyle(() => {
+    return {
+      paddingBottom: keyboard.height.value > 0 ? keyboard.height.value - 24 : 0,
+    };
+  });
+
+  const handleSendMessage = () => {
+    console.log(messageRef.current);
+    if (messageRef.current) {
+      const message = messageRef.current.trim();
+      if (message) {
+        setChats((prev) => [
+          {
+            id: prev.length + 1,
+            sender: "You",
+            message: message,
+            date: new Date().toISOString(),
+            color: "#000",
+          },
+          ...prev,
+        ]);
+        inputRef.current?.clear();
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.messagesContainer}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 190 : 38}
-      >
+      <Animated.View style={[styles.messagesContainer, animatedMessagesStyle]}>
         {/* Scrollable chat container that renders chat */}
         <FlatList
-          data={chatMessages.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-          )}
+          data={chats}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item, index }) => {
+            console.log(item);
             const currentDate = new Date(item.date);
-            const previousDate =
-              index > 0 ? new Date(chatMessages[index - 1].date) : null;
-            const isFirstMessage = index === 0;
+            const nextDate =
+              index < chats.length - 1 ? new Date(chats[index + 1].date) : null;
+
             const isNewDay =
-              previousDate &&
-              currentDate.toDateString() !== previousDate.toDateString();
+              !nextDate ||
+              currentDate.toDateString() !== nextDate.toDateString();
+
             const isMoreThanOneHourApart =
-              previousDate &&
-              currentDate.getTime() - previousDate.getTime() > 60 * 60 * 1000;
-            const shouldShowDate =
-              isFirstMessage || isNewDay || isMoreThanOneHourApart;
+              nextDate &&
+              nextDate.getTime() - currentDate.getTime() > 60 * 60 * 1000;
+
+            const shouldShowDate = isNewDay || isMoreThanOneHourApart;
+
             const selectedInteractions =
               index % 3 === 0 && index !== 0
                 ? getRandomInteractions()
@@ -357,14 +390,25 @@ export default function GroupChatScreen() {
           }}
           contentContainerStyle={{
             flexGrow: 1,
+            marginTop: 65,
+            paddingBottom: 15,
             justifyContent: "flex-end",
-            paddingTop: 25,
           }}
           keyboardShouldPersistTaps="handled"
           inverted={true}
-          keyboardDismissMode={"on-drag"} // Swipe down to exit keyboard
+          keyboardDismissMode={"interactive"} // Swipe down to exit keyboard
         />
-      </KeyboardAvoidingView>
+      </Animated.View>
+
+      <Animated.View style={[styles.typingContainer, animatedInputStyle]}>
+        {/* Maps currently typing people */}
+        {Array.from({ length: 3 }).map((_, index) => (
+          <View key={index} style={[styles.typingIcon, { zIndex: index }]}>
+            <Person width={40} height={40} />
+          </View>
+        ))}
+        <Text style={styles.typingDots}>...</Text>
+      </Animated.View>
 
       {/* Container for chat input and group chat interaction */}
       <Animated.View style={[styles.bottomChatContainer, animatedInputStyle]}>
@@ -377,9 +421,14 @@ export default function GroupChatScreen() {
           </TouchableOpacity>
           <TextInput
             style={styles.chatInput}
-            ref={messageRef}
+            ref={inputRef}
+            multiline={true}
+            onChangeText={(text) => (messageRef.current = text)}
             placeholder="Type here..."
             placeholderTextColor={"#C5C5C7"}
+            returnKeyType="send"
+            submitBehavior="blurAndSubmit"
+            onSubmitEditing={handleSendMessage}
           />
           <TouchableWithoutFeedback onPress={() => setIsAnon((prev) => !prev)}>
             <View
@@ -396,15 +445,6 @@ export default function GroupChatScreen() {
               />
             </View>
           </TouchableWithoutFeedback>
-        </View>
-        <View style={styles.typingContainer}>
-          {/* Maps currently typing people */}
-          {Array.from({ length: 3 }).map((_, index) => (
-            <View key={index} style={[styles.typingIcon, { zIndex: index }]}>
-              <Person width={40} height={40} />
-            </View>
-          ))}
-          <Text style={styles.typingDots}>...</Text>
         </View>
       </Animated.View>
 
@@ -573,27 +613,27 @@ export default function GroupChatScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "flex-end",
     width: "100%",
   },
   messagesContainer: {
-    height: "auto",
+    flex: 1,
     fontFamily: "Inter",
     fontSize: 15,
     fontWeight: 600,
-    margin: 0,
     width: "100%",
-    marginBottom: 140,
-    gap: 37,
+    marginBottom: -30,
   },
   typingContainer: {
     flexDirection: "row",
-    marginBottom: 10,
     justifyContent: "flex-start",
     height: 40,
-    width: 350,
+    width: "100%",
+    paddingLeft: 9,
+    marginBottom: 20,
     backgroundColor: "transparent",
   },
   typingIcon: {
@@ -605,26 +645,20 @@ const styles = StyleSheet.create({
   },
   typingDots: {
     fontSize: 40,
-    marginLeft: 15,
+    height: 40,
+    paddingLeft: 15,
     backgroundColor: "transparent",
   },
   bottomChatContainer: {
-    flex: 1,
-    position: "absolute",
-    bottom: 38,
+    paddingBottom: 10,
     flexDirection: "column-reverse",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    marginTop: 10,
+    alignItems: "flex-start",
     width: "100%",
-    height: 70,
-    backgroundColor: "transparent",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    height: 48,
-    backgroundColor: "white",
+    paddingLeft: 21,
   },
   addButton: {
     fontFamily: "SF Pro Text",
@@ -651,10 +685,12 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     fontSize: 15,
     width: 302,
-    height: 36,
+    minHeight: 36,
+    maxHeight: 115,
     borderColor: "#C5C5C7",
     borderRadius: 20,
     borderWidth: 1,
+    overflow: "scroll",
   },
   incognitoWrapper: {
     display: "flex",
@@ -663,7 +699,7 @@ const styles = StyleSheet.create({
     borderRadius: "50%",
     position: "absolute",
     right: 14,
-    bottom: 14,
+    bottom: 9,
     width: 20,
     height: 20,
   },
