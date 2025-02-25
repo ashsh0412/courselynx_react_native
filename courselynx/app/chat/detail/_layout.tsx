@@ -25,7 +25,9 @@ export default function DetailLayout() {
         />
         <Stack.Screen
           name="search"
-          options={{ header: () => <Header title="Search" /> }}
+          options={{
+            header: () => <Header title="Search Chat" withBorder={true} />,
+          }}
         />
       </Stack>
     </>

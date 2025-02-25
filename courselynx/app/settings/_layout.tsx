@@ -10,12 +10,7 @@ export default function SettingLayout() {
         <Stack.Screen
           name="index"
           options={{
-            header: () => (
-              <Header
-                title="My Profile"
-                hasShare={true}
-              />
-            ),
+            header: () => <Header title="My Profile" hasShare={true} />,
           }}
         />
       </Stack>
