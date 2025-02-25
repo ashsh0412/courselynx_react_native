@@ -1,7 +1,7 @@
-import ProfileSelf from "./profile";
+import Profile from "./profile";
 
 export default function SettingScreen() {
   return (
-    <ProfileSelf />
+    <Profile.Others />
   );
 }
