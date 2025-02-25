@@ -2,17 +2,22 @@ import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Search from "../assets/svg/searchChat.svg";
 import Share from "../assets/svg/shareChat.svg";
+import Settings from "../assets/svg/settings.svg";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { LinkProps, Href } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { onShare } from "@/utils/share";
 
 export type Props = {
   title?: string;
   colorSquare?: string;
   hasSearch?: boolean;
   hasShare?: boolean;
+  hasSettings?: boolean;
   toDetail?: boolean;
   withBorder?: boolean;
+  shareParams?: { message: string; url: string };
+  onChat?: boolean;
 };
 
 const Header: React.FC<Props> = ({
@@ -20,8 +25,14 @@ const Header: React.FC<Props> = ({
   colorSquare = "",
   hasSearch = false,
   hasShare = false,
+  hasSettings = false,
   toDetail = false,
   withBorder = false,
+  shareParams = {
+    message: "Default Message",
+    url: "https://courselynx/Default",
+  },
+  onChat = false,
 }) => {
   const router = useRouter();
   return (
@@ -71,15 +82,29 @@ const Header: React.FC<Props> = ({
             </View>
           </TouchableOpacity>
         </View>
-        {(hasSearch || hasShare) && (
-          <View style={styles.headerIcons}>
+        {(hasSearch || hasShare || hasSettings) && (
+          // Margin for search icon on chat page is further over than others
+          <View style={[styles.headerIcons, { marginRight: onChat ? 10 : 0 }]}>
             {/* Links to desired header icon pages */}
-            <Link href={"/chat/detail/search"} asChild>
-              <TouchableOpacity>
-                {hasSearch && <Search width={24} height={24} />}
+            {hasSearch && (
+              <Link href={"/chat/detail/search"} asChild>
+                <TouchableOpacity>
+                  <Search width={24} height={24} />
+                </TouchableOpacity>
+              </Link>
+            )}
+            {hasShare && (
+              <TouchableOpacity onPress={() => onShare(shareParams)}>
+                <Share width={24} height={24} />
               </TouchableOpacity>
-            </Link>
-            {hasShare && <Share width={24} height={24} />}
+            )}
+            {hasSettings && (
+              <Link href={"/settings"} asChild>
+                <TouchableOpacity>
+                  <Settings width={26} height={26} />
+                </TouchableOpacity>
+              </Link>
+            )}
           </View>
         )}
       </View>
@@ -90,11 +115,10 @@ const Header: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     paddingLeft: 20,
-    paddingRight: 20,
+    paddingRight: 15,
     paddingTop: 55,
     paddingBottom: 9,
     width: "100%",
-    textAlign: "left",
     fontFamily: "SF Pro Display",
     display: "flex",
     flexDirection: "row",
@@ -103,7 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   back: {
-    marginRight: 10,
+    marginRight: 20,
   },
   leftContainer: {
     flexDirection: "row",
@@ -131,8 +155,9 @@ const styles = StyleSheet.create({
   headerIcons: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 12,
   },
 });
 

@@ -5,9 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Share,
   Modal,
-  TouchableWithoutFeedback,
   Pressable,
 } from "react-native";
 import Detail from "@/components/ChatComponents/DetailComponents/Detail";
@@ -17,6 +15,7 @@ import Notification from "../../../assets/svg/notification.svg";
 import Member from "../../../assets/svg/group.svg";
 import { BlurView } from "expo-blur";
 import GestureRecognizer from "react-native-swipe-gestures";
+import { onShare } from "@/utils/share";
 
 const DESC_TEXT =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et";
@@ -31,29 +30,6 @@ export default function DetailScreen() {
     router.dismissTo("/");
     console.log("User Left Chat");
     setIsModal(false);
-  };
-
-  {
-    /* Function to bring up share menu */
-  }
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: `Join ${title}`,
-        url: "https://courselynx/join/12345",
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          `Shared via activity type: ${result.activityType}`;
-        } else {
-          console.log("Content Shared Successfully!");
-        }
-      } else if (result.action === Share.dismissedAction) {
-        console.log("Share Dialog Dismissed");
-      }
-    } catch (error: any) {
-      alert(error.message);
-    }
   };
 
   return (
@@ -72,7 +48,12 @@ export default function DetailScreen() {
           text="Share"
           SVG={ShareIcon}
           path={"/chat/detail"}
-          shareFunction={onShare}
+          shareFunction={() =>
+            onShare({
+              message: `Join ${title}`,
+              url: "https://courselynx/join/12345",
+            })
+          }
         />
         <Detail
           title={title as string}
