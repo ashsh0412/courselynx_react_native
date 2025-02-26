@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import { useLocalSearchParams } from "expo-router";
-import ProfilePage from "../../../components/ProfileComponents/ProfilePage";
+import ProfilePage from "./ProfileScreen";
 
 export default function ProfileScreen() {
   const { username } = useLocalSearchParams() || {};
