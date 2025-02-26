@@ -1,55 +1,73 @@
 import { useState } from "react";
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { InputField } from "@/components/InputField";
 
-function Self() {
-  // State for form inputs
-  const [name, setName] = useState("Ana Souza");
-  const [major, setMajor] = useState("Computer Science");
-  const [gradYear, setGradYear] = useState("2026");
-  const [bio, setBio] = useState("");
-  const [linkedin, setLinkedin] = useState("abcxyz");
-  const [discord, setDiscord] = useState("");
+type ProfileProps = {
+  avatar: string;
+  name: string;
+  major: string;
+  gradYear: string;
+  bio: string;
+  linkedin: string;
+  discord: string;
+};
 
-  function saveProfile() {
+const Self = ({ userdata }: { userdata: ProfileProps }) => {
+  // State for form inputs
+  const [avatar, setAvatar] = useState(userdata.avatar);
+  const [name, setName] = useState(userdata.name);
+  const [major, setMajor] = useState(userdata.major);
+  const [gradYear, setGradYear] = useState(userdata.gradYear);
+  const [bio, setBio] = useState(userdata.bio);
+  const [linkedin, setLinkedin] = useState(userdata.linkedin);
+  const [discord, setDiscord] = useState(userdata.discord);
+
+  const saveProfile = () => {
     console.log("Save");
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container} automaticallyAdjustKeyboardInsets={true}>
-      {/* Profile Image */}
-      <View style={styles.profileContainer}>
-        <Image source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Bohol_-_Chocolate_Hills.jpg/2560px-Bohol_-_Chocolate_Hills.jpg" }} style={styles.profileImage} />
-        <TouchableOpacity style={styles.editButton}>
-          <Ionicons name="pencil" size={18} color="white" />
-        </TouchableOpacity>
-      </View>
+    <>
+      <ScrollView contentContainerStyle={[styles.container, styles.lightBackgroundColor]} automaticallyAdjustKeyboardInsets={true}>
+        {/* Profile Image */}
+        <View style={styles.profileContainer}>
+          <Image source={{ uri: avatar }} style={styles.profileImage} />
+          <TouchableOpacity style={styles.editButton}>
+            <Ionicons name="pencil" size={18} color="white" />
+          </TouchableOpacity>
+        </View>
 
-      {/* Input Fields */}
-      <View style={styles.form}>
-        <InputField label="Name*" value={name} onChangeText={setName} placeholder="Type your name" />
+        {/* Input Fields */}
+        <View style={styles.form}>
+          <InputField label="Name*" value={name} onChangeText={setName} placeholder="Type your name" />
 
-        <InputField label="Major*" value={major} onChangeText={setMajor} placeholder="Type your major" />
+          <InputField label="Major*" value={major} onChangeText={setMajor} placeholder="Type your major" />
 
-        <InputField label="Graduation Year*" value={gradYear} onChangeText={setGradYear} placeholder="Type your graduation year" keyboardType="numeric" />
+          <InputField label="Graduation Year*" value={gradYear} onChangeText={setGradYear} placeholder="Type your graduation year" keyboardType="numeric" />
 
-        <InputField label="Bio" value={bio} onChangeText={setBio} placeholder="Tell us about yourself" />
+          <InputField label="Bio" value={bio} onChangeText={setBio} placeholder="Tell us about yourself" mulitline={true} addOnStyles={{ height: "auto", maxHeight: 100 }} />
 
-        <InputField label="LinkedIn" value={linkedin} onChangeText={setLinkedin} placeholder="Type your username" />
+          <InputField label="LinkedIn" value={linkedin} onChangeText={setLinkedin} placeholder="Type your username" />
 
-        <InputField label="Discord" value={discord} onChangeText={setDiscord} placeholder="Type your username" />
-      </View>
+          <InputField label="Discord" value={discord} onChangeText={setDiscord} placeholder="Type your username" />
+        </View>
+      </ScrollView>
+
+      {/* Extra padding at the bottom to prevent overlap */}
+      <View style={{ height: 60 }} />
 
       {/* Save Button */}
-      <TouchableOpacity style={styles.button} onPress={saveProfile}>
-        <Text style={styles.buttonText}>Save</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      <View style={[styles.fixedButtonContainer, styles.lightBackgroundColor]}>
+        <TouchableOpacity style={styles.button} onPress={saveProfile}>
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
-function Others() {
+const Public = ({ userdata }: { userdata: ProfileProps }) => {
   // Sample data for groups
   const socials = [
     { name: "LinkedIn", icon: "logo-linkedin", color: "#0A66C2", username: "@abcxyz" },
@@ -63,51 +81,55 @@ function Others() {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container} automaticallyAdjustKeyboardInsets={true}>
-      {/* Profile Header */}
-      <View style={[styles.profileContainer, styles.horizontalContainer]}>
-        <Image source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Bohol_-_Chocolate_Hills.jpg/2560px-Bohol_-_Chocolate_Hills.jpg" }} style={styles.profileImage} />
-        <View>
-          <Text style={styles.name}>Ana Souza</Text>
-          <Text style={[styles.details, styles.lightTextColor]}>Computer Science</Text>
-          <Text style={[styles.details, styles.lightTextColor]}>Class of 2026</Text>
+    <>
+      <ScrollView contentContainerStyle={styles.container} automaticallyAdjustKeyboardInsets={true}>
+        {/* Profile Header */}
+        <View style={[styles.profileContainer, styles.horizontalContainer]}>
+          <Image source={{ uri: userdata.avatar }} style={styles.profileImage} />
+          <View>
+            <Text style={styles.name}>{userdata.name}</Text>
+            <Text style={[styles.details, styles.lightTextColor]}>{userdata.major}</Text>
+            <Text style={[styles.details, styles.lightTextColor]}>{userdata.gradYear}</Text>
+          </View>
         </View>
-      </View>
-      <Text style={[styles.bio, styles.lightTextColor]}>
-        Lorem ipsum dolor sit amet, cons adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor
-        sit amet, consectetur
-      </Text>
+        <Text style={[styles.bio, styles.lightTextColor]}>{userdata.bio}</Text>
 
-      {/* Social Media Section */}
-      <Text style={styles.sectionTitle}>Socials</Text>
-      <View style={styles.horizontalContainer}>
-        {socials.map((social, index) => (
-          <View key={index} style={[styles.item, { width: "48%" }]}>
-            <Ionicons name={social.icon as keyof typeof Ionicons.glyphMap} size={32} color={social.color} />
-            <View>
-              <Text style={styles.label}>{social.name}</Text>
-              <Text style={[styles.text, styles.lightTextColor]}>{social.username}</Text>
+        {/* Social Media Section */}
+        <Text style={styles.sectionTitle}>Socials</Text>
+        <View style={styles.horizontalContainer}>
+          {socials.map((social, index) => (
+            <View key={index} style={[styles.item, { width: "48%" }]}>
+              <Ionicons name={social.icon as keyof typeof Ionicons.glyphMap} size={50} color={social.color} />
+              <View>
+                <Text style={styles.label}>{social.name}</Text>
+                <Text style={[styles.text, styles.lightTextColor]}>{social.username}</Text>
+              </View>
             </View>
-          </View>
-        ))}
-      </View>
+          ))}
+        </View>
 
-      {/* Groups in Common */}
-      <Text style={styles.sectionTitle}>Groups in Common [{groupsInCommon.length}]</Text>
-      <View>
-        {groupsInCommon.map((group, index) => (
-          <View key={index} style={styles.item}>
-            <View style={[styles.groupColor, { backgroundColor: group.color }]} />
-            <Text style={styles.label}>{group.name}</Text>
-          </View>
-        ))}
-      </View>
+        {/* Groups in Common */}
+        <Text style={styles.sectionTitle}>Groups in Common [{groupsInCommon.length}]</Text>
+        <View>
+          {groupsInCommon.map((group, index) => (
+            <View key={index} style={styles.item}>
+              <View style={[styles.groupColor, { backgroundColor: group.color }]} />
+              <Text style={styles.label}>{group.name}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
 
-      {/* Message Button */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Message</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      {/* Extra padding at the bottom to prevent overlap */}
+      <View style={{ height: 60 }} />
+
+      {/* Save Button */}
+      <View style={[styles.fixedButtonContainer, styles.lightBackgroundColor]}>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Message</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
@@ -115,8 +137,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    paddingTop: 5,
-    backgroundColor: "white",
+    paddingTop: 10,
   },
   profileContainer: {
     alignItems: "center",
@@ -130,6 +151,9 @@ const styles = StyleSheet.create({
   },
   lightTextColor: {
     color: "#111",
+  },
+  lightBackgroundColor: {
+    backgroundColor: "white",
   },
   label: {
     fontSize: 14,
@@ -166,16 +190,13 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
     gap: 10,
-    backgroundColor: "#F6F6F6",
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 10,
+    paddingVertical: 10,
+    alignItems: "center",
   },
   groupColor: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    marginRight: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
   },
   form: {
     marginBottom: 10,
@@ -192,6 +213,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  fixedButtonContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 20,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderColor: "#ddd",
+  },
   button: {
     backgroundColor: "#3b82f6",
     paddingVertical: 14,
@@ -205,5 +236,5 @@ const styles = StyleSheet.create({
   },
 });
 
-const Profile = { Self, Others };
+const Profile = { Self, Public };
 export default Profile;

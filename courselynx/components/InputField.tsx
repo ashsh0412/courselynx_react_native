@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   KeyboardTypeOptions,
+  StyleProp,
+  TextStyle,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -15,7 +17,9 @@ interface InputFieldProps {
   onChangeText: (text: string) => void;
   placeholder: string;
   secureTextEntry?: boolean;
+  mulitline?: boolean;
   keyboardType?: KeyboardTypeOptions;
+  addOnStyles?: StyleProp<TextStyle>;
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
@@ -24,7 +28,9 @@ export const InputField: React.FC<InputFieldProps> = ({
   onChangeText,
   placeholder,
   secureTextEntry = false,
+  mulitline = false,
   keyboardType = "default",
+  addOnStyles = {},
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const togglePasswordVisibility = () =>
@@ -35,13 +41,14 @@ export const InputField: React.FC<InputFieldProps> = ({
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, addOnStyles]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
           placeholderTextColor="#999"
           secureTextEntry={secureTextEntry && !isPasswordVisible}
           keyboardType={keyboardType}
+          multiline={mulitline}
         />
         {secureTextEntry && (
           <TouchableOpacity
@@ -80,7 +87,8 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 45,
-    paddingHorizontal: 10,
+    minHeight: 45,
+    padding: 10,
     color: "#111",
     fontWeight: "500",
     fontSize: 15,
