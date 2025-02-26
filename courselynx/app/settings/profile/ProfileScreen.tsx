@@ -60,7 +60,7 @@ const Self = ({ userdata }: { userdata: ProfileProps }) => {
       </ScrollView>
 
       {/* Extra padding at the bottom to prevent overlap */}
-      <View style={{ height: 60 }} />
+      <View style={styles.footer} />
 
       {/* Save Button */}
       <View style={[styles.fixedButtonContainer, styles.lightBackgroundColor]}>
@@ -81,7 +81,10 @@ const Public = ({ userdata }: { userdata: ProfileProps }) => {
     { name: "Business and Finance", color: "#D78787" },
     { name: "Statistics", color: "#8DC78B" },
     { name: "Badminton Club", color: "#E18B40" },
-    { name: "Dance Club", color: "#D39AD7" },
+    { name: "Dance1 Club", color: "#D39AD7" },
+    { name: "Dance2 Club", color: "#D39AD7" },
+    { name: "Dance3 Club", color: "#D39AD7" },
+    { name: "Dance4 Club", color: "#D39AD7" },
   ];
 
   const messageUser = () => {
@@ -90,7 +93,7 @@ const Public = ({ userdata }: { userdata: ProfileProps }) => {
 
   return (
     <>
-      <ScrollView contentContainerStyle={[styles.container, styles.lightBackgroundColor]} automaticallyAdjustKeyboardInsets={true}>
+      <View style={[styles.container, styles.lightBackgroundColor]}>
         {/* Profile Header */}
         <View style={[styles.profileContainer, styles.horizontalContainer]}>
           <Image source={{ uri: userdata.avatar }} style={styles.avatar} />
@@ -118,18 +121,18 @@ const Public = ({ userdata }: { userdata: ProfileProps }) => {
 
         {/* Groups in Common */}
         <Text style={styles.sectionTitle}>Groups in Common [{groupsInCommon.length}]</Text>
-        <View>
+        <ScrollView style={styles.scrollContainer}>
           {groupsInCommon.map((group, index) => (
             <View key={index} style={styles.item}>
               <View style={[styles.groupColor, { backgroundColor: group.color }]} />
               <Text style={styles.label}>{group.name}</Text>
             </View>
           ))}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
 
       {/* Extra padding at the bottom to prevent overlap */}
-      <View style={{ height: 60 }} />
+      <View style={styles.footer} />
 
       {/* Message Button */}
       <View style={[styles.fixedButtonContainer, styles.lightBackgroundColor]}>

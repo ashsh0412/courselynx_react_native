@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: "4%",
   },
+  scrollContainer: {
+    flex: 1,
+  },
   lightTextColor: {
     color: "#111",
   },
@@ -51,8 +54,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 8,
+    marginVertical: 8,
   },
   item: {
     flexDirection: "row",
@@ -79,6 +81,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
+  },
+  footer: {
+    height: 70,
   },
   fixedButtonContainer: {
     position: "absolute",
