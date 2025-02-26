@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TextInput, StyleSheet, Text, View } from "react-native";
 import Search from "../../../assets/svg/searchChat.svg";
+import { FlatList } from "react-native";
 
 // MOCK DATA WITH COLORS
 const chatMessages = [
@@ -150,14 +151,34 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           placeholderTextColor={"#767680AA"}
         />
       </View>
-      <View>
-        {filteredMessages.map((message) => (
+      <View style={{ flex: 1, marginVertical: 5 }}>
+        <FlatList
+          data={filteredMessages}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => {
+            return (
+              <View key={item.id} style={{ marginBottom: 10 }}>
+                <Text style={styles.searchName}>{item.sender}</Text>
+                <Text style={[styles.searchText, { color: item.color }]}>
+                  {highlightText(item.message, searchQuery)}
+                </Text>
+              </View>
+            );
+          }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingVertical: 5,
+            paddingHorizontal: 25,
+            gap: 10,
+          }}
+        />
+        {/* {filteredMessages.map((message) => (
           <View key={message.id} style={{ marginBottom: 10 }}>
             <Text style={{ color: message.color }}>
               {message.sender}: {highlightText(message.message, searchQuery)}
             </Text>
           </View>
-        ))}
+        ))} */}
       </View>
     </View>
   );
@@ -187,6 +208,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     textAlign: "left",
+  },
+  searchText: { fontFamily: "SF Pro Display", fontSize: 15, fontWeight: 400 },
+  searchName: {
+    fontSize: 15,
+    fontWeight: 500,
+    color: "#4F4F4F",
+    marginBottom: 3,
   },
 });
 
