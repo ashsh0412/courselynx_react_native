@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack } from "expo-router";
 import { StatusBar } from "react-native";
 
 export default function SettingLayout() {
@@ -9,8 +9,12 @@ export default function SettingLayout() {
       <Stack>
         <Stack.Screen
           name="index"
+          options={{ header: () => <Header title="Settings" /> }}
+        />
+        <Stack.Screen
+          name="profile"
           options={{
-            header: () => <Header title="My Profile" hasShare={true} />,
+            headerShown: false,
           }}
         />
       </Stack>
