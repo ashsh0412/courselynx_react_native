@@ -2,9 +2,10 @@ import { useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { InputField } from "@/components/InputField";
+import { Button } from "@/components/Button";
 import styles from "./ProfileStyles";
 
-type ProfileProps = {
+interface ProfileProps {
   avatar: string;
   name: string;
   major: string;
@@ -14,15 +15,15 @@ type ProfileProps = {
   discord: string;
 };
 
-const Self = ({ userdata }: { userdata: ProfileProps }) => {
+const Self = ({ userProfile }: { userProfile: ProfileProps }) => {
   // State for form inputs
-  const [avatar, setAvatar] = useState(userdata.avatar);
-  const [name, setName] = useState(userdata.name);
-  const [major, setMajor] = useState(userdata.major);
-  const [gradYear, setGradYear] = useState(userdata.gradYear);
-  const [bio, setBio] = useState(userdata.bio);
-  const [linkedin, setLinkedin] = useState(userdata.linkedin);
-  const [discord, setDiscord] = useState(userdata.discord);
+  const [avatar, setAvatar] = useState(userProfile.avatar);
+  const [name, setName] = useState(userProfile.name);
+  const [major, setMajor] = useState(userProfile.major);
+  const [gradYear, setGradYear] = useState(userProfile.gradYear);
+  const [bio, setBio] = useState(userProfile.bio);
+  const [linkedin, setLinkedin] = useState(userProfile.linkedin);
+  const [discord, setDiscord] = useState(userProfile.discord);
 
   const saveProfile = () => {
     console.log("Save");
@@ -64,15 +65,13 @@ const Self = ({ userdata }: { userdata: ProfileProps }) => {
 
       {/* Save Button */}
       <View style={[styles.fixedButtonContainer, styles.lightBackgroundColor]}>
-        <TouchableOpacity style={styles.button} onPress={saveProfile}>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
+        <Button text="Save" onPress={saveProfile} />
       </View>
     </>
   );
 }
 
-const Public = ({ userdata }: { userdata: ProfileProps }) => {
+const Public = ({ userProfile }: { userProfile: ProfileProps }) => {
   const socials = [
     { name: "LinkedIn", icon: "logo-linkedin", color: "#0A66C2", username: "@abcxyz" },
     { name: "Discord", icon: "logo-discord", color: "#5865F2", username: "N/A" },
@@ -96,14 +95,14 @@ const Public = ({ userdata }: { userdata: ProfileProps }) => {
       <View style={[styles.container, styles.lightBackgroundColor]}>
         {/* Profile Header */}
         <View style={[styles.profileContainer, styles.horizontalContainer]}>
-          <Image source={{ uri: userdata.avatar }} style={styles.avatar} />
+          <Image source={{ uri: userProfile.avatar }} style={styles.avatar} />
           <View>
-            <Text style={styles.name}>{userdata.name}</Text>
-            <Text style={[styles.details, styles.lightTextColor]}>{userdata.major}</Text>
-            <Text style={[styles.details, styles.lightTextColor]}>{userdata.gradYear}</Text>
+            <Text style={styles.name}>{userProfile.name}</Text>
+            <Text style={[styles.details, styles.lightTextColor]}>{userProfile.major}</Text>
+            <Text style={[styles.details, styles.lightTextColor]}>{userProfile.gradYear}</Text>
           </View>
         </View>
-        <Text style={[styles.bio, styles.lightTextColor]}>{userdata.bio}</Text>
+        <Text style={[styles.bio, styles.lightTextColor]}>{userProfile.bio}</Text>
 
         {/* Social Media Section */}
         <Text style={styles.sectionTitle}>Socials</Text>
@@ -136,13 +135,11 @@ const Public = ({ userdata }: { userdata: ProfileProps }) => {
 
       {/* Message Button */}
       <View style={[styles.fixedButtonContainer, styles.lightBackgroundColor]}>
-        <TouchableOpacity style={styles.button} onPress={messageUser}>
-          <Text style={styles.buttonText}>Message</Text>
-        </TouchableOpacity>
+        <Button text="Message" onPress={messageUser} />
       </View>
     </>
   );
-}
+};
 
 const ProfilePage = { Self, Public };
 export default ProfilePage;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -33,8 +33,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   addOnStyles = {},
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
-  const togglePasswordVisibility = () =>
-    setIsPasswordVisible(!isPasswordVisible);
+  const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
 
   return (
     <View style={styles.container}>

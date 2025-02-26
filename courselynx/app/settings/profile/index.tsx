@@ -20,14 +20,14 @@ export default function ProfileScreen() {
       return (
         <>
           <Header title={"My Profile"} hasShare={true} hasSettings={true} />
-          <ProfilePage.Self userdata={data} />
+          <ProfilePage.Self userProfile={data} />
         </>
       );
     }
     return (
       <>
         <Header title={"Profile"} hasShare={true} />
-        <ProfilePage.Public userdata={data} />
+        <ProfilePage.Public userProfile={data} />
       </>
     );
   }
