@@ -27,13 +27,17 @@ const Self = ({ userdata }: { userdata: ProfileProps }) => {
     console.log("Save");
   }
 
+  const editAvatar = () => {
+    console.log("Edit avatar");
+  }
+
   return (
     <>
       <ScrollView contentContainerStyle={[styles.container, styles.lightBackgroundColor]} automaticallyAdjustKeyboardInsets={true}>
         {/* Profile Image */}
         <View style={styles.profileContainer}>
-          <Image source={{ uri: avatar }} style={styles.profileImage} />
-          <TouchableOpacity style={styles.editButton}>
+          <Image source={{ uri: avatar }} style={styles.avatar} />
+          <TouchableOpacity style={styles.editButton} onPress={editAvatar}>
             <Ionicons name="pencil" size={18} color="white" />
           </TouchableOpacity>
         </View>
@@ -85,7 +89,7 @@ const Public = ({ userdata }: { userdata: ProfileProps }) => {
       <ScrollView contentContainerStyle={styles.container} automaticallyAdjustKeyboardInsets={true}>
         {/* Profile Header */}
         <View style={[styles.profileContainer, styles.horizontalContainer]}>
-          <Image source={{ uri: userdata.avatar }} style={styles.profileImage} />
+          <Image source={{ uri: userdata.avatar }} style={styles.avatar} />
           <View>
             <Text style={styles.name}>{userdata.name}</Text>
             <Text style={[styles.details, styles.lightTextColor]}>{userdata.major}</Text>
@@ -123,7 +127,7 @@ const Public = ({ userdata }: { userdata: ProfileProps }) => {
       {/* Extra padding at the bottom to prevent overlap */}
       <View style={{ height: 60 }} />
 
-      {/* Save Button */}
+      {/* Message Button */}
       <View style={[styles.fixedButtonContainer, styles.lightBackgroundColor]}>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Message</Text>
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 12,
   },
-  profileImage: {
+  avatar: {
     width: 150,
     height: 150,
     borderRadius: 75,
@@ -236,5 +240,5 @@ const styles = StyleSheet.create({
   },
 });
 
-const Profile = { Self, Public };
-export default Profile;
+const ProfilePage = { Self, Public };
+export default ProfilePage;
