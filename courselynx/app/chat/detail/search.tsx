@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, StyleSheet, Text, View } from "react-native";
+import { TextInput, StyleSheet, Text, View, Pressable } from "react-native";
 import Search from "../../../assets/svg/searchChat.svg";
 import { FlatList } from "react-native";
+import { Link, useRouter } from "expo-router";
+import { StackActions } from "@react-navigation/native";
 
 // MOCK DATA WITH COLORS
 const chatMessages = [
@@ -107,6 +109,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const [filteredMessages, setFilteredMessages] =
     useState<Message[]>(chatMessages);
 
+  const router = useRouter();
+
   useEffect(() => {
     const handler = setTimeout(() => {
       if (searchQuery.trim() === "") {
@@ -155,30 +159,35 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         <FlatList
           data={filteredMessages}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => {
+          renderItem={({ item, index }) => {
             return (
-              <View key={item.id} style={{ marginBottom: 10 }}>
-                <Text style={styles.searchName}>{item.sender}</Text>
-                <Text style={[styles.searchText, { color: item.color }]}>
-                  {highlightText(item.message, searchQuery)}
-                </Text>
-              </View>
+              <Link
+                dismissTo
+                href={`/chat?scrollId=${item.id}`}
+                key={item.id}
+                style={{
+                  backgroundColor: index % 2 === 0 ? "white" : "#76768015",
+                }}
+              >
+                <View
+                  style={{
+                    paddingVertical: 10,
+                    width: "100%",
+                    paddingHorizontal: 25,
+                  }}
+                >
+                  <Text style={styles.searchName}>{item.sender}</Text>
+                  <Text style={[styles.searchText, { color: item.color }]}>
+                    {highlightText(item.message, searchQuery)}
+                  </Text>
+                </View>
+              </Link>
             );
           }}
           contentContainerStyle={{
-            flexGrow: 1,
-            paddingVertical: 5,
-            paddingHorizontal: 25,
-            gap: 10,
+            paddingVertical: 10,
           }}
         />
-        {/* {filteredMessages.map((message) => (
-          <View key={message.id} style={{ marginBottom: 10 }}>
-            <Text style={{ color: message.color }}>
-              {message.sender}: {highlightText(message.message, searchQuery)}
-            </Text>
-          </View>
-        ))} */}
       </View>
     </View>
   );
