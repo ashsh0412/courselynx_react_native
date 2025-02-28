@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import Switch from "@/components/Switch";
 import styles from "./SettingsStyles";
 
-export default function NotificationSettings() {
+export default function NotificationScreen() {
   const notifications = {
     "ALL NOTIFICATIONS": [
       { label: "Mute", key: "isMuted", value: false },

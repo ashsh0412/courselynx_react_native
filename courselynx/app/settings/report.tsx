@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 
-export default function PrivacyScreen() {
+export default function ReportScreen() {
   return (
     <View>
       <Text>Report Screen</Text>
