@@ -6,14 +6,14 @@ import styles from "./SettingsStyles";
 export default function SettingsScreen() {
   const settingsOptions = {
     "ACCOUNT": [
-      { icon: "notifications-outline", label: "Notifications", href: "/settings/notifications" as const },
-      { icon: "shield-checkmark-outline", label: "Security", href: "/settings/security" as const },
-      { icon: "lock-closed-outline", label: "Privacy", href: "/settings/privacy" as const },
+      { label: "Notifications", icon: "notifications-outline" as const, href: "/settings/notifications" as const },
+      { label: "Security", icon: "shield-checkmark-outline" as const, href: "/settings/security" as const },
+      { label: "Privacy", icon: "lock-closed-outline" as const, href: "/settings/privacy" as const },
     ],
     "ACTIONS": [
-      { icon: "flag-outline", label: "Report a Problem", href: "/settings/report" as const },
-      { icon: "person-remove-outline", label: "Delete Account", href: "/settings/delete" as const },
-      { icon: "log-out-outline", label: "Sign Out", href: "/settings/signout" as const },
+      { label: "Report a Problem", icon: "flag-outline" as const, href: "/settings/report" as const },
+      { label: "Delete Account", icon: "person-remove-outline" as const, href: "/settings/delete" as const },
+      { label: "Sign Out", icon: "log-out-outline" as const, href: "/settings/signout" as const },
     ],
   };
 
@@ -26,7 +26,7 @@ export default function SettingsScreen() {
             {options.map((item, index) => (
               <Link href={item.href} key={index} asChild>
                 <TouchableOpacity key={index} style={styles.sectionRow}>
-                  <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={24} />
+                  <Ionicons name={item.icon} size={24} />
                   <Text style={styles.sectionText}>{item.label}</Text>
                 </TouchableOpacity>
               </Link>

@@ -12,7 +12,7 @@ export default function ProfileScreen() {
     gradYear: "2026",
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur",
     linkedin: "abcxyz",
-    discord: "N/A",
+    discord: "",
   }
 
   if (username) {
