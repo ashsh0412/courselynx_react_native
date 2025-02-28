@@ -1,8 +1,8 @@
-import { TouchableOpacity, Text, StyleSheet, StyleProp, TextStyle, ViewStyle } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, StyleProp, TextStyle, ViewStyle, GestureResponderEvent } from "react-native";
 
 interface ButtonProps {
   text: string;
-  onPress: () => void;
+  onPress: (event: GestureResponderEvent) => void;
   buttonStyles?: StyleProp<ViewStyle>;
   textStyles?: StyleProp<TextStyle>;
 }
@@ -22,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#3b82f6",
+    backgroundColor: "rgba(45, 138, 251, 1)",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",

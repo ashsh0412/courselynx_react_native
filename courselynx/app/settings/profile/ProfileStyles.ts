@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     bottom: 5,
     left: "50%",
     transform: [{ translateX: 45 }],
-    backgroundColor: "#3b82f6",
+    backgroundColor: "rgba(45, 138, 251, 1)",
     width: 30,
     height: 30,
     borderRadius: 15,
