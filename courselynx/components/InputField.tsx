@@ -14,7 +14,7 @@ interface InputFieldProps {
   inputStyles?: StyleProp<TextStyle>;
 }
 
-export const InputField: React.FC<InputFieldProps> = ({
+const InputField: React.FC<InputFieldProps> = ({
   label,
   value,
   onChangeText,
@@ -89,3 +89,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
+export default InputField;

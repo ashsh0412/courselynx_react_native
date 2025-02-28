@@ -7,7 +7,7 @@ interface ButtonProps {
   textStyles?: StyleProp<TextStyle>;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+const Button: React.FC<ButtonProps> = ({
   text,
   onPress,
   buttonStyles = {},
@@ -33,3 +33,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+export default Button;
