@@ -16,17 +16,14 @@ export default function ProfileScreen() {
   }
 
   if (username) {
-    if (username === "myself") {
-      return (
-        <>
-          <Header title={"My Profile"} hasShare={true} hasSettings={true} />
-          <ProfilePage.Self userProfile={data} />
-        </>
-      );
-    }
-    return (
+    return username === "myself" ? (
       <>
-        <Header title={"Profile"} hasShare={true} />
+        <Header title={"My Profile"} hasShare={true} hasSettings={true} withBorder />
+        <ProfilePage.Self userProfile={data} />
+      </>
+    ) : (
+      <>
+        <Header title={"Profile"} hasShare={true} withBorder />
         <ProfilePage.Public userProfile={data} />
       </>
     );

@@ -1,18 +1,20 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
+import styles from "./SettingsStyles";
 
 export default function SettingsScreen() {
   const settingsOptions = {
     "ACCOUNT": [
-      { icon: "notifications-outline", label: "Notifications" },
-      { icon: "shield-checkmark-outline", label: "Security" },
-      { icon: "lock-closed-outline", label: "Privacy" },
+      { icon: "notifications-outline", label: "Notifications", href: "/settings/notifications" as const },
+      { icon: "shield-checkmark-outline", label: "Security", href: "/settings/security" as const },
+      { icon: "lock-closed-outline", label: "Privacy", href: "/settings/privacy" as const },
     ],
     "ACTIONS": [
-      { icon: "flag-outline", label: "Report a Problem" },
-      { icon: "person-remove-outline", label: "Delete Account" },
-      { icon: "log-out-outline", label: "Sign Out" },
-    ]
+      { icon: "flag-outline", label: "Report a Problem", href: "/settings/report" as const },
+      { icon: "person-remove-outline", label: "Delete Account", href: "/settings/delete" as const },
+      { icon: "log-out-outline", label: "Sign Out", href: "/settings/signout" as const },
+    ],
   };
 
   return (
@@ -22,10 +24,12 @@ export default function SettingsScreen() {
           <Text style={styles.sectionTitle}>{section}</Text>
           <View style={styles.sectionContainer}>
             {options.map((item, index) => (
-              <TouchableOpacity key={index} style={styles.option}>
-                <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={24} />
-                <Text style={styles.optionText}>{item.label}</Text>
-              </TouchableOpacity>
+              <Link href={item.href} key={index} asChild>
+                <TouchableOpacity key={index} style={styles.sectionRow}>
+                  <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={24} />
+                  <Text style={styles.sectionText}>{item.label}</Text>
+                </TouchableOpacity>
+              </Link>
             ))}
           </View>
         </View>
@@ -33,35 +37,3 @@ export default function SettingsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 20,
-    paddingTop: 0,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
-    marginTop: 20,
-  },
-  sectionContainer: {
-    backgroundColor: "#EEF5FF",
-    borderRadius: 15,
-    padding: 15,
-    gap: 15,
-  },
-  option: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 25,
-  },
-  optionText: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-});
-
