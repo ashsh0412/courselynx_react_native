@@ -97,11 +97,13 @@ const Public = ({ userProfile }: { userProfile: ProfileProps }) => {
         {/* Profile Header */}
         <View style={[styles.profileContainer, styles.horizontalContainer]}>
           <Image source={{ uri: userProfile.avatar }} style={styles.avatar} />
+
           <View>
             <Text style={styles.name}>{userProfile.name}</Text>
             <Text style={[styles.details, styles.lightTextColor]}>{userProfile.major}</Text>
             <Text style={[styles.details, styles.lightTextColor]}>{userProfile.gradYear}</Text>
           </View>
+
         </View>
         <Text style={[styles.bio, styles.lightTextColor]}>{userProfile.bio}</Text>
 
@@ -111,12 +113,14 @@ const Public = ({ userProfile }: { userProfile: ProfileProps }) => {
           {socials.map((social, index) => (
             <View key={index} style={[styles.item, { width: "48%" }]}>
               <Ionicons name={social.icon} size={50} color={social.color} />
+
               <View>
                 <Text style={styles.label}>{social.name}</Text>
                 <Text style={[styles.text, styles.lightTextColor]}>{
                   userProfile[social.id] != "" ? "@" + userProfile[social.id] : "N/A"
                 }</Text>
               </View>
+              
             </View>
           ))}
         </View>

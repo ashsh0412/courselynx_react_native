@@ -32,9 +32,10 @@ export default function NotificationScreen() {
 
   return (
     <View style={styles.container}>
-      {Object.entries(notifications).map(([section, items]) => (
-        <View key={section}>
+      {Object.entries(notifications).map(([section, items], sectionIndex) => (
+        <View key={sectionIndex}>
           <Text style={styles.sectionTitle}>{section}</Text>
+          
           <View style={styles.sectionContainer}>
             {items.map((item, index) => (
               <View style={[styles.sectionRow, {justifyContent: "space-between"}]} key={index}>
@@ -46,6 +47,7 @@ export default function NotificationScreen() {
               </View>
             ))}
           </View>
+          
         </View>
       ))}
     </View>

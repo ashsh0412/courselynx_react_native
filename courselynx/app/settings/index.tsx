@@ -22,6 +22,7 @@ export default function SettingsScreen() {
       {Object.entries(settingsOptions).map(([section, options]) => (
         <View key={section}>
           <Text style={styles.sectionTitle}>{section}</Text>
+          
           <View style={styles.sectionContainer}>
             {options.map((item, index) => (
               <Link href={item.href} key={index} asChild>
@@ -32,6 +33,7 @@ export default function SettingsScreen() {
               </Link>
             ))}
           </View>
+          
         </View>
       ))}
     </View>
