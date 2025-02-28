@@ -1,9 +1,9 @@
 /**
- * There's been a bug in the Native-React switch component since 2020
- * that always reduces the opacity of background color on IOS devices.
+ * There's been a bug in the Native-React Switch component since 2020.
+ * It always reduces the opacity of background color on IOS devices.
  * https://github.com/facebook/react-native/issues/29803
  * 
- * Use this custom switch component instead. Do not use the default switch component.
+ * You can use this custom switch component instead. Avoid using the default switch component.
  */
 
 import { useRef } from "react";
@@ -13,9 +13,11 @@ interface SwitchProps {
   value: boolean;
   onValueChange: (value: boolean) => void;
   switchStyles?: StyleProp<ViewStyle>;
+  thumbStyles?: StyleProp<ViewStyle>;
 }
 
-const Switch: React.FC<SwitchProps> = ({ value, onValueChange, switchStyles }) => {
+const Switch: React.FC<SwitchProps> = ({ value, onValueChange, switchStyles, thumbStyles }) => {
+  
   const translateX = useRef(new Animated.Value(value ? 20 : 0)).current;
 
   const toggleSwitch = () => {
@@ -43,6 +45,7 @@ const Switch: React.FC<SwitchProps> = ({ value, onValueChange, switchStyles }) =
           styles.switchThumb,
           { transform: [{ translateX }] },
           value && styles.switchThumbOn,
+          thumbStyles,
         ]}
       />
     </TouchableOpacity>
