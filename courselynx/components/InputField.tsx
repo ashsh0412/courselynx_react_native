@@ -1,46 +1,39 @@
 import { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  KeyboardTypeOptions,
-  StyleProp,
-  TextStyle,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardTypeOptions, StyleProp, TextStyle } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 interface InputFieldProps {
   label: string;
   value: string;
   onChangeText: (text: string) => void;
-  placeholder: string;
+  placeholder?: string;
   secureTextEntry?: boolean;
   mulitline?: boolean;
   keyboardType?: KeyboardTypeOptions;
-  addOnStyles?: StyleProp<TextStyle>;
+  labelSytle?: StyleProp<TextStyle>;
+  inputStyles?: StyleProp<TextStyle>;
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
   label,
   value,
   onChangeText,
-  placeholder,
+  placeholder = "",
   secureTextEntry = false,
   mulitline = false,
   keyboardType = "default",
-  addOnStyles = {},
+  labelSytle = {},
+  inputStyles = {},
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, labelSytle]}>{label}</Text>
       <View style={styles.inputContainer}>
         <TextInput
-          style={[styles.input, addOnStyles]}
+          style={[styles.input, inputStyles]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}

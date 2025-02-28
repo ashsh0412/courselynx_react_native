@@ -52,7 +52,7 @@ const Self = ({ userProfile }: { userProfile: ProfileProps }) => {
 
           <InputField label="Graduation Year*" value={gradYear} onChangeText={setGradYear} placeholder="Type your graduation year" keyboardType="numeric" />
 
-          <InputField label="Bio" value={bio} onChangeText={setBio} placeholder="Tell us about yourself" mulitline={true} addOnStyles={{ height: "auto", maxHeight: 100 }} />
+          <InputField label="Bio" value={bio} onChangeText={setBio} placeholder="Tell us about yourself" mulitline={true} inputStyles={{ height: "auto", maxHeight: 100 }} />
 
           <InputField label="LinkedIn" value={linkedin} onChangeText={setLinkedin} placeholder="Type your username" />
 
