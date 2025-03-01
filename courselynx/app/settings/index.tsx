@@ -26,10 +26,12 @@ export default function SettingsScreen() {
           <View style={styles.sectionContainer}>
             {options.map((item, index) => (
               <Link href={item.href} key={index} asChild>
+
                 <TouchableOpacity key={index} style={styles.sectionRow}>
                   <Ionicons name={item.icon} size={24} />
                   <Text style={styles.sectionText}>{item.label}</Text>
                 </TouchableOpacity>
+                
               </Link>
             ))}
           </View>

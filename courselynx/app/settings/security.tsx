@@ -18,12 +18,27 @@ export default function SecurityScreen() {
       <Text style={styles.sectionTitle}>CHANGE PASSWORD</Text>
 
       <View style={{ gap: 20, marginTop: 20 }}>
-        <InputField label="Current Password" secureTextEntry value={currentPassword} onChangeText={setCurrentPassword} />
-        <InputField label="New Password" secureTextEntry value={newPassword} onChangeText={setNewPassword} />
-        <InputField label="Confirm New Password" secureTextEntry value={confirmPassword} onChangeText={setConfirmPassword} />
+        <InputField
+          label="Current Password"
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+          secureTextEntry
+        />
+        <InputField
+          label="New Password"
+          value={newPassword}
+          onChangeText={setNewPassword}
+          secureTextEntry
+        />
+        <InputField
+          label="Confirm New Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+        />
         <Button text="Update Password" onPress={handleUpdatePassword}></Button>
       </View>
-      
+
     </View>
   );
 }

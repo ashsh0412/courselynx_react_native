@@ -39,11 +39,13 @@ export default function NotificationScreen() {
           <View style={styles.sectionContainer}>
             {items.map((item, index) => (
               <View style={[styles.sectionRow, {justifyContent: "space-between"}]} key={index}>
+
                 <Text style={styles.sectionText}>{item.label}</Text>
                 <Switch
                   value={toggleStates[item.key]}
                   onValueChange={(value) => handleToggle(item.key, value)}
                 />
+
               </View>
             ))}
           </View>

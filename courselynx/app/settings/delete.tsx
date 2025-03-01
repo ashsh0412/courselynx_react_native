@@ -14,12 +14,16 @@ export default function DeleteAccountScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>CONFIRM ACTION</Text>
-      
+
       <View style={{ gap: 20, marginTop: 20 }}>
-        <InputField label="Current Password" secureTextEntry value={password} onChangeText={setPassword} />
+        <InputField
+          label="Current Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry />
         <Button text="Delete Account" onPress={handleDeleteAccount}></Button>
       </View>
-      
+
     </View>
   );
 }
