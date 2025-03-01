@@ -36,7 +36,10 @@ export default function SecurityScreen() {
           onChangeText={setConfirmPassword}
           secureTextEntry
         />
-        <Button text="Update Password" onPress={handleUpdatePassword}></Button>
+        <Button
+          text="Update Password"
+          onPress={handleUpdatePassword}
+        />
       </View>
 
     </View>

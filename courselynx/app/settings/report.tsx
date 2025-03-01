@@ -20,18 +20,10 @@ export default function ReportScreen() {
   return (
     <>
       {isModalVisible && (
-        <Modal onRequestClose={handleCloseModal}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: "bold",
-              color: "white",
-              textAlign: "center",
-            }}
-          >
-            {reportMessage}
-          </Text>
-        </Modal>
+        <Modal
+          onRequestClose={handleCloseModal}
+          text={reportMessage}
+        />
       )}
     </>
   );
