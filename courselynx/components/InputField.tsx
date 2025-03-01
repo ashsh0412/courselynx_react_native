@@ -1,47 +1,46 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  KeyboardTypeOptions,
-} from "react-native";
+import { useState } from "react";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardTypeOptions, StyleProp, TextStyle } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 interface InputFieldProps {
   label: string;
   value: string;
   onChangeText: (text: string) => void;
-  placeholder: string;
+  placeholder?: string;
   secureTextEntry?: boolean;
+  mulitline?: boolean;
   keyboardType?: KeyboardTypeOptions;
+  labelSytle?: StyleProp<TextStyle>;
+  inputStyles?: StyleProp<TextStyle>;
 }
 
-export const InputField: React.FC<InputFieldProps> = ({
+const InputField: React.FC<InputFieldProps> = ({
   label,
   value,
   onChangeText,
-  placeholder,
+  placeholder = "",
   secureTextEntry = false,
+  mulitline = false,
   keyboardType = "default",
+  labelSytle = {},
+  inputStyles = {},
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
-  const togglePasswordVisibility = () =>
-    setIsPasswordVisible(!isPasswordVisible);
+  const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, labelSytle]}>{label}</Text>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyles]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
           placeholderTextColor="#999"
           secureTextEntry={secureTextEntry && !isPasswordVisible}
           keyboardType={keyboardType}
+          multiline={mulitline}
         />
         {secureTextEntry && (
           <TouchableOpacity
@@ -80,7 +79,8 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 45,
-    paddingHorizontal: 10,
+    minHeight: 45,
+    padding: 10,
     color: "#111",
     fontWeight: "500",
     fontSize: 15,
@@ -89,3 +89,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
+export default InputField;
