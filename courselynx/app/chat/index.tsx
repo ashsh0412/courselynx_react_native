@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   Pressable,
   Alert,
+  FlatListComponent,
 } from "react-native";
 import Incognito from "../../assets/svg/incognito.svg";
 import Person from "../../assets/svg/person.svg";
@@ -36,6 +37,7 @@ import GestureRecognizer from "react-native-swipe-gestures";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { Audio as AudioPlayer } from "expo-av";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 
 const getRandomInteractions = () => {
   if (Math.random() > 0.5) return undefined; // 50% chance of no interactions
@@ -153,6 +155,27 @@ export default function GroupChatScreen() {
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     )
   );
+
+  {
+    /* FOR SEARCH CHAT AUTO SCROLL */
+  }
+  const { scrollId } = useLocalSearchParams();
+  const flatListRef = useRef<FlatList | null>(null);
+  const scrollToChat = (id: number) => {
+    if (flatListRef.current) {
+      const index = chats.findIndex((chat) => chat.id === id);
+      flatListRef.current.scrollToIndex({ index, animated: true });
+    }
+  };
+  useEffect(() => {
+    console.log(scrollId);
+    if (scrollId) {
+      setTimeout(() => {
+        scrollToChat(parseInt(scrollId as string));
+      }, 500);
+    }
+    return () => {};
+  }, [scrollId]);
 
   const openCamera = async () => {
     const result = await ImagePicker.requestCameraPermissionsAsync();
@@ -354,6 +377,7 @@ export default function GroupChatScreen() {
         {/* Scrollable chat container that renders chat */}
         <FlatList
           data={chats}
+          ref={flatListRef}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item, index }) => {
             console.log(item);

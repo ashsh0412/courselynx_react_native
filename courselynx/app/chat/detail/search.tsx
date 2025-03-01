@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, StyleSheet, Text, View } from "react-native";
+import { TextInput, StyleSheet, Text, View, Pressable } from "react-native";
 import Search from "../../../assets/svg/searchChat.svg";
+import { FlatList } from "react-native";
+import { Link, useRouter } from "expo-router";
+import { StackActions } from "@react-navigation/native";
 
 // MOCK DATA WITH COLORS
 const chatMessages = [
@@ -106,6 +109,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const [filteredMessages, setFilteredMessages] =
     useState<Message[]>(chatMessages);
 
+  const router = useRouter();
+
   useEffect(() => {
     const handler = setTimeout(() => {
       if (searchQuery.trim() === "") {
@@ -150,14 +155,39 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           placeholderTextColor={"#767680AA"}
         />
       </View>
-      <View>
-        {filteredMessages.map((message) => (
-          <View key={message.id} style={{ marginBottom: 10 }}>
-            <Text style={{ color: message.color }}>
-              {message.sender}: {highlightText(message.message, searchQuery)}
-            </Text>
-          </View>
-        ))}
+      <View style={{ flex: 1, marginVertical: 5 }}>
+        <FlatList
+          data={filteredMessages}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item, index }) => {
+            return (
+              <Link
+                dismissTo
+                href={`/chat?scrollId=${item.id}`}
+                key={item.id}
+                style={{
+                  backgroundColor: index % 2 === 0 ? "white" : "#76768015",
+                }}
+              >
+                <View
+                  style={{
+                    paddingVertical: 10,
+                    width: "100%",
+                    paddingHorizontal: 25,
+                  }}
+                >
+                  <Text style={styles.searchName}>{item.sender}</Text>
+                  <Text style={[styles.searchText, { color: item.color }]}>
+                    {highlightText(item.message, searchQuery)}
+                  </Text>
+                </View>
+              </Link>
+            );
+          }}
+          contentContainerStyle={{
+            paddingVertical: 10,
+          }}
+        />
       </View>
     </View>
   );
@@ -187,6 +217,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     textAlign: "left",
+  },
+  searchText: { fontFamily: "SF Pro Display", fontSize: 15, fontWeight: 400 },
+  searchName: {
+    fontSize: 15,
+    fontWeight: 500,
+    color: "#4F4F4F",
+    marginBottom: 3,
   },
 });
 
