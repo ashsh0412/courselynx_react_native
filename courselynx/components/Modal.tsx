@@ -26,9 +26,9 @@ const Modal: React.FC<ModalProps> = ({
   children,
   text = "",
   hasButtonYesNo = false,
-  onPressNo = () => { },
-  onPressYes = () => { },
-  modalStyles = {}
+  onPressNo = () => {},
+  onPressYes = () => {},
+  modalStyles = {},
 }) => {
   return (
     <BlurView
@@ -36,10 +36,7 @@ const Modal: React.FC<ModalProps> = ({
       style={styles.blur}
       experimentalBlurMethod="dimezisBlurView"
     >
-      <GestureRecognizer
-        style={{ flex: 1 }}
-        onSwipeDown={onRequestClose}
-      >
+      <GestureRecognizer style={{ flex: 1 }} onSwipeDown={onRequestClose}>
         <RNModal
           transparent={true}
           animationType="slide"
@@ -52,33 +49,43 @@ const Modal: React.FC<ModalProps> = ({
             <View style={styles.bar} />
 
             {text != "" && (
-              <Text style={styles.text}>{text}</Text>
+              <Text
+                style={[
+                  styles.text,
+                  { marginBottom: !hasButtonYesNo && !children ? 28 : 23 },
+                ]}
+              >
+                {text}
+              </Text>
             )}
 
-            <View>
-              {children}
-            </View>
+            {children}
 
             {hasButtonYesNo && (
               <View style={styles.buttonContainer}>
-
-                <TouchableOpacity style={styles.button} onPress={onPressNo} activeOpacity={0.7}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={onPressNo}
+                  activeOpacity={0.7}
+                >
                   <Text style={styles.buttonText}>No</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={onPressYes} activeOpacity={0.7}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={onPressYes}
+                  activeOpacity={0.7}
+                >
                   <Text style={styles.buttonText}>Yes</Text>
                 </TouchableOpacity>
-
               </View>
             )}
           </View>
-
         </RNModal>
       </GestureRecognizer>
     </BlurView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   blur: {
@@ -97,35 +104,36 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(45, 138, 251, 0.9)",
     borderRadius: 16,
     alignItems: "center",
-    paddingBottom: 35,
   },
   bar: {
-    width: 40,
+    width: 30,
     height: 3,
     backgroundColor: "#FFFFFF",
     opacity: 0.5,
     borderRadius: 10,
-    margin: 10,
+    marginTop: 9,
+    marginBottom: 12,
   },
   text: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "bold",
     color: "white",
     textAlign: "center",
-    paddingHorizontal: 30,
-    marginBottom: 20,
+    marginHorizontal: 20,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
     width: "100%",
-    gap: 60,
+    gap: 69,
+    marginBottom: 42,
   },
   button: {
     width: 100,
-    height: 35,
+    height: 34,
     borderRadius: 10,
     borderWidth: 1,
+    borderColor: "#375DFB",
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
@@ -135,7 +143,6 @@ const styles = StyleSheet.create({
     color: "rgba(45, 138, 251, 1)",
     fontWeight: "500",
   },
-
 });
 
 export default Modal;

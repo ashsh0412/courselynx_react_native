@@ -5,14 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   FlatList,
-  Modal,
   TouchableWithoutFeedback,
   Pressable,
   Alert,
-  FlatListComponent,
 } from "react-native";
 import Incognito from "../../assets/svg/incognito.svg";
 import Person from "../../assets/svg/person.svg";
@@ -30,6 +26,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import Modal from "@/components/Modal";
 
 import { useAnimatedKeyboard } from "react-native-reanimated";
 import { BlurView } from "expo-blur";
@@ -473,162 +470,111 @@ export default function GroupChatScreen() {
       </Animated.View>
 
       {isModal && (
-        <BlurView
-          intensity={15}
-          style={styles.blur}
-          experimentalBlurMethod="dimezisBlurView"
-        >
-          <GestureRecognizer
-            style={{ flex: 1, zIndex: 1 }}
-            onSwipeDown={() => setIsModal(false)}
-          >
-            <Modal
-              transparent={true}
-              visible={isModal}
-              animationType="slide"
-              onRequestClose={() => setIsModal(false)}
+        <Modal onRequestClose={() => setIsModal(false)}>
+          <View style={styles.modalButtonContainer}>
+            <TouchableOpacity
+              style={styles.modalChatButton}
+              onPress={() => openCamera()}
             >
-              {/* Handles clicks to close modal on click outside of the modal */}
-              <Pressable
-                onPress={(event) =>
-                  event.target == event.currentTarget && setIsModal(false)
-                }
-                style={{ flex: 1 }}
-              >
-                <View style={styles.modalContainer}>
-                  <View style={styles.modalContent}>
-                    <View style={styles.modalBar} />
-                    <View style={styles.modalButtonContainer}>
-                      <TouchableOpacity
-                        style={styles.modalChatButton}
-                        onPress={() => openCamera()}
-                      >
-                        <View
-                          style={[
-                            styles.modalIcon,
-                            { backgroundColor: "#B4B8BF" },
-                          ]}
-                        >
-                          <Camera width={35} height={35} />
-                        </View>
-                        <Text style={styles.modalChatText}>Camera</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.modalChatButton}
-                        onPress={() => openPhotos()}
-                      >
-                        <View
-                          style={[
-                            styles.modalIcon,
-                            { backgroundColor: "#FFF" },
-                          ]}
-                        >
-                          <Photo width={35} height={35} />
-                        </View>
-                        <Text style={styles.modalChatText}>Photos</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.modalChatButton}
-                        onPress={() => openDocument()}
-                      >
-                        <View
-                          style={[
-                            styles.modalIcon,
-                            { backgroundColor: "#7dabe7" },
-                          ]}
-                        >
-                          <File width={35} height={35} />
-                        </View>
-                        <Text style={styles.modalChatText}>Documents</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.modalChatButton}
-                        onPress={() => setIsAudioPopupVisible(true)}
-                      >
-                        <View
-                          style={[
-                            styles.modalIcon,
-                            { backgroundColor: "#f9815e" },
-                          ]}
-                        >
-                          <Audio width={25} height={25} />
-                        </View>
-                        <Text style={styles.modalChatText}>Audio</Text>
-                      </TouchableOpacity>
-                    </View>
+              <View style={[styles.modalIcon, { backgroundColor: "#B4B8BF" }]}>
+                <Camera width={35} height={35} />
+              </View>
+              <Text style={styles.modalChatText}>Camera</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalChatButton}
+              onPress={() => openPhotos()}
+            >
+              <View style={[styles.modalIcon, { backgroundColor: "#FFF" }]}>
+                <Photo width={35} height={35} />
+              </View>
+              <Text style={styles.modalChatText}>Photos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalChatButton}
+              onPress={() => openDocument()}
+            >
+              <View style={[styles.modalIcon, { backgroundColor: "#7dabe7" }]}>
+                <File width={35} height={35} />
+              </View>
+              <Text style={styles.modalChatText}>Documents</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalChatButton}
+              onPress={() => setIsAudioPopupVisible(true)}
+            >
+              <View style={[styles.modalIcon, { backgroundColor: "#f9815e" }]}>
+                <Audio width={25} height={25} />
+              </View>
+              <Text style={styles.modalChatText}>Audio</Text>
+            </TouchableOpacity>
+          </View>
+          {isAudioPopupVisible && (
+            <View style={styles.audioPopupOverlay}>
+              <View style={styles.audioPopup}>
+                <Text style={styles.audioPopupTitle}>🎙️ Record Audio</Text>
+
+                {/* Recording Indicator */}
+                {recording ? (
+                  <View style={styles.recordingIndicator}>
+                    <Animated.View
+                      style={[styles.recordingDot, blinkingStyle]}
+                    />
+                    <Text style={styles.recordingText}>Recording...</Text>
                   </View>
-                </View>
-              </Pressable>
-              {isAudioPopupVisible && (
-                <View style={styles.audioPopupOverlay}>
-                  <View style={styles.audioPopup}>
-                    <Text style={styles.audioPopupTitle}>🎙️ Record Audio</Text>
+                ) : null}
 
-                    {/* Recording Indicator */}
-                    {recording ? (
-                      <View style={styles.recordingIndicator}>
-                        <Animated.View
-                          style={[styles.recordingDot, blinkingStyle]}
-                        />
-                        <Text style={styles.recordingText}>Recording...</Text>
-                      </View>
-                    ) : null}
-
-                    {/* Audio Playback & Controls */}
-                    <View style={styles.audioButtonContainer}>
-                      {recording ? (
-                        <TouchableOpacity
-                          style={styles.audioButton}
-                          onPress={stopRecording}
-                        >
-                          <Text style={styles.audioButtonText}>Stop</Text>
-                        </TouchableOpacity>
-                      ) : (
-                        <TouchableOpacity
-                          style={styles.audioButton}
-                          onPress={startRecording}
-                        >
-                          <Text style={styles.audioButtonText}>Start</Text>
-                        </TouchableOpacity>
-                      )}
-
-                      {/* Show Play Button Only If an Audio is Recorded */}
-                      <TouchableOpacity
-                        style={[
-                          styles.audioButton,
-                          { opacity: !audioUri ? 0.5 : 1 },
-                        ]}
-                        onPress={playAudio}
-                        disabled={!audioUri}
-                      >
-                        <Text style={styles.audioButtonText}>Play</Text>
-                      </TouchableOpacity>
-
-                      {/* Send Audio Button */}
-                      <TouchableOpacity
-                        style={[
-                          styles.audioButton,
-                          { opacity: !audioUri ? 0.5 : 1 },
-                        ]}
-                        onPress={sendAudioMessage}
-                        disabled={!audioUri}
-                      >
-                        <Text style={styles.audioButtonText}>Send</Text>
-                      </TouchableOpacity>
-                    </View>
-
-                    {/* Cancel Button */}
+                {/* Audio Playback & Controls */}
+                <View style={styles.audioButtonContainer}>
+                  {recording ? (
                     <TouchableOpacity
-                      onPress={() => setIsAudioPopupVisible(false)}
+                      style={styles.audioButton}
+                      onPress={stopRecording}
                     >
-                      <Text style={styles.closePopupText}>Cancel</Text>
+                      <Text style={styles.audioButtonText}>Stop</Text>
                     </TouchableOpacity>
-                  </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.audioButton}
+                      onPress={startRecording}
+                    >
+                      <Text style={styles.audioButtonText}>Start</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  {/* Show Play Button Only If an Audio is Recorded */}
+                  <TouchableOpacity
+                    style={[
+                      styles.audioButton,
+                      { opacity: !audioUri ? 0.5 : 1 },
+                    ]}
+                    onPress={playAudio}
+                    disabled={!audioUri}
+                  >
+                    <Text style={styles.audioButtonText}>Play</Text>
+                  </TouchableOpacity>
+
+                  {/* Send Audio Button */}
+                  <TouchableOpacity
+                    style={[
+                      styles.audioButton,
+                      { opacity: !audioUri ? 0.5 : 1 },
+                    ]}
+                    onPress={sendAudioMessage}
+                    disabled={!audioUri}
+                  >
+                    <Text style={styles.audioButtonText}>Send</Text>
+                  </TouchableOpacity>
                 </View>
-              )}
-            </Modal>
-          </GestureRecognizer>
-        </BlurView>
+
+                {/* Cancel Button */}
+                <TouchableOpacity onPress={() => setIsAudioPopupVisible(false)}>
+                  <Text style={styles.closePopupText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Modal>
       )}
     </View>
   );
@@ -727,49 +673,17 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  blur: {
-    position: "absolute",
-    flexDirection: "column-reverse",
-    justifyContent: "flex-start",
-    top: -200,
-    left: 0,
-    right: 0,
-    height: "150%",
-    backgroundColor: "rgba(217, 217, 217, 0.05)",
-    zIndex: 1,
-  },
-  modalContainer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: 238,
-    zIndex: 1,
-  },
-  modalContent: {
-    flex: 1,
-    alignItems: "flex-start",
-    backgroundColor: "#2D8AFB",
-    opacity: 0.9,
-    borderRadius: 16,
-  },
-  modalBar: {
-    alignSelf: "center",
-    width: 30,
-    height: 3,
-    backgroundColor: "#FFFFFF",
-    opacity: 0.5,
-    borderRadius: 10,
-    marginTop: 9,
-  },
   modalButtonContainer: {
     flexDirection: "column",
+    justifyContent: "center",
     marginLeft: 19,
-    marginTop: 9,
+    marginBottom: 27,
+    alignSelf: "stretch",
   },
   modalChatButton: {
     flexDirection: "row",
-    marginBottom: 11,
     alignItems: "center",
+    marginBottom: 11,
     gap: 26,
   },
   modalIcon: {
