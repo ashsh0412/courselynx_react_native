@@ -29,7 +29,11 @@ export default function SettingLayout() {
         />
         <Stack.Screen
           name="report"
-          options={{ header: () => <Header title="Report a Problem" withBorder /> }}
+          options={{
+            headerShown: false,
+            presentation: "transparentModal",
+            animation: "none",
+          }}
         />
         <Stack.Screen
           name="delete"

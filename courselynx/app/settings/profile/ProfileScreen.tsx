@@ -120,7 +120,7 @@ const Public = ({ userProfile }: { userProfile: ProfileProps }) => {
                   userProfile[social.id] != "" ? "@" + userProfile[social.id] : "N/A"
                 }</Text>
               </View>
-              
+
             </View>
           ))}
         </View>
