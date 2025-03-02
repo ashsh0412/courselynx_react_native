@@ -139,25 +139,25 @@ export default function HomeScreen() {
         <ScrollView style={styles.chatList}>
           {chats.map((chat) => (
             <Swipeable
-            key={chat.id}
-            ref={(ref) => (swipeRefs.current[chat.id] = ref)}
-            renderRightActions={renderRightActions}
-            overshootRight={false}
-            rightThreshold={5}
-            onSwipeableWillOpen={() => {
-              Object.keys(swipeRefs.current).forEach((key) => {
-                if (parseInt(key) !== chat.id) {
-                  swipeRefs.current[parseInt(key)]?.close();
-                }
-              });
-              activeSwipeRef.current = chat.id;
-              setActiveSwipe(chat.id);
-            }}
-            onSwipeableClose={() => {
-              setActiveSwipe(null);
-              activeSwipeRef.current = null;
-            }}
-          >
+              key={chat.id}
+              ref={(ref) => (swipeRefs.current[chat.id] = ref)}
+              renderRightActions={renderRightActions}
+              overshootRight={false}
+              rightThreshold={5}
+              onSwipeableWillOpen={() => {
+                Object.keys(swipeRefs.current).forEach((key) => {
+                  if (parseInt(key) !== chat.id) {
+                    swipeRefs.current[parseInt(key)]?.close();
+                  }
+                });
+                activeSwipeRef.current = chat.id;
+                setActiveSwipe(chat.id);
+              }}
+              onSwipeableClose={() => {
+                setActiveSwipe(null);
+                activeSwipeRef.current = null;
+              }}
+            >
             <View pointerEvents={activeSwipe ? "none" : "auto"}>
               <TouchableWithoutFeedback
                 onPress={() => {
