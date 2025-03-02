@@ -129,6 +129,8 @@ export default function HomeScreen() {
               key={chat.id}
               ref={(ref) => (swipeRefs.current[chat.id] = ref)}
               renderRightActions={renderRightActions}
+              overshootRight={false}
+              rightThreshold={64}
               onSwipeableWillOpen={() => {
                 Object.keys(swipeRefs.current).forEach((key) => {
                   if (parseInt(key) !== chat.id) {
