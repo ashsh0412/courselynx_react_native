@@ -139,6 +139,7 @@ export default function HomeScreen() {
               }}
               onSwipeableClose={() => setActiveSwipe(null)}
             >
+            <View pointerEvents={activeSwipe ? "none" : "auto"}>
               <TouchableWithoutFeedback
                 onPress={() => {
                   if (activeSwipe === null) {
@@ -188,7 +189,8 @@ export default function HomeScreen() {
                   </View>
                 </View>
               </TouchableWithoutFeedback>
-            </Swipeable>
+            </View>
+          </Swipeable>
           ))}
         </ScrollView>
       </View>
