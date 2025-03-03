@@ -4,7 +4,7 @@ import Search from "../../../assets/svg/searchChat.svg";
 import { FlatList } from "react-native";
 import { Link } from "expo-router";
 
-import { chatMessages } from "@/mock/chatData";
+import { chatMessages } from "@/mock/chatMessages";
 
 interface Message {
   id: number;

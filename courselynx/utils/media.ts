@@ -3,49 +3,6 @@ import * as DocumentPicker from "expo-document-picker";
 import { Audio as AudioPlayer } from "expo-av";
 import { Alert } from "react-native";
 
-export const openCamera = async (
-  setChatMedia: React.Dispatch<React.SetStateAction<string[] | undefined>>,
-  setChatMediaType: React.Dispatch<
-    React.SetStateAction<("image" | "livePhoto" | "video" | "none")[]>
-  >
-) => {
-  const result = await ImagePicker.requestCameraPermissionsAsync();
-
-  console.log(result);
-
-  if (result.granted === false) {
-    alert("You've refused to allow this app to access your photos!");
-  } else {
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ["images", "livePhotos", "videos"],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      videoMaxDuration: 30,
-    });
-
-    if (!result.canceled) {
-      setChatMedia(result.assets.map((asset) => asset.uri));
-      setChatMediaType(
-        result.assets.map((asset) => {
-          switch (asset.type) {
-            case "image":
-            case "livePhoto":
-            case "video":
-              return asset.type;
-            default:
-              return "none";
-          }
-        })
-      );
-    }
-
-    console.log(result);
-
-    return result;
-  }
-};
-
 export const openPhotos = async (
   setChatMedia: React.Dispatch<React.SetStateAction<string[] | undefined>>,
   setChatMediaType: React.Dispatch<

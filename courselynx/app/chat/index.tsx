@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -27,13 +27,36 @@ import Animated, {
 import Modal from "@/components/Modal";
 
 import { useAnimatedKeyboard } from "react-native-reanimated";
-import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { Audio as AudioPlayer } from "expo-av";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 
-import { chatMessages, interactions } from "@/mock/chatData";
+import { chatMessages, interactions } from "@/mock/chatMessages";
 import * as Media from "@/utils/media";
+import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
+import ChatCamera from "@/components/ChatComponents/ChatCamera";
+
+type textMessage = {
+  id: number;
+  sender: string;
+  message: string;
+  date: string;
+  color: string;
+};
+
+type mediaMessage = {
+  id: number;
+  sender: string;
+  uri: string;
+  date: string;
+  color: string;
+  type: string;
+};
+
+type MediaTypes = "image" | "livePhoto" | "video" | "none";
+const isMediaType = (value: any): value is MediaTypes => {
+  return ["image", "livePhoto", "video", "none"].includes(value);
+};
 
 const getRandomInteractions = () => {
   if (Math.random() > 0.5) return undefined; // 50% chance of no interactions
@@ -50,9 +73,7 @@ export default function GroupChatScreen() {
   const [isModal, setIsModal] = useState(false);
 
   const [chatMedia, setChatMedia] = useState<string[] | undefined>([]);
-  const [chatMediaType, setChatMediaType] = useState<
-    ("image" | "livePhoto" | "video" | "none")[]
-  >([]);
+  const [chatMediaType, setChatMediaType] = useState<MediaTypes[]>([]);
   const [chatFile, setChatFile] = useState<
     DocumentPicker.DocumentPickerSuccessResult | undefined
   >(undefined);
@@ -60,7 +81,7 @@ export default function GroupChatScreen() {
   {
     /* MAKE SURE CHATS ARE SORTED EVERYTIME THEY ARE FETCHED */
   }
-  const [chats, setChats] = useState(
+  const [chats, setChats] = useState<(textMessage | mediaMessage)[]>(
     chatMessages.sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     )
@@ -71,6 +92,7 @@ export default function GroupChatScreen() {
   const [sound, setSound] = useState<AudioPlayer.Sound | null>();
 
   const [isAudioPopupVisible, setIsAudioPopupVisible] = useState(false);
+  const [isCamera, setIsCamera] = useState(false);
 
   {
     /* FOR SEARCH CHAT AUTO SCROLL */
@@ -160,6 +182,28 @@ export default function GroupChatScreen() {
     }
   };
 
+  useEffect(() => {
+    if (chatMedia?.length && chatMediaType.length) {
+      const mediaChats = chatMedia.map((media, index) => ({
+        id: chats.length + 1,
+        sender: "You",
+        uri: media,
+        date: new Date().toISOString(),
+        color: "#000",
+        type: chatMediaType[index],
+      }));
+      setChats((prev) => [...mediaChats, ...prev]);
+      setChatMedia([]);
+      setChatMediaType([]);
+    }
+  }, [chatMedia, chatMediaType]);
+
+  const navigation = useNavigation();
+  // Hide header when the camera is open
+  useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: !isCamera });
+  }, [isCamera]);
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.messagesContainer, animatedMessagesStyle]}>
@@ -190,13 +234,25 @@ export default function GroupChatScreen() {
             return (
               <View key={item.id}>
                 {shouldShowDate && <ChatDate date={item.date} />}
-                <ChatMessage
-                  id={item.id}
-                  message={item.message}
-                  titleName={item.sender}
-                  interactions={selectedInteractions}
-                  iconColor={item.color}
-                />
+                {isMediaType(item.type) && (
+                  <ChatVisualMedia
+                    mediaUri={item.uri}
+                    id={item.id}
+                    type={item.type}
+                    titleName={item.sender}
+                    interactions={selectedInteractions}
+                    iconColor={item.color}
+                  />
+                )}
+                {!isMediaType(item.type) && (
+                  <ChatMessage
+                    id={item.id}
+                    message={item.message}
+                    titleName={item.sender}
+                    interactions={selectedInteractions}
+                    iconColor={item.color}
+                  />
+                )}
               </View>
             );
           }}
@@ -265,7 +321,10 @@ export default function GroupChatScreen() {
           <View style={styles.modalButtonContainer}>
             <TouchableOpacity
               style={styles.modalChatButton}
-              onPress={() => Media.openCamera(setChatMedia, setChatMediaType)}
+              onPress={() => {
+                setIsCamera(true);
+                setIsModal(false);
+              }}
             >
               <View style={[styles.modalIcon, { backgroundColor: "#B4B8BF" }]}>
                 <Camera width={35} height={35} />
@@ -372,6 +431,31 @@ export default function GroupChatScreen() {
             </View>
           )}
         </Modal>
+      )}
+      {isCamera && (
+        <>
+          <ChatCamera
+            onRequestClose={() => setIsCamera(false)}
+            setUri={() => setChatMedia}
+            setType={() => setChatMediaType}
+          />
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              backgroundColor: "black",
+              width: "100%",
+              height: "100%",
+              zIndex: 2,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white", fontWeight: 500 }}>
+              Camera is loading...
+            </Text>
+          </View>
+        </>
       )}
     </View>
   );
