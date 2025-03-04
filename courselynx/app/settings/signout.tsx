@@ -1,9 +1,13 @@
-import { View, Text } from 'react-native';
+import { StatusBar } from "react-native";
+import LoginPage from "../login";
 
-export default function SignoutScreen() {
+const SignOutPage: React.FC = () => {
   return (
-    <View>
-      <Text>Signout Screen</Text>
-    </View>
+    <>
+      <StatusBar barStyle="dark-content" />
+      <LoginPage />
+    </>
   );
-}
+};
+
+export default SignOutPage;
