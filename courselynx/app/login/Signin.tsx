@@ -1,19 +1,15 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, ScrollView, Dimensions } from "react-native";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
 import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
-import { CheckboxField } from "@/components/LoginPageComponents/CreateAccountComponents/CheckboxField";
 import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
 import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
 
-export const CreateAccountPage: React.FC<{
-  onNext: () => void;
-  onSignIn: () => void;
-}> = ({ onNext, onSignIn }) => {
+export const SignInPage: React.FC<{ onCreateAccount: () => void }> = ({
+  onCreateAccount,
+}) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   return (
     <View style={styles.container}>
@@ -24,13 +20,12 @@ export const CreateAccountPage: React.FC<{
         <View style={styles.blueSection}>
           <View style={styles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Get started now!</Text>
+            <Text style={styles.mainTitle}>Hello there!</Text>
             <Text style={styles.subHeader}>
-              Create an account with your school email (.edu)
+              Enter your school email (.edu) and password to get started.
             </Text>
           </View>
         </View>
-
         <View style={styles.formWrapper}>
           <View style={styles.whiteContainer}>
             <View style={styles.form}>
@@ -49,36 +44,18 @@ export const CreateAccountPage: React.FC<{
                 placeholder="Write your password"
                 secureTextEntry
               />
-              <View style={styles.spacing} />
-              <InputField
-                label="Confirm Password"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                placeholder="Confirm your password"
-                secureTextEntry
-              />
-              <View style={styles.spacing} />
-              <CheckboxField
-                isChecked={isChecked}
-                onToggle={() => setIsChecked(!isChecked)}
-                text="I agree to the Terms and Conditions and the Privacy Policy"
-              />
-              <Text style={styles.termsText}>
-                By using CourseLynx you agree to our End User Licensing
-                Agreement
-              </Text>
-              <Button text="Create Account" onPress={onNext} />
-              <View style={styles.divider} />
-
-              <View style={styles.loginSection}>
-                <Text style={styles.alreadyHaveText}>
-                  ALREADY HAVE AN ACCOUNT?
-                </Text>
+              <View style={styles.linkWrapper1}>
                 <LinkText
-                  text="SIGN IN WITH GATORLINK"
-                  onPress={() => console.log("Gatorlink")}
+                  text="Forgot your password?"
+                  onPress={() => console.log("forgot password")}
                 />
-                <LinkText text="SIGN IN WITH EMAIL" onPress={onSignIn} />
+              </View>
+              <Button text="Sign In" onPress={() => ""} />
+              <View style={styles.linkWrapper}>
+                <LinkText
+                  text="DON'T HAVE AN ACCOUNT? CREATE HERE"
+                  onPress={onCreateAccount}
+                />
               </View>
             </View>
           </View>
@@ -143,31 +120,12 @@ const styles = StyleSheet.create({
   spacing: {
     height: 16,
   },
-  termsText: {
-    color: "#4285F4",
-    fontSize: 13,
-    textAlign: "center",
-    marginVertical: 20,
-    opacity: 0.8,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: "#E5E5E5",
-    marginVertical: 24,
-    width: "100%",
-  },
-  loginSection: {
+  linkWrapper: {
     alignItems: "center",
   },
-  alreadyHaveText: {
-    color: "#4285F4",
-    fontSize: 13,
-    fontWeight: "600",
-    marginBottom: 16,
-  },
-  linkText: {
-    marginVertical: 8,
+  linkWrapper1: {
+    alignItems: "flex-end",
   },
 });
 
-export default CreateAccountPage;
+export default SignInPage;
