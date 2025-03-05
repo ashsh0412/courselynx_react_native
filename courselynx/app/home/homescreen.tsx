@@ -121,8 +121,6 @@ export default function HomeScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <HomeHeader/>
-
         <ScrollView style={styles.chatList}>
           {chats.map((chat) => (
             <Swipeable

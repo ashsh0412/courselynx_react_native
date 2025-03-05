@@ -1,6 +1,7 @@
 import { Link } from "expo-router";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import HomeHeader from "@/components/HomeHeader";
 import HomeScreen from "./home/homescreen";
 import NavBar from "../components/Navigation/NavBar";
 
@@ -9,6 +10,7 @@ export default function Index() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.content}>
+          <HomeHeader />
           <HomeScreen />
         </View>
         <NavBar />

@@ -60,7 +60,6 @@ export default function CoursesPage() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <HomeHeader/>
                 <ScrollView contentContainerStyle={styles.grid}>
                     {courses.map((course) => (
                         <CourseCard key={course.id} {...course}/>
