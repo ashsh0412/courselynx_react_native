@@ -1,19 +1,23 @@
 import { Link } from "expo-router";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import HomeHeader from "@/components/HomeHeader";
 import HomeScreen from "./home/homescreen";
+import CoursesScreen from "./courses"
 import NavBar from "../components/Navigation/NavBar";
 
 export default function Index() {
+  const [activeScreen, setActiveScreen] = useState<"chats" | "courses">("chats");
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.content}>
           <HomeHeader />
-          <HomeScreen />
+          {activeScreen === "chats" ? <HomeScreen /> : <CoursesScreen />}
         </View>
-        <NavBar />
+        <NavBar activeScreen={activeScreen} setActiveScreen={setActiveScreen} />
       </View>
     </GestureHandlerRootView>
   );
