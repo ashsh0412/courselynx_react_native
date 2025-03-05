@@ -4,43 +4,46 @@ import { Link, usePathname } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
-export default function NavBar() {
-  const pathname = usePathname();
-  const isChatsActive = pathname === "/";
-  const isCoursesActive = pathname === "/courses";
+interface NavBarProps {
+  activeScreen: "chats" | "courses";
+  setActiveScreen: (screen: "chats" | "courses") => void;
+}
 
-  const handlePress = async () => {
+export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
+
+  const handlePress = async (screen: "chats" | "courses") => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setActiveScreen(screen);
   };
 
   return (
     <>
       <View style={styles.navContainer}>
-        <Link href="/" onPress={handlePress}>
+          <Pressable onPress={() => handlePress("chats")}>
+            <View style={styles.navButton}>
+              <Ionicons
+                name={activeScreen === "chats" ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"}
+                size={28}
+                color="#fff"
+              />
+              <Text style={[styles.navText, activeScreen === "chats" && styles.activeText]}>
+                Chats
+              </Text>
+            </View>
+          </Pressable>
+        
+        <Pressable onPress={() => handlePress("courses")}>
           <View style={styles.navButton}>
-            <Ionicons
-              name={isChatsActive ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"}
-              size={28}
-              color="#fff"
-            />
-            <Text style={[styles.navText, isChatsActive && styles.activeText]}>
-              Chats
-            </Text>
-          </View>
-        </Link>
-        {/* add correct link later */}
-        <Link href="/courses" onPress={handlePress}>
-          <View style={styles.navButton}>
-            <Ionicons name="book-outline" size={28} color="#fff" />
-            <Text style={[styles.navText, isCoursesActive && styles.activeText]}>
+            <Ionicons name={activeScreen === "courses" ? "book" : "book-outline"} size={28} color="#fff" />
+            <Text style={[styles.navText, activeScreen === "courses" && styles.activeText]}>
               Courses
             </Text>
           </View>
-        </Link>
+        </Pressable>
       </View>
 
       {/* add correct link later*/}
-      <Link href="/addcourse" onPress={handlePress} asChild>
+      <Link href="/" asChild>
         <Pressable style={styles.addCourseButton}>
           <Ionicons name="add" size={34} color="#fff" />
         </Pressable>

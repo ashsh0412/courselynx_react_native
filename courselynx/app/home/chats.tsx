@@ -78,7 +78,7 @@ const chats: Chat[] = [
   },
 ];
 
-export default function HomeScreen() {
+export default function ChatsTab() {
   const [activeSwipe, setActiveSwipe] = useState<number | null>(null);
   const activeSwipeRef = useRef<number | null>(null);
   const [muteModalVisible, setMuteModalVisible] = useState(false);
@@ -120,22 +120,6 @@ export default function HomeScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            source={require("@/assets/images/CourseLynxLogo.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-          <View style={styles.iconContainer}>
-            <MaterialIcons name="notifications-none" size={34} color="#000" />
-            <Link
-              href={{ pathname: "/settings/profile", params: { username: "myself" } }}
-            >
-              <MaterialIcons name="account-circle" size={38} color="#000" />
-            </Link>
-          </View>
-        </View>
-
         <ScrollView style={styles.chatList}>
           {chats.map((chat) => (
             <Swipeable
@@ -198,6 +182,7 @@ export default function HomeScreen() {
           ))}
         </ScrollView>
 
+        {/* Modal for muting chat's notifications */}
         <Modal
           visible={muteModalVisible}
           transparent
@@ -240,14 +225,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 14,
-  },
-  logo: { width: 190, height: 55 },
-  iconContainer: { flexDirection: "row", alignItems: "center", gap: 10 },
   chatList: {},
   chatItem: {
     flexDirection: "row",
