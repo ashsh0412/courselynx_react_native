@@ -17,7 +17,6 @@ import {
 } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from "react-native";
 import { Animated } from "react-native";
-import HomeHeader from "@/components/HomeHeader"
 
 interface Chat {
   id: number;
@@ -79,7 +78,7 @@ const chats: Chat[] = [
   },
 ];
 
-export default function HomeScreen() {
+export default function ChatsTab() {
   const [activeSwipe, setActiveSwipe] = useState<number | null>(null);
   const activeSwipeRef = useRef<number | null>(null);
   const [muteModalVisible, setMuteModalVisible] = useState(false);
@@ -183,6 +182,7 @@ export default function HomeScreen() {
           ))}
         </ScrollView>
 
+        {/* Modal for muting chat's notifications */}
         <Modal
           visible={muteModalVisible}
           transparent

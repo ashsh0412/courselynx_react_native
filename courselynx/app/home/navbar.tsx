@@ -4,7 +4,12 @@ import { Link, usePathname } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
-export default function NavBar({ activeScreen, setActiveScreen }) {
+interface NavBarProps {
+  activeScreen: "chats" | "courses";
+  setActiveScreen: (screen: "chats" | "courses") => void;
+}
+
+export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
 
   const handlePress = async (screen: "chats" | "courses") => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -38,7 +43,7 @@ export default function NavBar({ activeScreen, setActiveScreen }) {
       </View>
 
       {/* add correct link later*/}
-      <Link href="/addcourse" onPress={handlePress} asChild>
+      <Link href="/" asChild>
         <Pressable style={styles.addCourseButton}>
           <Ionicons name="add" size={34} color="#fff" />
         </Pressable>

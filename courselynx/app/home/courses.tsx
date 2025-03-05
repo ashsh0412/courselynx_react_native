@@ -1,6 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native"
-import { Ionicons } from "@expo/vector-icons"
-import HomeHeader from "@/components/HomeHeader"
+import { View, StyleSheet, ScrollView } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import CourseCard from "@/components/CourseComponents/CourseCard";
 
@@ -56,7 +54,7 @@ const courses: Course[] = [
     },
 ]
 
-export default function CoursesPage() {
+export default function CoursesTab() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={styles.container}>
