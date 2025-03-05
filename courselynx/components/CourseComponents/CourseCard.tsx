@@ -27,8 +27,8 @@ export default function CourseCard({ name, code, professor, students, color }: P
 
 const styles = StyleSheet.create({
     card: {
-        width: 175,
-        height: 175,
+        flexBasis: "45%",
+        aspectRatio: 1,
         borderRadius: 10,
         backgroundColor: "#ffffff",
         padding: 12,
