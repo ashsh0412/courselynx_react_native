@@ -51,7 +51,20 @@
           "microphonePermission": "Allow CourseLynx to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      [
+        "react-native-video",
+        {
+          "enableNotificationControls": true,
+          "androidExtensions": {
+            "useExoplayerRtsp": false,
+            "useExoplayerSmoothStreaming": false,
+            "useExoplayerHls": false,
+            "useExoplayerDash": false
+          }
+        }
+      ],
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, StyleSheet, Image, Text, ViewComponent } from "react-native";
-import { ResizeMode, Video } from "expo-av";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Image, Text } from "react-native";
 import { Bar as ProgressBar } from "react-native-progress";
 import Play from "@/assets/svg/playButton.svg";
 import { Interaction } from "./ChatMessage";
+import { VideoView, useVideoPlayer } from "expo-video";
+import { useEventListener } from "expo";
 
 export type Props = {
   mediaUri: string;
@@ -24,10 +25,22 @@ const ChatVisualMedia: React.FC<Props> = ({
   isUser,
   iconColor,
 }) => {
-  const videoRef = useRef<Video | null>(null);
-  const [duration, setDuration] = useState("");
+  const [currentDuration, setCurrentDuration] = useState(0);
   const [loadAmount, setLoadAmount] = useState(0);
   const [loadVisible, setLoadVisible] = useState(true);
+  const [videoDuration, setVideoDuration] = useState(0);
+  const [formattedTime, setFormattedTime] = useState("00:00 / 00:00");
+
+  const formatTime = (seconds: number) => {
+    if (!seconds) return "00:00";
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
+
+  useEffect(() => {
+    setFormattedTime(formatTime(videoDuration));
+  }, [videoDuration]);
 
   const loadDelay = () => {
     setTimeout(() => {
@@ -35,20 +48,18 @@ const ChatVisualMedia: React.FC<Props> = ({
     }, 500);
   };
 
-  const getVideoDuration = async () => {
-    if (videoRef.current) {
-      const status = await videoRef.current.getStatusAsync();
-      if (status.isLoaded && status.durationMillis) {
-        const formattedTime = formatTime(status.durationMillis / 1000);
-        setDuration(formattedTime);
-      } else {
-        setDuration("00:00");
-      }
-    }
-  };
+  const player = useVideoPlayer(mediaUri, (player) => {
+    player.loop = false;
+    setLoadAmount(0.2);
+  });
 
-  console.log(loadVisible);
-  console.log(type);
+  useEventListener(player, "statusChange", ({ status, error }) => {
+    if (status === "readyToPlay") {
+      setLoadAmount(1);
+      loadDelay();
+      setVideoDuration(player.duration);
+    }
+  });
 
   return (
     <>
@@ -59,7 +70,7 @@ const ChatVisualMedia: React.FC<Props> = ({
         </View>
         <View style={styles.visualMediaWrapper}>
           <Text style={styles.messageTitle}>{titleName}</Text>
-          {(type == "image" || type == "livePhoto") && (
+          {(type === "image" || type === "livePhoto") && (
             <Image
               source={{ uri: mediaUri }}
               style={styles.visualMedia}
@@ -72,42 +83,38 @@ const ChatVisualMedia: React.FC<Props> = ({
             />
           )}
           {type == "video" && (
-            <Video
-              ref={videoRef}
-              source={{ uri: mediaUri }}
+            <VideoView
               style={styles.visualMedia}
-              onLoadStart={() => setLoadAmount(0.2)}
-              onLoad={() => {
-                setLoadAmount(1);
-                getVideoDuration();
-                loadDelay();
-              }}
-              resizeMode={ResizeMode.COVER}
+              player={player}
+              contentFit="cover"
+              nativeControls={false}
             />
           )}
-          {type == "video" && (
-            <>
-              <View style={styles.videoDurationContainer}>
-                <Text style={styles.videoDuration}>{duration}</Text>
-              </View>
-              <View style={styles.playContainer}>
-                <Play width={24} height={24} />
-              </View>
-            </>
-          )}
-          {type == "none" && <Text>An Error Loading Occured</Text>}
           <View
-            style={{
-              display: loadVisible ? "flex" : "none",
-            }}
+            style={[
+              styles.progressBarContainer,
+              { opacity: loadVisible ? 1 : 0 },
+            ]}
           >
             <ProgressBar
               progress={loadAmount}
               width={235}
               height={4}
-              color="blue"
+              color="#2D8AFB"
+              borderWidth={0}
             />
           </View>
+          {type == "video" && !loadVisible && (
+            <View style={styles.videoContainer}>
+              <View style={styles.playContainer}>
+                <Play width={24} height={24} style={{ alignSelf: "center" }} />
+              </View>
+              <View style={styles.videoDurationContainer}>
+                <Text style={styles.videoDuration}>{formattedTime}</Text>
+              </View>
+            </View>
+          )}
+          {type == "none" && <Text>An Error Loading Occured</Text>}
           <View style={styles.interactionsContainer}>
             {/* Display chat emoji interactions */}
             {interactions?.map((inter, index) => (
@@ -148,10 +155,39 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 0.5,
     borderColor: "rgba(0, 0, 0, 0.10)",
+    zIndex: 1,
   },
-  videoDurationContainer: {},
-  videoDuration: {},
-  playContainer: {},
+  videoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    position: "relative",
+    zIndex: 2,
+    bottom: 55,
+    marginBottom: -44,
+    marginHorizontal: 8,
+  },
+  videoDurationContainer: {
+    borderRadius: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.30)",
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+  },
+  videoDuration: {
+    color: "#FFF",
+    fontFamily: "SF Pro",
+    fontSize: 11,
+    fontWeight: 500,
+  },
+  playContainer: {
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
+    width: 44,
+    height: 44,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 22,
+  },
   iconContainer: {
     marginTop: 6,
     width: 50,
@@ -193,13 +229,16 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginRight: 5,
   },
+  progressBarContainer: {
+    position: "relative",
+    alignSelf: "center",
+    zIndex: 2,
+    bottom: 13,
+    backgroundColor: "#CBD0DC",
+    width: 235,
+    height: 4,
+    borderRadius: 4,
+  },
 });
 
 export default ChatVisualMedia;
-
-// Helper function to format time as MM:SS
-const formatTime = (seconds: number) => {
-  const minutes = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-};

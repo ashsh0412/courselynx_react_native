@@ -34,7 +34,6 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { chatMessages, interactions } from "@/mock/chatMessages";
 import * as Media from "@/utils/media";
 import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
-import ChatCamera from "@/components/ChatComponents/ChatCamera";
 
 type textMessage = {
   id: number;
@@ -92,7 +91,7 @@ export default function GroupChatScreen() {
   const [sound, setSound] = useState<AudioPlayer.Sound | null>();
 
   const [isAudioPopupVisible, setIsAudioPopupVisible] = useState(false);
-  const [isCamera, setIsCamera] = useState(false);
+  const [isDummyChat, setIsDummyChat] = useState(false);
 
   {
     /* FOR SEARCH CHAT AUTO SCROLL */
@@ -198,12 +197,6 @@ export default function GroupChatScreen() {
     }
   }, [chatMedia, chatMediaType]);
 
-  const navigation = useNavigation();
-  // Hide header when the camera is open
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: !isCamera });
-  }, [isCamera]);
-
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.messagesContainer, animatedMessagesStyle]}>
@@ -295,7 +288,6 @@ export default function GroupChatScreen() {
             placeholder="Type here..."
             placeholderTextColor={"#C5C5C7"}
             returnKeyType="send"
-            submitBehavior="blurAndSubmit"
             onSubmitEditing={handleSendMessage}
           />
           <TouchableWithoutFeedback onPress={() => setIsAnon((prev) => !prev)}>
@@ -321,10 +313,7 @@ export default function GroupChatScreen() {
           <View style={styles.modalButtonContainer}>
             <TouchableOpacity
               style={styles.modalChatButton}
-              onPress={() => {
-                setIsCamera(true);
-                setIsModal(false);
-              }}
+              onPress={() => Media.openCamera(setChatMedia, setChatMediaType)}
             >
               <View style={[styles.modalIcon, { backgroundColor: "#B4B8BF" }]}>
                 <Camera width={35} height={35} />
@@ -333,7 +322,7 @@ export default function GroupChatScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalChatButton}
-              onPress={() => Media.openPhotos(setChatMedia, setChatMediaType)}
+              onPress={() => {Media.openPhotos(setChatMedia, setChatMediaType)}}
             >
               <View style={[styles.modalIcon, { backgroundColor: "#FFF" }]}>
                 <Photo width={35} height={35} />
@@ -431,31 +420,6 @@ export default function GroupChatScreen() {
             </View>
           )}
         </Modal>
-      )}
-      {isCamera && (
-        <>
-          <ChatCamera
-            onRequestClose={() => setIsCamera(false)}
-            setUri={() => setChatMedia}
-            setType={() => setChatMediaType}
-          />
-          <View
-            style={{
-              position: "absolute",
-              top: 0,
-              backgroundColor: "black",
-              width: "100%",
-              height: "100%",
-              zIndex: 2,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ color: "white", fontWeight: 500 }}>
-              Camera is loading...
-            </Text>
-          </View>
-        </>
       )}
     </View>
   );
