@@ -34,6 +34,7 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { chatMessages, interactions } from "@/mock/chatMessages";
 import * as Media from "@/utils/media";
 import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
+import ChatVisualContainer from "@/components/ChatComponents/ChatVisualContainer";
 
 type textMessage = {
   id: number;
@@ -46,10 +47,10 @@ type textMessage = {
 type mediaMessage = {
   id: number;
   sender: string;
-  uri: string;
+  uris: string[];
   date: string;
   color: string;
-  type: string;
+  types: string[];
 };
 
 type MediaTypes = "image" | "livePhoto" | "video" | "none";
@@ -183,15 +184,16 @@ export default function GroupChatScreen() {
 
   useEffect(() => {
     if (chatMedia?.length && chatMediaType.length) {
-      const mediaChats = chatMedia.map((media, index) => ({
+      const mediaChat = {
         id: chats.length + 1,
         sender: "You",
-        uri: media,
+        uris: chatMedia.map((media) => media),
         date: new Date().toISOString(),
         color: "#000",
-        type: chatMediaType[index],
-      }));
-      setChats((prev) => [...mediaChats, ...prev]);
+        types: chatMediaType.map((type) => type),
+      };
+      console.log(mediaChat);
+      setChats((prev) => [mediaChat, ...prev]);
       setChatMedia([]);
       setChatMediaType([]);
     }
@@ -227,17 +229,17 @@ export default function GroupChatScreen() {
             return (
               <View key={item.id}>
                 {shouldShowDate && <ChatDate date={item.date} />}
-                {isMediaType(item.type) && (
-                  <ChatVisualMedia
-                    mediaUri={item.uri}
+                {item.uris && (
+                  <ChatVisualContainer
+                    mediaUris={item.uris}
                     id={item.id}
-                    type={item.type}
+                    mediaTypes={item.types}
                     titleName={item.sender}
                     interactions={selectedInteractions}
                     iconColor={item.color}
                   />
                 )}
-                {!isMediaType(item.type) && (
+                {!item.uris && (
                   <ChatMessage
                     id={item.id}
                     message={item.message}
@@ -322,7 +324,9 @@ export default function GroupChatScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalChatButton}
-              onPress={() => {Media.openPhotos(setChatMedia, setChatMediaType)}}
+              onPress={() => {
+                Media.openPhotos(setChatMedia, setChatMediaType);
+              }}
             >
               <View style={[styles.modalIcon, { backgroundColor: "#FFF" }]}>
                 <Photo width={35} height={35} />

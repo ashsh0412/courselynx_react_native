@@ -107,6 +107,7 @@ export default function ChatLayout() {
           }}
         />
         <Stack.Screen name="detail" options={{ headerShown: false }} />
+        <Stack.Screen name="images" options={{ headerShown: false }} />
       </Stack>
     </>
   );
