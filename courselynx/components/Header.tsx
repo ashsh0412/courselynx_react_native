@@ -10,7 +10,9 @@ import { onShare } from "@/utils/share";
 
 export type Props = {
   title?: string;
+  subTitle?: string;
   colorSquare?: string;
+  colorIsCircle?: boolean;
   hasSearch?: boolean;
   hasShare?: boolean;
   hasSettings?: boolean;
@@ -22,7 +24,9 @@ export type Props = {
 
 const Header: React.FC<Props> = ({
   title = "",
+  subTitle = "",
   colorSquare = "",
+  colorIsCircle = false,
   hasSearch = false,
   hasShare = false,
   hasSettings = false,
@@ -61,22 +65,42 @@ const Header: React.FC<Props> = ({
                         style={[
                           styles.square,
                           { backgroundColor: colorSquare },
+                          { borderRadius: colorIsCircle ? 30 : 10 },
                         ]}
                       ></View>
                     )}
 
-                    {title && <Text style={styles.headerTitle}>{title}</Text>}
+                    <View>
+                      {title && <Text style={styles.headerTitle}>{title}</Text>}
+                    </View>
                   </View>
                 </Link>
               ) : (
                 <>
                   {colorSquare && (
                     <View
-                      style={[styles.square, { backgroundColor: colorSquare }]}
+                      style={[
+                        styles.square,
+                        { backgroundColor: colorSquare },
+                        { borderRadius: colorIsCircle ? 30 : 10 },
+                      ]}
                     ></View>
                   )}
 
-                  {title && <Text style={styles.headerTitle}>{title}</Text>}
+                  <View>
+                    {title && <Text style={styles.headerTitle}>{title}</Text>}
+                    {subTitle && (
+                      <Text
+                        style={{
+                          fontFamily: "Inter",
+                          fontSize: 10,
+                          color: "#4F4F4F",
+                        }}
+                      >
+                        {subTitle}
+                      </Text>
+                    )}
+                  </View>
                 </>
               )}
             </View>
@@ -145,7 +169,6 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     marginRight: 10,
-    borderRadius: 10,
   },
   headerTitle: {
     color: "#02102E",

@@ -13,6 +13,12 @@ export type Props = {
   mediaTypes: string[];
   isUser?: boolean;
   id: number;
+  params: {
+    color: string;
+    name: string;
+    photoCount: number;
+    videoCount: number;
+  };
 };
 
 const ChatVisualContainer: React.FC<Props> = ({
@@ -22,6 +28,7 @@ const ChatVisualContainer: React.FC<Props> = ({
   mediaUris,
   mediaTypes,
   isUser,
+  params,
 }) => {
   const mediaCount = mediaUris.length;
   const [loadAmount, setLoadAmount] = useState(0);
@@ -98,7 +105,16 @@ const ChatVisualContainer: React.FC<Props> = ({
         </View>
         <View style={styles.messageWrapper}>
           <Text style={styles.messageTitle}>{titleName}</Text>
-          <Link href={{ pathname: "/chat/images", params: {} }}>
+          <Link
+            href={{
+              pathname: "/chat/images",
+              params: {
+                ...params,
+                uris: JSON.stringify(mediaUris),
+                types: JSON.stringify(mediaTypes),
+              },
+            }}
+          >
             {renderMedia()}
           </Link>
           <View

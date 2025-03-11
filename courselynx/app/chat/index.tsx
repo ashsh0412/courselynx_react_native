@@ -54,9 +54,12 @@ type mediaMessage = {
 };
 
 type MediaTypes = "image" | "livePhoto" | "video" | "none";
-const isMediaType = (value: any): value is MediaTypes => {
-  return ["image", "livePhoto", "video", "none"].includes(value);
-};
+
+const countImageLive = (media: MediaTypes[]): number =>
+  media.filter((type) => type === "image" || type === "livePhoto").length;
+
+const countVideos = (media: MediaTypes[]): number =>
+  media.filter((type) => type === "video").length;
 
 const getRandomInteractions = () => {
   if (Math.random() > 0.5) return undefined; // 50% chance of no interactions
@@ -226,6 +229,7 @@ export default function GroupChatScreen() {
               index % 3 === 0 && index !== 0
                 ? getRandomInteractions()
                 : undefined;
+
             return (
               <View key={item.id}>
                 {shouldShowDate && <ChatDate date={item.date} />}
@@ -237,6 +241,12 @@ export default function GroupChatScreen() {
                     titleName={item.sender}
                     interactions={selectedInteractions}
                     iconColor={item.color}
+                    params={{
+                      color: item.color,
+                      name: item.sender,
+                      photoCount: countImageLive(item.types),
+                      videoCount: countVideos(item.types),
+                    }}
                   />
                 )}
                 {!item.uris && (

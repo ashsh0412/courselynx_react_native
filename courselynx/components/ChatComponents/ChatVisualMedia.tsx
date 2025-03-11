@@ -9,8 +9,9 @@ import { useEventListener } from "expo";
 export type Props = {
   mediaUri: string;
   type: string;
-  sizing: "whole" | "half" | "quarter";
+  sizing: "whole" | "half" | "quarter" | "images";
   overlay?: number;
+  onImages?: boolean;
 };
 
 const ChatVisualMedia: React.FC<Props> = ({
@@ -18,8 +19,8 @@ const ChatVisualMedia: React.FC<Props> = ({
   type,
   sizing,
   overlay = -1,
+  onImages = false,
 }) => {
-  const [currentDuration, setCurrentDuration] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
   const [formattedTime, setFormattedTime] = useState("00:00");
   const [position, setPosition] = useState<{ x: number; y: number }>({
@@ -32,8 +33,10 @@ const ChatVisualMedia: React.FC<Props> = ({
       return { width: 256, height: 195 };
     } else if (sizing === "half") {
       return { width: 127, height: 195 };
-    } else {
+    } else if (sizing === "quarter") {
       return { width: 127, height: 97 };
+    } else {
+      return { minWidth: 345 };
     }
   };
 
@@ -65,29 +68,37 @@ const ChatVisualMedia: React.FC<Props> = ({
           source={{ uri: mediaUri }}
           style={[
             styles.visualMedia,
+            onImages && {
+              width: "100%",
+              height: "100%",
+            },
             getSizingStyling(),
             { opacity: overlay > 0 ? 0.5 : 1 },
           ]}
-          resizeMode="cover"
+          resizeMode={onImages ? "contain" : "cover"}
         />
       )}
       {type == "video" && (
         <VideoView
           style={[
             styles.visualMedia,
+            onImages && {
+              width: "100%",
+              height: "100%",
+            },
             getSizingStyling(),
             { opacity: overlay > 0 ? 0.5 : 1 },
           ]}
           player={player}
-          contentFit="cover"
-          nativeControls={false}
+          contentFit={onImages ? "contain" : "cover"}
+          nativeControls={onImages}
           onLayout={(event) => {
             const { x, y } = event.nativeEvent.layout;
             setPosition({ x: x, y: y });
           }}
         />
       )}
-      {type == "video" && (
+      {type == "video" && !onImages && (
         <View
           style={[
             styles.videoContainer,
