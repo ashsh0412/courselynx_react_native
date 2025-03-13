@@ -204,6 +204,7 @@ export default function GroupChatScreen() {
 
   useEffect(() => {
     if (chatMedia?.length && chatMediaType.length) {
+      setIsModal(false);
       const mediaChat = {
         id: chats.length + 1,
         sender: "You",
@@ -223,6 +224,7 @@ export default function GroupChatScreen() {
 
   useEffect(() => {
     if (chatFile.length) {
+      setIsModal(false);
       const sizes = chatFile.map((asset) => asset.size as number);
       const names = chatFile.map((asset) => asset.name);
       const uris = chatFile.map((asset) => asset.uri);
@@ -382,13 +384,13 @@ export default function GroupChatScreen() {
           <View style={styles.modalButtonContainer}>
             <TouchableOpacity
               style={styles.modalChatButton}
-              onPress={() =>
+              onPress={() => {
                 Media.openCamera(
                   setChatMedia,
                   setChatMediaType,
                   setChatMediaSizes
-                )
-              }
+                );
+              }}
             >
               <View style={[styles.modalIcon, { backgroundColor: "#B4B8BF" }]}>
                 <Camera width={35} height={35} />
@@ -412,7 +414,9 @@ export default function GroupChatScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalChatButton}
-              onPress={() => Media.openDocument(setChatFile)}
+              onPress={() => {
+                Media.openDocument(setChatFile);
+              }}
             >
               <View style={[styles.modalIcon, { backgroundColor: "#7dabe7" }]}>
                 <File width={35} height={35} />
@@ -421,7 +425,9 @@ export default function GroupChatScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalChatButton}
-              onPress={() => setIsAudioPopupVisible(true)}
+              onPress={() => {
+                setIsAudioPopupVisible(true);
+              }}
             >
               <View style={[styles.modalIcon, { backgroundColor: "#f9815e" }]}>
                 <Audio width={25} height={25} />
