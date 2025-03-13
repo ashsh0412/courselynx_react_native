@@ -7,6 +7,9 @@ export const openCamera = async (
   setChatMedia: React.Dispatch<React.SetStateAction<string[] | undefined>>,
   setChatMediaType: React.Dispatch<
     React.SetStateAction<("image" | "livePhoto" | "video" | "none")[]>
+  >,
+  setChatMediaSizes: React.Dispatch<
+    React.SetStateAction<{ width: number; height: number }[]>
   >
 ) => {
   const result = await ImagePicker.requestCameraPermissionsAsync();
@@ -19,7 +22,6 @@ export const openCamera = async (
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ["images", "livePhotos", "videos"],
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
       videoMaxDuration: 30,
     });
@@ -38,6 +40,12 @@ export const openCamera = async (
           }
         })
       );
+      setChatMediaSizes(
+        result.assets.map((asset) => ({
+          width: asset.width,
+          height: asset.height,
+        }))
+      );
     }
 
     console.log(result);
@@ -50,6 +58,9 @@ export const openPhotos = async (
   setChatMedia: React.Dispatch<React.SetStateAction<string[] | undefined>>,
   setChatMediaType: React.Dispatch<
     React.SetStateAction<("image" | "livePhoto" | "video" | "none")[]>
+  >,
+  setChatMediaSizes: React.Dispatch<
+    React.SetStateAction<{ width: number; height: number }[]>
   >
 ) => {
   const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -83,6 +94,12 @@ export const openPhotos = async (
                 return "none";
             }
           })
+        );
+        setChatMediaSizes(
+          result.assets.map((asset) => ({
+            width: asset.width,
+            height: asset.height,
+          }))
         );
       }
     });

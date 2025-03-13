@@ -77,6 +77,9 @@ export default function GroupChatScreen() {
 
   const [chatMedia, setChatMedia] = useState<string[] | undefined>([]);
   const [chatMediaType, setChatMediaType] = useState<MediaTypes[]>([]);
+  const [chatMediaSizes, setChatMediaSizes] = useState<
+    { width: number; height: number }[]
+  >([]);
   const [chatFile, setChatFile] = useState<
     DocumentPicker.DocumentPickerSuccessResult | undefined
   >(undefined);
@@ -95,7 +98,6 @@ export default function GroupChatScreen() {
   const [sound, setSound] = useState<AudioPlayer.Sound | null>();
 
   const [isAudioPopupVisible, setIsAudioPopupVisible] = useState(false);
-  const [isDummyChat, setIsDummyChat] = useState(false);
 
   {
     /* FOR SEARCH CHAT AUTO SCROLL */
@@ -190,15 +192,17 @@ export default function GroupChatScreen() {
       const mediaChat = {
         id: chats.length + 1,
         sender: "You",
-        uris: chatMedia.map((media) => media),
+        uris: chatMedia,
         date: new Date().toISOString(),
         color: "#000",
-        types: chatMediaType.map((type) => type),
+        types: chatMediaType,
+        dimensions: chatMediaSizes,
       };
       console.log(mediaChat);
       setChats((prev) => [mediaChat, ...prev]);
       setChatMedia([]);
       setChatMediaType([]);
+      setChatMediaSizes([]);
     }
   }, [chatMedia, chatMediaType]);
 
@@ -241,6 +245,7 @@ export default function GroupChatScreen() {
                     titleName={item.sender}
                     interactions={selectedInteractions}
                     iconColor={item.color}
+                    dimensions={item.dimensions}
                     params={{
                       color: item.color,
                       name: item.sender,
@@ -300,6 +305,7 @@ export default function GroupChatScreen() {
             placeholder="Type here..."
             placeholderTextColor={"#C5C5C7"}
             returnKeyType="send"
+            submitBehavior="blurAndSubmit"
             onSubmitEditing={handleSendMessage}
           />
           <TouchableWithoutFeedback onPress={() => setIsAnon((prev) => !prev)}>
@@ -325,7 +331,13 @@ export default function GroupChatScreen() {
           <View style={styles.modalButtonContainer}>
             <TouchableOpacity
               style={styles.modalChatButton}
-              onPress={() => Media.openCamera(setChatMedia, setChatMediaType)}
+              onPress={() =>
+                Media.openCamera(
+                  setChatMedia,
+                  setChatMediaType,
+                  setChatMediaSizes
+                )
+              }
             >
               <View style={[styles.modalIcon, { backgroundColor: "#B4B8BF" }]}>
                 <Camera width={35} height={35} />
@@ -335,7 +347,11 @@ export default function GroupChatScreen() {
             <TouchableOpacity
               style={styles.modalChatButton}
               onPress={() => {
-                Media.openPhotos(setChatMedia, setChatMediaType);
+                Media.openPhotos(
+                  setChatMedia,
+                  setChatMediaType,
+                  setChatMediaSizes
+                );
               }}
             >
               <View style={[styles.modalIcon, { backgroundColor: "#FFF" }]}>

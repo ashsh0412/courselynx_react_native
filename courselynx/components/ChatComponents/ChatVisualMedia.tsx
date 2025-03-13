@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  Animated,
+} from "react-native";
 
 import Play from "@/assets/svg/playButton.svg";
+import Dots from "@/assets/svg/imageDots.svg";
 
 import { VideoView, useVideoPlayer } from "expo-video";
 import { useEventListener } from "expo";
+import { onShare } from "@/utils/share";
 
 export type Props = {
   mediaUri: string;
@@ -12,6 +22,7 @@ export type Props = {
   sizing: "whole" | "half" | "quarter" | "images";
   overlay?: number;
   onImages?: boolean;
+  aspect?: number;
 };
 
 const ChatVisualMedia: React.FC<Props> = ({
@@ -20,6 +31,7 @@ const ChatVisualMedia: React.FC<Props> = ({
   sizing,
   overlay = -1,
   onImages = false,
+  aspect,
 }) => {
   const [videoDuration, setVideoDuration] = useState(0);
   const [formattedTime, setFormattedTime] = useState("00:00");
@@ -35,8 +47,6 @@ const ChatVisualMedia: React.FC<Props> = ({
       return { width: 127, height: 195 };
     } else if (sizing === "quarter") {
       return { width: 127, height: 97 };
-    } else {
-      return { minWidth: 345 };
     }
   };
 
@@ -68,11 +78,8 @@ const ChatVisualMedia: React.FC<Props> = ({
           source={{ uri: mediaUri }}
           style={[
             styles.visualMedia,
-            onImages && {
-              width: "100%",
-              height: "100%",
-            },
             getSizingStyling(),
+            aspect ? { aspectRatio: aspect } : undefined,
             { opacity: overlay > 0 ? 0.5 : 1 },
           ]}
           resizeMode={onImages ? "contain" : "cover"}
@@ -82,11 +89,8 @@ const ChatVisualMedia: React.FC<Props> = ({
         <VideoView
           style={[
             styles.visualMedia,
-            onImages && {
-              width: "100%",
-              height: "100%",
-            },
             getSizingStyling(),
+            aspect ? { aspectRatio: aspect } : undefined,
             { opacity: overlay > 0 ? 0.5 : 1 },
           ]}
           player={player}
@@ -98,7 +102,7 @@ const ChatVisualMedia: React.FC<Props> = ({
           }}
         />
       )}
-      {type == "video" && !onImages && (
+      {(type == "video" || onImages) && (
         <View
           style={[
             styles.videoContainer,
@@ -106,17 +110,28 @@ const ChatVisualMedia: React.FC<Props> = ({
             { top: position.y - 8, left: position.x },
           ]}
         >
-          <View
-            style={[
-              styles.playContainer,
-              { opacity: sizing === "whole" ? 1 : 0 },
-            ]}
-          >
-            <Play width={24} height={24} style={{ alignSelf: "center" }} />
-          </View>
-          <View style={styles.videoDurationContainer}>
-            <Text style={styles.videoDuration}>{formattedTime}</Text>
-          </View>
+          {!onImages ? (
+            <>
+              <View
+                style={[
+                  styles.playContainer,
+                  { opacity: sizing === "whole" ? 1 : 0 },
+                ]}
+              >
+                <Play width={24} height={24} style={{ alignSelf: "center" }} />
+              </View>
+              <View style={styles.videoDurationContainer}>
+                <Text style={styles.videoDuration}>{formattedTime}</Text>
+              </View>
+            </>
+          ) : (
+            <TouchableOpacity
+              style={styles.dotsContainer}
+              onPress={() => onShare({ message: "", uri: mediaUri })}
+            >
+              <Dots width={15} height={15} />
+            </TouchableOpacity>
+          )}
         </View>
       )}
       {overlay > 0 && (
@@ -175,6 +190,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     marginLeft: 8,
     borderRadius: 22,
+  },
+  dotsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    position: "absolute",
+    zIndex: 2,
+    borderRadius: 5,
+    top: 12,
+    left: 319,
+    paddingVertical: 2,
+    paddingHorizontal: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.30)",
   },
 });
 

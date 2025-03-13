@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TextInput } from "react-native";
 
 export type Interaction = {
   emoji: string;
@@ -31,8 +31,22 @@ const ChatMessage: React.FC<Props> = ({
           <View style={[styles.messageIcon, { backgroundColor: iconColor }]} />
         </View>
         <View style={styles.messageWrapper}>
-          <Text style={styles.messageTitle}>{titleName}</Text>
-          <Text style={styles.messageText}>{message}</Text>
+          <TextInput
+            style={styles.messageTitle}
+            editable={false}
+            multiline
+            selectionColor="blue"
+          >
+            {titleName}
+          </TextInput>
+          <TextInput
+            style={styles.messageText}
+            editable={false}
+            multiline
+            selectionColor="blue"
+          >
+            {message}
+          </TextInput>
           <View style={styles.interactionsContainer}>
             {/* Display chat emoji interactions */}
             {interactions?.map((inter, index) => (
@@ -62,6 +76,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginLeft: 6,
     marginRight: 25,
+    marginBottom: 21,
   },
   iconContainer: {
     marginTop: 6,
@@ -83,19 +98,25 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   messageWrapper: {
-    paddingVertical: 8,
+    paddingTop: 8,
     marginLeft: 13,
   },
   messageText: {
     fontFamily: "SF Pro Display",
     fontSize: 15,
     width: 300,
+    padding: 0,
+    margin: 0,
   },
   messageTitle: {
     fontSize: 15,
     fontWeight: 500,
     color: "#4F4F4F",
     marginBottom: 3,
+    padding: 0,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
   },
   interactionsContainer: {
     marginRight: 4,

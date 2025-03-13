@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   dateText: {
     fontFamily: "Inter",
     fontWeight: 500,
-    marginVertical: 10,
+    marginBottom: 15,
     textAlign: "center",
     color: "#909093",
     fontSize: 10,

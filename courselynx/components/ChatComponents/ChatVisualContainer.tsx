@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, StyleSheet, Pressable, Animated } from "react-native";
 import { Interaction } from "./ChatMessage";
 import ChatVisualMedia from "./ChatVisualMedia";
 import { Bar as ProgressBar } from "react-native-progress";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { onShare } from "@/utils/share";
+import { longPressAnimation, releaseAnimation } from "@/utils/LongPress";
 
 export type Props = {
   iconColor: string;
@@ -13,6 +15,7 @@ export type Props = {
   mediaTypes: string[];
   isUser?: boolean;
   id: number;
+  dimensions: { width: number; height: number }[];
   params: {
     color: string;
     name: string;
@@ -29,10 +32,13 @@ const ChatVisualContainer: React.FC<Props> = ({
   mediaTypes,
   isUser,
   params,
+  dimensions,
 }) => {
   const mediaCount = mediaUris.length;
   const [loadAmount, setLoadAmount] = useState(0);
   const [loadVisible, setLoadVisible] = useState(true);
+  const router = useRouter();
+  const scales = useRef<Animated.Value[]>([new Animated.Value(1)]);
 
   const renderMedia = () => {
     if (mediaCount === 1) {
@@ -105,18 +111,30 @@ const ChatVisualContainer: React.FC<Props> = ({
         </View>
         <View style={styles.messageWrapper}>
           <Text style={styles.messageTitle}>{titleName}</Text>
-          <Link
-            href={{
-              pathname: "/chat/images",
-              params: {
-                ...params,
-                uris: JSON.stringify(mediaUris),
-                types: JSON.stringify(mediaTypes),
-              },
-            }}
-          >
-            {renderMedia()}
-          </Link>
+          <Animated.View style={{ transform: [{ scale: scales.current[0] }] }}>
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: "/chat/images",
+                  params: {
+                    ...params,
+                    uris: JSON.stringify(mediaUris),
+                    types: JSON.stringify(mediaTypes),
+                    sizes: JSON.stringify(dimensions),
+                  },
+                })
+              }
+              onLongPress={() => {
+                if (mediaUris.length === 1) {
+                  onShare({ message: "", uri: mediaUris[0] });
+                  longPressAnimation(0, scales, 1.05, 200, true);
+                }
+              }}
+              onPressOut={() => releaseAnimation(0, scales, 200)}
+            >
+              {renderMedia()}
+            </Pressable>
+          </Animated.View>
           <View
             style={[
               styles.progressBarContainer,
