@@ -3,8 +3,18 @@ import { useLocalSearchParams } from "expo-router";
 import PublicView from "./public";
 import EditView from "./edit";
 
+export interface ProfileProps {
+  avatar: string;
+  name: string;
+  major: string;
+  gradYear: string;
+  bio: string;
+  linkedin: string;
+  discord: string;
+};
+
 export default function ProfileScreen() {
-  const { username } = useLocalSearchParams() || {};
+  const { id } = useLocalSearchParams() || {};
 
   const data = {
     avatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Bohol_-_Chocolate_Hills.jpg/2560px-Bohol_-_Chocolate_Hills.jpg",
@@ -16,8 +26,8 @@ export default function ProfileScreen() {
     discord: "",
   }
 
-  if (username) {
-    return username === "myself" ? (
+  if (id) {
+    return id === "myself" ? (
       <>
         <Header
           title={"My Profile"}

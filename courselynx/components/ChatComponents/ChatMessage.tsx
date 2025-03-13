@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
+import UserIcon from "./UserIcon";
 
 export type Interaction = {
   emoji: string;
@@ -26,10 +27,7 @@ const ChatMessage: React.FC<Props> = ({
   return (
     <>
       <View style={styles.messageContent}>
-        <View style={styles.iconContainer}>
-          <View style={styles.iconLeftBorder} />
-          <View style={[styles.messageIcon, { backgroundColor: iconColor }]} />
-        </View>
+        <UserIcon id={id} uri={iconColor} />
         <View style={styles.messageWrapper}>
           <Text style={styles.messageTitle}>{titleName}</Text>
           <Text style={styles.messageText}>{message}</Text>

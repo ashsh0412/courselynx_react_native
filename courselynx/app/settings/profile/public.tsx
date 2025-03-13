@@ -3,16 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Button from "@/components/Button";
 import styles from "./profile.styles";
 import Avatar from "@/components/ProfileComponents/Avatar";
-
-interface ProfileProps {
-  avatar: string;
-  name: string;
-  major: string;
-  gradYear: string;
-  bio: string;
-  linkedin: string;
-  discord: string;
-};
+import { ProfileProps } from ".";
 
 export default function PublicView({ userProfile }: { userProfile: ProfileProps }) {
   const socials = [

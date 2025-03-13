@@ -3,17 +3,8 @@ import { View, ScrollView } from "react-native";
 import InputField from "@/components/InputField";
 import Button from "@/components/Button";
 import Avatar from "@/components/ProfileComponents/Avatar"
+import { ProfileProps } from ".";
 import styles from "./profile.styles";
-
-interface ProfileProps {
-  avatar: string;
-  name: string;
-  major: string;
-  gradYear: string;
-  bio: string;
-  linkedin: string;
-  discord: string;
-};
 
 export default function EditView({ userProfile }: { userProfile: ProfileProps }) {
   const [avatar, setAvatar] = useState(userProfile.avatar);
