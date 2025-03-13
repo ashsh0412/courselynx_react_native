@@ -109,13 +109,13 @@ export const openPhotos = async (
 
 export const openDocument = async (
   setChatFile: React.Dispatch<
-    React.SetStateAction<DocumentPicker.DocumentPickerSuccessResult | undefined>
+    React.SetStateAction<DocumentPicker.DocumentPickerAsset[]>
   >
 ) => {
   try {
     const result = await DocumentPicker.getDocumentAsync({
       type: "*/*", // Allows picking any file type
-      copyToCacheDirectory: true, // Saves a copy to cache
+      multiple: true,
     });
 
     if (result.canceled) {
@@ -123,8 +123,8 @@ export const openDocument = async (
       return;
     }
 
-    setChatFile(result); // Store the selected file
-    console.log("Selected File:", result.assets[0]); // Log file details
+    setChatFile(result.assets); // Store the selected file
+    console.log("Selected File:", result); // Log file details
   } catch (error) {
     console.error("Error selecting file:", error);
     Alert.alert("Error", "Something went wrong while selecting the file.");

@@ -51,7 +51,7 @@ export default function DetailScreen() {
           shareFunction={() =>
             onShare({
               message: `Join ${title}`,
-              url: "https://courselynx/join/12345",
+              uri: "https://courselynx/join/12345",
             })
           }
         />

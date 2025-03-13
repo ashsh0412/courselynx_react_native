@@ -17,6 +17,7 @@ import File from "../../assets/svg/file.svg";
 import Audio from "../../assets/svg/audio.svg";
 import ChatMessage from "@/components/ChatComponents/ChatMessage";
 import ChatDate from "@/components/ChatComponents/ChatDate";
+import MessageContainer from "@/components/ChatComponents/MessageContainer";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -35,6 +36,7 @@ import { chatMessages, interactions } from "@/mock/chatMessages";
 import * as Media from "@/utils/media";
 import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
 import ChatVisualContainer from "@/components/ChatComponents/ChatVisualContainer";
+import ChatFile from "@/components/ChatComponents/ChatFile";
 
 type textMessage = {
   id: number;
@@ -51,6 +53,16 @@ type mediaMessage = {
   date: string;
   color: string;
   types: string[];
+};
+
+type fileMessage = {
+  id: number;
+  sender: string;
+  uris: string[];
+  date: string;
+  color: string;
+  names: string[];
+  sizes: number[];
 };
 
 type MediaTypes = "image" | "livePhoto" | "video" | "none";
@@ -81,13 +93,15 @@ export default function GroupChatScreen() {
     { width: number; height: number }[]
   >([]);
   const [chatFile, setChatFile] = useState<
-    DocumentPicker.DocumentPickerSuccessResult | undefined
-  >(undefined);
+    DocumentPicker.DocumentPickerAsset[]
+  >([]);
 
   {
     /* MAKE SURE CHATS ARE SORTED EVERYTIME THEY ARE FETCHED */
   }
-  const [chats, setChats] = useState<(textMessage | mediaMessage)[]>(
+  const [chats, setChats] = useState<
+    (textMessage | mediaMessage | fileMessage)[]
+  >(
     chatMessages.sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     )
@@ -183,6 +197,7 @@ export default function GroupChatScreen() {
           ...prev,
         ]);
         inputRef.current?.clear();
+        messageRef.current = "";
       }
     }
   };
@@ -205,6 +220,25 @@ export default function GroupChatScreen() {
       setChatMediaSizes([]);
     }
   }, [chatMedia, chatMediaType]);
+
+  useEffect(() => {
+    if (chatFile.length) {
+      const sizes = chatFile.map((asset) => asset.size as number);
+      const names = chatFile.map((asset) => asset.name);
+      const uris = chatFile.map((asset) => asset.uri);
+      const fileChat = {
+        id: chats.length + 1,
+        sender: "You",
+        uris: uris,
+        date: new Date().toISOString(),
+        color: "#000",
+        names: names,
+        sizes: sizes,
+      };
+      setChats((prev) => [fileChat, ...prev]);
+      setChatFile([]);
+    }
+  }, [chatFile]);
 
   return (
     <View style={styles.container}>
@@ -237,7 +271,24 @@ export default function GroupChatScreen() {
             return (
               <View key={item.id}>
                 {shouldShowDate && <ChatDate date={item.date} />}
-                {item.uris && (
+                {item.names && (
+                  <MessageContainer
+                    id={item.id}
+                    titleName={item.sender}
+                    interactions={selectedInteractions}
+                    iconColor={item.color}
+                  >
+                    {item.names.map((file: string, index: number) => (
+                      <ChatFile
+                        id={item.id * (1 + index)}
+                        name={file}
+                        uri={item.uris[index]}
+                        size={item.sizes[index]}
+                      />
+                    ))}
+                  </MessageContainer>
+                )}
+                {item.uris && !item.names && (
                   <ChatVisualContainer
                     mediaUris={item.uris}
                     id={item.id}
@@ -305,7 +356,7 @@ export default function GroupChatScreen() {
             placeholder="Type here..."
             placeholderTextColor={"#C5C5C7"}
             returnKeyType="send"
-            submitBehavior="blurAndSubmit"
+            submitBehavior="submit"
             onSubmitEditing={handleSendMessage}
           />
           <TouchableWithoutFeedback onPress={() => setIsAnon((prev) => !prev)}>

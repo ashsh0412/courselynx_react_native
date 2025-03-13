@@ -31,22 +31,8 @@ const ChatMessage: React.FC<Props> = ({
           <View style={[styles.messageIcon, { backgroundColor: iconColor }]} />
         </View>
         <View style={styles.messageWrapper}>
-          <TextInput
-            style={styles.messageTitle}
-            editable={false}
-            multiline
-            selectionColor="blue"
-          >
-            {titleName}
-          </TextInput>
-          <TextInput
-            style={styles.messageText}
-            editable={false}
-            multiline
-            selectionColor="blue"
-          >
-            {message}
-          </TextInput>
+          <Text style={styles.messageTitle}>{titleName}</Text>
+          <Text style={styles.messageText}>{message}</Text>
           <View style={styles.interactionsContainer}>
             {/* Display chat emoji interactions */}
             {interactions?.map((inter, index) => (

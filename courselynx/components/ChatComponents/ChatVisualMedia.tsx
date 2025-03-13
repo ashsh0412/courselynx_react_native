@@ -1,13 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  Animated,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 
 import Play from "@/assets/svg/playButton.svg";
 import Dots from "@/assets/svg/imageDots.svg";
