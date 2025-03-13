@@ -1,9 +1,7 @@
-import Header from "@/components/Header";
-import { Stack, useLocalSearchParams } from "expo-router";
-import { StatusBar } from "react-native";
+import { Interaction } from "@/components/ChatComponents/ChatMessage";
 
 // MOCK DATA WITH COLORS
-const chatMessages = [
+export const chatMessages = [
   {
     id: 1,
     sender: "Emily Johnson",
@@ -85,30 +83,8 @@ const chatMessages = [
   },
 ];
 
-export default function ChatLayout() {
-  const { title, color } = useLocalSearchParams();
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <Stack>
-        <Stack.Screen
-          name="index"
-          options={{
-            header: () => (
-              <Header
-                title={title as string}
-                colorSquare={color as string}
-                hasSearch={true}
-                toDetail={true}
-                withBorder={true}
-                onChat={true}
-              />
-            ),
-          }}
-        />
-        <Stack.Screen name="detail" options={{ headerShown: false }} />
-        <Stack.Screen name="images" />
-      </Stack>
-    </>
-  );
-}
+export const interactions: Interaction[] = [
+  { emoji: "😂", count: 5 },
+  { emoji: "❤️", count: 3 },
+  { emoji: "👍", count: 8 },
+];

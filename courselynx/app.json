@@ -43,10 +43,34 @@
           "cameraPermission": "We need access to your camera to take pictures and videos.",
           "photosPermission": "We need access to your photos to allow you to select media."
         }
-      ]
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow CourseLynx to access your camera",
+          "microphonePermission": "Allow CourseLynx to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "react-native-video",
+        {
+          "enableNotificationControls": true,
+          "androidExtensions": {
+            "useExoplayerRtsp": false,
+            "useExoplayerSmoothStreaming": false,
+            "useExoplayerHls": false,
+            "useExoplayerDash": false
+          }
+        }
+      ],
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "expo": {
+      "assetBundlePatterns": ["**/*"]
     },
     "extra": {
       "router": {

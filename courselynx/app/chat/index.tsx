@@ -1,18 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Text,
   View,
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   FlatList,
-  Modal,
   TouchableWithoutFeedback,
-  Pressable,
   Alert,
-  FlatListComponent,
 } from "react-native";
 import Incognito from "../../assets/svg/incognito.svg";
 import Person from "../../assets/svg/person.svg";
@@ -20,9 +15,9 @@ import Camera from "../../assets/svg/appleCamera.svg";
 import Photo from "../../assets/svg/applePhoto.svg";
 import File from "../../assets/svg/file.svg";
 import Audio from "../../assets/svg/audio.svg";
-import { Interaction } from "@/components/ChatComponents/ChatMessage";
 import ChatMessage from "@/components/ChatComponents/ChatMessage";
 import ChatDate from "@/components/ChatComponents/ChatDate";
+import MessageContainer from "@/components/ChatComponents/MessageContainer";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -30,109 +25,59 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import Modal from "@/components/Modal";
 
 import { useAnimatedKeyboard } from "react-native-reanimated";
-import { BlurView } from "expo-blur";
-import GestureRecognizer from "react-native-swipe-gestures";
-import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { Audio as AudioPlayer } from "expo-av";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+
+import { chatMessages, interactions } from "@/mock/chatMessages";
+import * as Media from "@/utils/media";
+import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
+import ChatVisualContainer from "@/components/ChatComponents/ChatVisualContainer";
+import ChatFile from "@/components/ChatComponents/ChatFile";
+
+type textMessage = {
+  id: number;
+  sender: string;
+  message: string;
+  date: string;
+  color: string;
+};
+
+type mediaMessage = {
+  id: number;
+  sender: string;
+  uris: string[];
+  date: string;
+  color: string;
+  types: string[];
+};
+
+type fileMessage = {
+  id: number;
+  sender: string;
+  uris: string[];
+  date: string;
+  color: string;
+  names: string[];
+  sizes: number[];
+};
+
+type MediaTypes = "image" | "livePhoto" | "video" | "none";
+
+const countImageLive = (media: MediaTypes[]): number =>
+  media.filter((type) => type === "image" || type === "livePhoto").length;
+
+const countVideos = (media: MediaTypes[]): number =>
+  media.filter((type) => type === "video").length;
 
 const getRandomInteractions = () => {
   if (Math.random() > 0.5) return undefined; // 50% chance of no interactions
   const shuffled = [...interactions].sort(() => 0.5 - Math.random()); // Shuffle interactions
   return shuffled.slice(0, Math.floor(Math.random() * 2) + 1); // Pick 1 or 2
 };
-
-// MOCK DATA WITH COLORS
-const chatMessages = [
-  {
-    id: 1,
-    sender: "Emily Johnson",
-    message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    date: new Date().toISOString(),
-    color: "#833C3C",
-  },
-  {
-    id: 2,
-    sender: "Michael Smith",
-    message:
-      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    date: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-    color: "#F97316",
-  },
-  {
-    id: 3,
-    sender: "Emily Johnson",
-    message:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
-    date: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-    color: "#833C3C",
-  },
-  {
-    id: 4,
-    sender: "Sophia Martinez",
-    message:
-      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.",
-    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    color: "#80BD72",
-  },
-  {
-    id: 5,
-    sender: "David Brown",
-    message:
-      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.",
-    date: new Date(Date.now() - 23 * 60 * 60 * 1000).toISOString(),
-    color: "#B48BE9",
-  },
-  {
-    id: 6,
-    sender: "Alice Walker",
-    message: "Curabitur pretium tincidunt lacus. Nulla gravida orci a odio.",
-    date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    color: "#4CAF50",
-  },
-  {
-    id: 7,
-    sender: "Michael Smith",
-    message: "Vestibulum fringilla pede sit amet augue.",
-    date: new Date(
-      Date.now() - 3 * 24 * 60 * 60 * 1000 + 45 * 60 * 1000
-    ).toISOString(),
-    color: "#F97316",
-  },
-  {
-    id: 8,
-    sender: "Sophia Martinez",
-    message:
-      "Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor.",
-    date: new Date(
-      Date.now() - 3 * 24 * 60 * 60 * 1000 + 1 * 60 * 60 * 1000
-    ).toISOString(),
-    color: "#80BD72",
-  },
-  {
-    id: 9,
-    sender: "David Brown",
-    message: "Maecenas malesuada elit lectus felis, malesuada ultricies.",
-    date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
-    color: "#B48BE9",
-  },
-  {
-    id: 10,
-    sender: "Sophia Martinez",
-    message: "Donec in velit vel ipsum auctor pulvinar.",
-    date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-    color: "#80BD72",
-  },
-];
-
-const interactions: Interaction[] = [
-  { emoji: "😂", count: 5 },
-  { emoji: "❤️", count: 3 },
-  { emoji: "👍", count: 8 },
-];
 
 export default function GroupChatScreen() {
   const inputRef = useRef<TextInput | null>(null);
@@ -142,19 +87,31 @@ export default function GroupChatScreen() {
 
   const [isModal, setIsModal] = useState(false);
 
-  const [chatMedia, setChatMedia] = useState<string | undefined>("");
-  const [chatMediaType, setChatMediaType] = useState<string | undefined>("");
+  const [chatMedia, setChatMedia] = useState<string[] | undefined>([]);
+  const [chatMediaType, setChatMediaType] = useState<MediaTypes[]>([]);
+  const [chatMediaSizes, setChatMediaSizes] = useState<
+    { width: number; height: number }[]
+  >([]);
   const [chatFile, setChatFile] = useState<
-    DocumentPicker.DocumentPickerSuccessResult | undefined
-  >(undefined);
+    DocumentPicker.DocumentPickerAsset[]
+  >([]);
+
   {
     /* MAKE SURE CHATS ARE SORTED EVERYTIME THEY ARE FETCHED */
   }
-  const [chats, setChats] = useState(
+  const [chats, setChats] = useState<
+    (textMessage | mediaMessage | fileMessage)[]
+  >(
     chatMessages.sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     )
   );
+
+  const [recording, setRecording] = useState<AudioPlayer.Recording | null>();
+  const [audioUri, setAudioUri] = useState<string | null>("");
+  const [sound, setSound] = useState<AudioPlayer.Sound | null>();
+
+  const [isAudioPopupVisible, setIsAudioPopupVisible] = useState(false);
 
   {
     /* FOR SEARCH CHAT AUTO SCROLL */
@@ -176,133 +133,6 @@ export default function GroupChatScreen() {
     }
     return () => {};
   }, [scrollId]);
-
-  const openCamera = async () => {
-    const result = await ImagePicker.requestCameraPermissionsAsync();
-
-    console.log(result);
-
-    if (result.granted === false) {
-      alert("You've refused to allow this app to access your photos!");
-    } else {
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ["images", "livePhotos", "videos"],
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-        videoMaxDuration: 30,
-      });
-
-      if (!result.canceled) {
-        setChatMedia(result.assets[0].uri);
-        setChatMediaType(result.assets[0].type);
-      }
-
-      console.log(result);
-
-      return result;
-    }
-  };
-
-  const openPhotos = async () => {
-    const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (result.granted === false) {
-      alert("You've refused to allow this app to access your photos!");
-    } else {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images", "livePhotos", "videos"],
-        aspect: [4, 3],
-        quality: 1,
-        videoMaxDuration: 30,
-        selectionLimit: 1,
-      });
-
-      if (!result.canceled) {
-        setChatMedia(result.assets[0].uri);
-        setChatMediaType(result.assets[0].type);
-      }
-
-      console.log(result);
-
-      return result;
-    }
-  };
-
-  const openDocument = async () => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "*/*", // Allows picking any file type
-        copyToCacheDirectory: true, // Saves a copy to cache
-      });
-
-      if (result.canceled) {
-        Alert.alert("File Selection", "No file was selected.");
-        return;
-      }
-
-      setChatFile(result); // Store the selected file
-      console.log("Selected File:", result.assets[0]); // Log file details
-    } catch (error) {
-      console.error("Error selecting file:", error);
-      Alert.alert("Error", "Something went wrong while selecting the file.");
-    }
-  };
-
-  const [recording, setRecording] = useState<AudioPlayer.Recording | null>();
-  const [audioUri, setAudioUri] = useState<string | null>("");
-  const [sound, setSound] = useState<AudioPlayer.Sound | null>();
-
-  const [isAudioPopupVisible, setIsAudioPopupVisible] = useState(false);
-
-  const startRecording = async () => {
-    try {
-      const { status } = await AudioPlayer.requestPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission Denied",
-          "Microphone access is required to record audio."
-        );
-        return;
-      }
-
-      await AudioPlayer.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-
-      const { recording } = await AudioPlayer.Recording.createAsync(
-        AudioPlayer.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      setRecording(recording);
-    } catch (error) {
-      console.error("Error starting recording:", error);
-    }
-  };
-
-  const stopRecording = async () => {
-    try {
-      await recording?.stopAndUnloadAsync();
-      const uri = recording?.getURI();
-      setAudioUri(uri as string);
-      console.log("Recorded audio:", uri);
-      setRecording(null);
-    } catch (error) {
-      console.error("Error stopping recording:", error);
-    }
-  };
-
-  const playAudio = async () => {
-    if (!audioUri) return;
-
-    try {
-      const { sound } = await AudioPlayer.Sound.createAsync({ uri: audioUri });
-      setSound(sound);
-      await sound.playAsync();
-    } catch (error) {
-      console.error("Error playing audio:", error);
-    }
-  };
 
   const sendAudioMessage = async () => {
     if (!audioUri) {
@@ -367,9 +197,48 @@ export default function GroupChatScreen() {
           ...prev,
         ]);
         inputRef.current?.clear();
+        messageRef.current = "";
       }
     }
   };
+
+  useEffect(() => {
+    if (chatMedia?.length && chatMediaType.length) {
+      const mediaChat = {
+        id: chats.length + 1,
+        sender: "You",
+        uris: chatMedia,
+        date: new Date().toISOString(),
+        color: "#000",
+        types: chatMediaType,
+        dimensions: chatMediaSizes,
+      };
+      console.log(mediaChat);
+      setChats((prev) => [mediaChat, ...prev]);
+      setChatMedia([]);
+      setChatMediaType([]);
+      setChatMediaSizes([]);
+    }
+  }, [chatMedia, chatMediaType]);
+
+  useEffect(() => {
+    if (chatFile.length) {
+      const sizes = chatFile.map((asset) => asset.size as number);
+      const names = chatFile.map((asset) => asset.name);
+      const uris = chatFile.map((asset) => asset.uri);
+      const fileChat = {
+        id: chats.length + 1,
+        sender: "You",
+        uris: uris,
+        date: new Date().toISOString(),
+        color: "#000",
+        names: names,
+        sizes: sizes,
+      };
+      setChats((prev) => [fileChat, ...prev]);
+      setChatFile([]);
+    }
+  }, [chatFile]);
 
   return (
     <View style={styles.container}>
@@ -380,7 +249,6 @@ export default function GroupChatScreen() {
           ref={flatListRef}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item, index }) => {
-            console.log(item);
             const currentDate = new Date(item.date);
             const nextDate =
               index < chats.length - 1 ? new Date(chats[index + 1].date) : null;
@@ -399,16 +267,53 @@ export default function GroupChatScreen() {
               index % 3 === 0 && index !== 0
                 ? getRandomInteractions()
                 : undefined;
+
             return (
               <View key={item.id}>
                 {shouldShowDate && <ChatDate date={item.date} />}
-                <ChatMessage
-                  id={item.id}
-                  message={item.message}
-                  titleName={item.sender}
-                  interactions={selectedInteractions}
-                  iconColor={item.color}
-                />
+                {item.names && (
+                  <MessageContainer
+                    id={item.id}
+                    titleName={item.sender}
+                    interactions={selectedInteractions}
+                    iconColor={item.color}
+                  >
+                    {item.names.map((file: string, index: number) => (
+                      <ChatFile
+                        id={item.id * (1 + index)}
+                        name={file}
+                        uri={item.uris[index]}
+                        size={item.sizes[index]}
+                      />
+                    ))}
+                  </MessageContainer>
+                )}
+                {item.uris && !item.names && (
+                  <ChatVisualContainer
+                    mediaUris={item.uris}
+                    id={item.id}
+                    mediaTypes={item.types}
+                    titleName={item.sender}
+                    interactions={selectedInteractions}
+                    iconColor={item.color}
+                    dimensions={item.dimensions}
+                    params={{
+                      color: item.color,
+                      name: item.sender,
+                      photoCount: countImageLive(item.types),
+                      videoCount: countVideos(item.types),
+                    }}
+                  />
+                )}
+                {!item.uris && (
+                  <ChatMessage
+                    id={item.id}
+                    message={item.message}
+                    titleName={item.sender}
+                    interactions={selectedInteractions}
+                    iconColor={item.color}
+                  />
+                )}
               </View>
             );
           }}
@@ -451,7 +356,7 @@ export default function GroupChatScreen() {
             placeholder="Type here..."
             placeholderTextColor={"#C5C5C7"}
             returnKeyType="send"
-            submitBehavior="blurAndSubmit"
+            submitBehavior="submit"
             onSubmitEditing={handleSendMessage}
           />
           <TouchableWithoutFeedback onPress={() => setIsAnon((prev) => !prev)}>
@@ -473,162 +378,129 @@ export default function GroupChatScreen() {
       </Animated.View>
 
       {isModal && (
-        <BlurView
-          intensity={15}
-          style={styles.blur}
-          experimentalBlurMethod="dimezisBlurView"
-        >
-          <GestureRecognizer
-            style={{ flex: 1, zIndex: 1 }}
-            onSwipeDown={() => setIsModal(false)}
-          >
-            <Modal
-              transparent={true}
-              visible={isModal}
-              animationType="slide"
-              onRequestClose={() => setIsModal(false)}
+        <Modal onRequestClose={() => setIsModal(false)}>
+          <View style={styles.modalButtonContainer}>
+            <TouchableOpacity
+              style={styles.modalChatButton}
+              onPress={() =>
+                Media.openCamera(
+                  setChatMedia,
+                  setChatMediaType,
+                  setChatMediaSizes
+                )
+              }
             >
-              {/* Handles clicks to close modal on click outside of the modal */}
-              <Pressable
-                onPress={(event) =>
-                  event.target == event.currentTarget && setIsModal(false)
-                }
-                style={{ flex: 1 }}
-              >
-                <View style={styles.modalContainer}>
-                  <View style={styles.modalContent}>
-                    <View style={styles.modalBar} />
-                    <View style={styles.modalButtonContainer}>
-                      <TouchableOpacity
-                        style={styles.modalChatButton}
-                        onPress={() => openCamera()}
-                      >
-                        <View
-                          style={[
-                            styles.modalIcon,
-                            { backgroundColor: "#B4B8BF" },
-                          ]}
-                        >
-                          <Camera width={35} height={35} />
-                        </View>
-                        <Text style={styles.modalChatText}>Camera</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.modalChatButton}
-                        onPress={() => openPhotos()}
-                      >
-                        <View
-                          style={[
-                            styles.modalIcon,
-                            { backgroundColor: "#FFF" },
-                          ]}
-                        >
-                          <Photo width={35} height={35} />
-                        </View>
-                        <Text style={styles.modalChatText}>Photos</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.modalChatButton}
-                        onPress={() => openDocument()}
-                      >
-                        <View
-                          style={[
-                            styles.modalIcon,
-                            { backgroundColor: "#7dabe7" },
-                          ]}
-                        >
-                          <File width={35} height={35} />
-                        </View>
-                        <Text style={styles.modalChatText}>Documents</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.modalChatButton}
-                        onPress={() => setIsAudioPopupVisible(true)}
-                      >
-                        <View
-                          style={[
-                            styles.modalIcon,
-                            { backgroundColor: "#f9815e" },
-                          ]}
-                        >
-                          <Audio width={25} height={25} />
-                        </View>
-                        <Text style={styles.modalChatText}>Audio</Text>
-                      </TouchableOpacity>
-                    </View>
+              <View style={[styles.modalIcon, { backgroundColor: "#B4B8BF" }]}>
+                <Camera width={35} height={35} />
+              </View>
+              <Text style={styles.modalChatText}>Camera</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalChatButton}
+              onPress={() => {
+                Media.openPhotos(
+                  setChatMedia,
+                  setChatMediaType,
+                  setChatMediaSizes
+                );
+              }}
+            >
+              <View style={[styles.modalIcon, { backgroundColor: "#FFF" }]}>
+                <Photo width={35} height={35} />
+              </View>
+              <Text style={styles.modalChatText}>Photos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalChatButton}
+              onPress={() => Media.openDocument(setChatFile)}
+            >
+              <View style={[styles.modalIcon, { backgroundColor: "#7dabe7" }]}>
+                <File width={35} height={35} />
+              </View>
+              <Text style={styles.modalChatText}>Documents</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalChatButton}
+              onPress={() => setIsAudioPopupVisible(true)}
+            >
+              <View style={[styles.modalIcon, { backgroundColor: "#f9815e" }]}>
+                <Audio width={25} height={25} />
+              </View>
+              <Text style={styles.modalChatText}>Audio</Text>
+            </TouchableOpacity>
+          </View>
+          {isAudioPopupVisible && (
+            <View style={styles.audioPopupOverlay}>
+              <View style={styles.audioPopup}>
+                <Text style={styles.audioPopupTitle}>🎙️ Record Audio</Text>
+
+                {/* Recording Indicator */}
+                {recording ? (
+                  <View style={styles.recordingIndicator}>
+                    <Animated.View
+                      style={[styles.recordingDot, blinkingStyle]}
+                    />
+                    <Text style={styles.recordingText}>Recording...</Text>
                   </View>
-                </View>
-              </Pressable>
-              {isAudioPopupVisible && (
-                <View style={styles.audioPopupOverlay}>
-                  <View style={styles.audioPopup}>
-                    <Text style={styles.audioPopupTitle}>🎙️ Record Audio</Text>
+                ) : null}
 
-                    {/* Recording Indicator */}
-                    {recording ? (
-                      <View style={styles.recordingIndicator}>
-                        <Animated.View
-                          style={[styles.recordingDot, blinkingStyle]}
-                        />
-                        <Text style={styles.recordingText}>Recording...</Text>
-                      </View>
-                    ) : null}
-
-                    {/* Audio Playback & Controls */}
-                    <View style={styles.audioButtonContainer}>
-                      {recording ? (
-                        <TouchableOpacity
-                          style={styles.audioButton}
-                          onPress={stopRecording}
-                        >
-                          <Text style={styles.audioButtonText}>Stop</Text>
-                        </TouchableOpacity>
-                      ) : (
-                        <TouchableOpacity
-                          style={styles.audioButton}
-                          onPress={startRecording}
-                        >
-                          <Text style={styles.audioButtonText}>Start</Text>
-                        </TouchableOpacity>
-                      )}
-
-                      {/* Show Play Button Only If an Audio is Recorded */}
-                      <TouchableOpacity
-                        style={[
-                          styles.audioButton,
-                          { opacity: !audioUri ? 0.5 : 1 },
-                        ]}
-                        onPress={playAudio}
-                        disabled={!audioUri}
-                      >
-                        <Text style={styles.audioButtonText}>Play</Text>
-                      </TouchableOpacity>
-
-                      {/* Send Audio Button */}
-                      <TouchableOpacity
-                        style={[
-                          styles.audioButton,
-                          { opacity: !audioUri ? 0.5 : 1 },
-                        ]}
-                        onPress={sendAudioMessage}
-                        disabled={!audioUri}
-                      >
-                        <Text style={styles.audioButtonText}>Send</Text>
-                      </TouchableOpacity>
-                    </View>
-
-                    {/* Cancel Button */}
+                {/* Audio Playback & Controls */}
+                <View style={styles.audioButtonContainer}>
+                  {recording ? (
                     <TouchableOpacity
-                      onPress={() => setIsAudioPopupVisible(false)}
+                      style={styles.audioButton}
+                      onPress={() =>
+                        Media.stopRecording(
+                          recording,
+                          setAudioUri,
+                          setRecording
+                        )
+                      }
                     >
-                      <Text style={styles.closePopupText}>Cancel</Text>
+                      <Text style={styles.audioButtonText}>Stop</Text>
                     </TouchableOpacity>
-                  </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.audioButton}
+                      onPress={() => Media.startRecording(setRecording)}
+                    >
+                      <Text style={styles.audioButtonText}>Start</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  {/* Show Play Button Only If an Audio is Recorded */}
+                  <TouchableOpacity
+                    style={[
+                      styles.audioButton,
+                      { opacity: !audioUri ? 0.5 : 1 },
+                    ]}
+                    onPress={() => Media.playAudio(setSound, audioUri)}
+                    disabled={!audioUri}
+                  >
+                    <Text style={styles.audioButtonText}>Play</Text>
+                  </TouchableOpacity>
+
+                  {/* Send Audio Button */}
+                  <TouchableOpacity
+                    style={[
+                      styles.audioButton,
+                      { opacity: !audioUri ? 0.5 : 1 },
+                    ]}
+                    onPress={sendAudioMessage}
+                    disabled={!audioUri}
+                  >
+                    <Text style={styles.audioButtonText}>Send</Text>
+                  </TouchableOpacity>
                 </View>
-              )}
-            </Modal>
-          </GestureRecognizer>
-        </BlurView>
+
+                {/* Cancel Button */}
+                <TouchableOpacity onPress={() => setIsAudioPopupVisible(false)}>
+                  <Text style={styles.closePopupText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Modal>
       )}
     </View>
   );
@@ -727,49 +599,17 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  blur: {
-    position: "absolute",
-    flexDirection: "column-reverse",
-    justifyContent: "flex-start",
-    top: -200,
-    left: 0,
-    right: 0,
-    height: "150%",
-    backgroundColor: "rgba(217, 217, 217, 0.05)",
-    zIndex: 1,
-  },
-  modalContainer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: 238,
-    zIndex: 1,
-  },
-  modalContent: {
-    flex: 1,
-    alignItems: "flex-start",
-    backgroundColor: "#2D8AFB",
-    opacity: 0.9,
-    borderRadius: 16,
-  },
-  modalBar: {
-    alignSelf: "center",
-    width: 30,
-    height: 3,
-    backgroundColor: "#FFFFFF",
-    opacity: 0.5,
-    borderRadius: 10,
-    marginTop: 9,
-  },
   modalButtonContainer: {
     flexDirection: "column",
+    justifyContent: "center",
     marginLeft: 19,
-    marginTop: 9,
+    marginBottom: 27,
+    alignSelf: "stretch",
   },
   modalChatButton: {
     flexDirection: "row",
-    marginBottom: 11,
     alignItems: "center",
+    marginBottom: 11,
     gap: 26,
   },
   modalIcon: {
@@ -790,8 +630,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black
-    zIndex: 2, // Above the modal
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 2,
   },
   audioPopup: {
     width: 250,

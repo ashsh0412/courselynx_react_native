@@ -10,19 +10,23 @@ import { onShare } from "@/utils/share";
 
 export type Props = {
   title?: string;
+  subTitle?: string;
   colorSquare?: string;
+  colorIsCircle?: boolean;
   hasSearch?: boolean;
   hasShare?: boolean;
   hasSettings?: boolean;
   toDetail?: boolean;
   withBorder?: boolean;
-  shareParams?: { message: string; url: string };
+  shareParams?: { message: string; uri: string };
   onChat?: boolean;
 };
 
 const Header: React.FC<Props> = ({
   title = "",
+  subTitle = "",
   colorSquare = "",
+  colorIsCircle = false,
   hasSearch = false,
   hasShare = false,
   hasSettings = false,
@@ -30,7 +34,7 @@ const Header: React.FC<Props> = ({
   withBorder = false,
   shareParams = {
     message: "Default Message",
-    url: "https://courselynx/Default",
+    uri: "https://courselynx/Default",
   },
   onChat = false,
 }) => {
@@ -46,41 +50,62 @@ const Header: React.FC<Props> = ({
             <FontAwesome6 name="chevron-left" size={24} color="#02102E" />
           </TouchableOpacity>
           {/* Allows navigation to chat detail page if needed, otherwise displays title */}
-          <TouchableOpacity disabled={!toDetail}>
-            <View style={styles.detailButton}>
-              {toDetail ? (
-                <Link
-                  href={{
-                    pathname: "/chat/detail",
-                    params: { title: title, color: colorSquare },
-                  }}
-                >
+          <View style={styles.detailButton}>
+            {toDetail ? (
+              <Link
+                href={{
+                  pathname: "/chat/detail",
+                  params: { title: title, color: colorSquare },
+                }}
+                asChild
+              >
+                <TouchableOpacity>
                   <View style={styles.detailButton}>
                     {colorSquare && (
                       <View
                         style={[
                           styles.square,
                           { backgroundColor: colorSquare },
+                          { borderRadius: colorIsCircle ? 30 : 10 },
                         ]}
                       ></View>
                     )}
 
-                    {title && <Text style={styles.headerTitle}>{title}</Text>}
+                    <View>
+                      {title && <Text style={styles.headerTitle}>{title}</Text>}
+                    </View>
                   </View>
-                </Link>
-              ) : (
-                <>
-                  {colorSquare && (
-                    <View
-                      style={[styles.square, { backgroundColor: colorSquare }]}
-                    ></View>
-                  )}
+                </TouchableOpacity>
+              </Link>
+            ) : (
+              <>
+                {colorSquare && (
+                  <View
+                    style={[
+                      styles.square,
+                      { backgroundColor: colorSquare },
+                      { borderRadius: colorIsCircle ? 30 : 10 },
+                    ]}
+                  ></View>
+                )}
 
+                <View>
                   {title && <Text style={styles.headerTitle}>{title}</Text>}
-                </>
-              )}
-            </View>
-          </TouchableOpacity>
+                  {subTitle && (
+                    <Text
+                      style={{
+                        fontFamily: "Inter",
+                        fontSize: 10,
+                        color: "#4F4F4F",
+                      }}
+                    >
+                      {subTitle}
+                    </Text>
+                  )}
+                </View>
+              </>
+            )}
+          </View>
         </View>
         {(hasSearch || hasShare || hasSettings) && (
           // Margin for search icon on chat page is further over than others
@@ -145,7 +170,6 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     marginRight: 10,
-    borderRadius: 10,
   },
   headerTitle: {
     color: "#02102E",
