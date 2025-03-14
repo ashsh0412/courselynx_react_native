@@ -13,7 +13,7 @@ import { useLocalSearchParams } from "expo-router";
 import CLIcon from "@/assets/images/icon_campus.png";
 import ChatFile from "@/components/ChatComponents/ChatFile";
 import { onShare } from "@/utils/share";
-import { longPressAnimation, releaseAnimation } from "@/utils/LongPress";
+import { longPressAnimation, releaseAnimation } from "@/utils/ongPress";
 
 const imageUrls = Array(18).fill(CLIcon);
 

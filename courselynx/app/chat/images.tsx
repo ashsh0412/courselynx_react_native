@@ -11,7 +11,7 @@ import {
 import Header from "@/components/Header";
 import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
 import { onShare } from "@/utils/share";
-import { longPressAnimation, releaseAnimation } from "@/utils/LongPress";
+import { longPressAnimation, releaseAnimation } from "@/utils/ongPress";
 
 export default function ImagesScreen() {
   const navigation = useNavigation();
