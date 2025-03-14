@@ -1,15 +1,14 @@
-import HeaderLogo from "@/components/HeaderLogo";
 import { Stack } from "expo-router";
 import { StatusBar } from "react-native";
 
-export default function SettingLayout() {
+export default function AddCourseLayout() {
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <Stack>
         <Stack.Screen
           name="index"
-          options={{ header: () => <HeaderLogo /> }}
+          options={{ headerShown: false }}
         />
       </Stack>
     </>

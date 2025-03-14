@@ -3,6 +3,8 @@ import { useEffect } from "react";
 
 export default function Index() {
 
+  // Temporary workaround
+  // Reference: https://github.com/expo/router/issues/740
   const rootNavigationState = useRootNavigationState();
   
   useEffect(() => {
