@@ -8,6 +8,7 @@ dist/
 web-build/
 expo-env.d.ts
 .expo/
+ios/
 
 # Native
 *.orig.*
