@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Interaction } from "./ChatMessage";
+import UserIcon from "./UserIcon";
 
 export type Props = {
   iconColor: string;
@@ -14,14 +15,12 @@ const MessageContainer: React.FC<Props> = ({
   titleName,
   interactions,
   children,
+  id,
 }) => {
   return (
     <>
       <View style={styles.messageContainer}>
-        <View style={styles.iconContainer}>
-          <View style={styles.iconLeftBorder} />
-          <View style={[styles.messageIcon, { backgroundColor: iconColor }]} />
-        </View>
+        <UserIcon id={id} uri={iconColor} />
         <View style={styles.messageWrapper}>
           <Text style={styles.messageTitle}>{titleName}</Text>
           {children}
@@ -60,25 +59,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginLeft: 13,
     gap: 5,
-  },
-  iconContainer: {
-    marginTop: 6,
-    width: 50,
-    height: 40,
-    flexDirection: "row",
-  },
-  iconLeftBorder: {
-    width: 4,
-    height: 40,
-    borderLeftWidth: 4,
-    borderColor: "#2D8AFB",
-    borderRadius: 2,
-    marginRight: 5,
-  },
-  messageIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 40,
   },
   messageTitle: {
     fontSize: 15,

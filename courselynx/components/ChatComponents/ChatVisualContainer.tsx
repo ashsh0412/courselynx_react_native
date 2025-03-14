@@ -5,7 +5,8 @@ import ChatVisualMedia from "./ChatVisualMedia";
 import { Bar as ProgressBar } from "react-native-progress";
 import { Link, useRouter } from "expo-router";
 import { onShare } from "@/utils/share";
-import { longPressAnimation, releaseAnimation } from "@/utils/LongPress";
+import { longPressAnimation, releaseAnimation } from "@/utils/longPress";
+import UserIcon from "./UserIcon";
 
 export type Props = {
   iconColor: string;
@@ -31,6 +32,7 @@ const ChatVisualContainer: React.FC<Props> = ({
   mediaUris,
   mediaTypes,
   isUser,
+  id,
   params,
   dimensions,
 }) => {
@@ -105,10 +107,7 @@ const ChatVisualContainer: React.FC<Props> = ({
           { opacity: loadVisible ? 0.5 : 1 },
         ]}
       >
-        <View style={styles.iconContainer}>
-          <View style={styles.iconLeftBorder} />
-          <View style={[styles.messageIcon, { backgroundColor: iconColor }]} />
-        </View>
+        <UserIcon id={id} uri={iconColor} />
         <View style={styles.messageWrapper}>
           <Text style={styles.messageTitle}>{titleName}</Text>
           <Animated.View style={{ transform: [{ scale: scales.current[0] }] }}>
@@ -181,25 +180,6 @@ const styles = StyleSheet.create({
   messageWrapper: {
     paddingVertical: 8,
     marginLeft: 13,
-  },
-  iconContainer: {
-    marginTop: 6,
-    width: 50,
-    height: 40,
-    flexDirection: "row",
-  },
-  iconLeftBorder: {
-    width: 4,
-    height: 40,
-    borderLeftWidth: 4,
-    borderColor: "#2D8AFB",
-    borderRadius: 2,
-    marginRight: 5,
-  },
-  messageIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 40,
   },
   messageTitle: {
     fontSize: 15,
