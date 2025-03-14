@@ -1,13 +1,11 @@
 import {
   View,
   Modal as RNModal,
-  Pressable,
   StyleSheet,
   StyleProp,
   ViewStyle,
   TouchableOpacity,
   Text,
-  Dimensions,
 } from "react-native";
 import { BlurView } from "expo-blur";
 import {
@@ -38,27 +36,30 @@ const Modal: React.FC<ModalProps> = ({
   children,
   text = "",
   hasButtonYesNo = false,
-  onPressNo = () => {},
-  onPressYes = () => {},
+  onPressNo = () => { },
+  onPressYes = () => { },
   modalStyle = {},
 }) => {
   const translateY = useSharedValue(0);
-  const [modalY, setModalY] = useState<number>();
-  const height = Dimensions.get("screen").height;
+  const [modalY, setModalY] = useState(0); // Modal height
 
-  const pan = Gesture.Pan()
+  const handleCloseModal = () => {
+    translateY.value = withTiming(modalY, { duration: 200 }, () => runOnJS(onRequestClose)());
+  };
+
+  const tapGesture = Gesture.Tap()
+    .onEnd(() => runOnJS(handleCloseModal)());
+
+  const panGesture = Gesture.Pan()
     .onChange((event) => {
-      console.log(height);
-      console.log(modalY);
-      console.log(event);
-      if (modalY && event.translationY > 0 && event.absoluteY >= modalY)
-        translateY.value = event.absoluteY - modalY;
+      if (event.translationY > 0)
+        translateY.value = event.translationY;
     })
     .onEnd((event) => {
-      if (modalY && event.absoluteY - modalY > (height - modalY) / 1.5) {
-        translateY.value = withTiming(500);
-        runOnJS(onRequestClose)();
-      } else translateY.value = withTiming(0);
+      if (event.translationY * 2 > modalY || event.velocityY > 200)
+        runOnJS(handleCloseModal)();
+      else
+        translateY.value = withTiming(0); // Snap back if not dragged enough
     });
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -74,51 +75,55 @@ const Modal: React.FC<ModalProps> = ({
       <RNModal
         transparent={true}
         animationType="slide"
-        onRequestClose={onRequestClose}
+        onRequestClose={handleCloseModal} // Not sure how Android behaves here
       >
-        <GestureHandlerRootView style={{ flex: 1, justifyContent: "flex-end" }}>
-          <GestureDetector gesture={pan}>
-            <View style={{ flex: 1 }}>
-              {/* Handles clicks to close modal on click outside of the modal */}
-              <Pressable onPress={onRequestClose} style={{ flex: 1 }} />
-              <Animated.View
-                style={[styles.container, modalStyles, animatedStyle]}
-                onLayout={(event) => setModalY(event.nativeEvent.layout.y)}
-              >
-                <View style={styles.bar} />
-                {text != "" && (
-                  <Text
-                    style={[
-                      styles.text,
-                      { marginBottom: !hasButtonYesNo && !children ? 28 : 23 },
-                    ]}
-                  >
-                    {text}
-                  </Text>
-                )}
-                {children}
-                {hasButtonYesNo && (
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={onPressNo}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={styles.buttonText}>No</Text>
-                    </TouchableOpacity>
+        <GestureHandlerRootView style={{ flex: 1 }}>
 
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={onPressYes}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={styles.buttonText}>Yes</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </Animated.View>
-            </View>
+          {/* The rest of the screen */}
+          <GestureDetector gesture={tapGesture}>
+            <View style={{ flex: 1 }} />
           </GestureDetector>
+
+          {/* The modal at the bottom */}
+          <GestureDetector gesture={panGesture}>
+            <Animated.View
+              style={[styles.container, modalStyle, animatedStyle]}
+              onLayout={(event) => setModalY(event.nativeEvent.layout.height)}
+            >
+              <View style={styles.bar} />
+              {text != "" && (
+                <Text
+                  style={[
+                    styles.text,
+                    { marginBottom: !hasButtonYesNo && !children ? 28 : 23 },
+                  ]}
+                >
+                  {text}
+                </Text>
+              )}
+              {children}
+              {hasButtonYesNo && (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={onPressNo}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.buttonText}>No</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={onPressYes}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.buttonText}>Yes</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </Animated.View>
+          </GestureDetector>
+
         </GestureHandlerRootView>
       </RNModal>
     </BlurView>
