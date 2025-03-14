@@ -163,14 +163,13 @@ export default function ChatsTab() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  chatList: {},
+  chatList: { paddingTop: 12 },
   chatItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingBottom: 16,
     backgroundColor: "#fff",
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
   },
   chatIcon: { width: 48, height: 48, borderRadius: 12, marginRight: 16 },
   chatInfo: { flex: 1 },
