@@ -5,7 +5,7 @@ import ChatVisualMedia from "./ChatVisualMedia";
 import { Bar as ProgressBar } from "react-native-progress";
 import { Link, useRouter } from "expo-router";
 import { onShare } from "@/utils/share";
-import { longPressAnimation, releaseAnimation } from "@/utils/ongPress";
+import { longPressAnimation, releaseAnimation } from "@/utils/longPress";
 import UserIcon from "./UserIcon";
 
 export type Props = {

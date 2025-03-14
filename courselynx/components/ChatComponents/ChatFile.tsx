@@ -11,7 +11,7 @@ import Check from "@/assets/svg/fileCheck.svg";
 import { useEffect, useRef, useState } from "react";
 import { Bar as ProgressBar } from "react-native-progress";
 import { Interaction } from "./ChatMessage";
-import { longPressAnimation, releaseAnimation } from "@/utils/ongPress";
+import { longPressAnimation, releaseAnimation } from "@/utils/longPress";
 import { onShare } from "@/utils/share";
 
 export type Props = {
