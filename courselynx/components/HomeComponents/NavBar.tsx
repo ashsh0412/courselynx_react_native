@@ -40,8 +40,12 @@ export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
         ))}
       </View>
 
-      {/* add correct link later*/}
-      <Link href="/" asChild>
+      <Link
+        href={
+          activeScreen === "Chats" ? "/home/addChat" : "/home/addCourse"
+        }
+        asChild
+      >
         <Pressable style={styles.addCourseButton}>
           <Ionicons name="add" size={34} color="#fff" />
         </Pressable>

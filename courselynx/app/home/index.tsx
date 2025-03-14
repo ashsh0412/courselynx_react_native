@@ -1,6 +1,5 @@
 import { useState } from "react";
-import NavBar from "../../components/HomeComponents/NavBar";
-import HomeHeader from "@/components/HomeComponents/Header";
+import NavBar from "@/components/HomeComponents/NavBar";
 import ChatsTab from "./chats";
 import CoursesTab from "./courses";
 
@@ -9,8 +8,6 @@ export default function HomeScreen() {
 
   return (
     <>
-      <HomeHeader />
-
       {activeScreen === "Chats" ? <ChatsTab /> : <CoursesTab />}
 
       <NavBar activeScreen={activeScreen} setActiveScreen={setActiveScreen} />

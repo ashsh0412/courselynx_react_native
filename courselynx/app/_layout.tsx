@@ -11,7 +11,13 @@ export default function RootLayout() {
           <Stack.Screen
             name="index"
             options={{
-              title: "Development Screen",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="home"
+            options={{
+              headerShown: false,
             }}
           />
           <Stack.Screen
