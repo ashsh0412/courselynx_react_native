@@ -1,5 +1,6 @@
-import React, { useContext, useRef } from "react";
-import { Animated, Pressable, StyleProp, ViewStyle } from "react-native";
+import React, { useContext } from "react";
+import { Pressable, StyleProp, ViewStyle } from "react-native";
+import Animated, { useSharedValue, withTiming, useAnimatedStyle } from "react-native-reanimated";
 import * as Haptics from 'expo-haptics';
 import { HapticContext } from "@/contexts/HapticContext";
 
@@ -17,34 +18,32 @@ const LongPressable: React.FC<LongPressableProps> = ({
   onPress = () => { },
   onLongPress = () => { },
   scaling = 1.05,
-  duration = 200,
+  duration = 250,
   style,
 }) => {
-  const scale = useRef<Animated.Value>(new Animated.Value(1));
+  const scale = useSharedValue(1);
   const { isHapticEnabled } = useContext(HapticContext);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
 
   return (
     <Pressable
       onPress={onPress}
       onLongPress={() => {
-        if (isHapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        Animated.timing(scale.current, {
-          toValue: scaling,
-          duration: duration,
-          useNativeDriver: true,
-        }).start();
+        isHapticEnabled && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        scale.value = withTiming(scaling, { duration });
         onLongPress();
       }}
       onPressOut={() => {
-        Animated.timing(scale.current, {
-          toValue: 1,
-          duration: duration,
-          useNativeDriver: true,
-        }).start();
+        scale.value = withTiming(1, { duration });
       }}
       style={style}
     >
-      <Animated.View style={{ transform: [{ scale: scale.current }] }}>
+      <Animated.View style={animatedStyle}>
         {children}
       </Animated.View>
     </Pressable>

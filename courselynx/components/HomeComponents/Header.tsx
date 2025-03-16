@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import Logo from "@/components/Logo";

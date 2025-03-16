@@ -1,11 +1,6 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import {
-  View,
-  StyleSheet,
-  Animated,
-  FlatList,
-} from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import Header from "@/components/Header";
 import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
 import { onShare } from "@/utils/share";

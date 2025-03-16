@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,23 +6,18 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  Animated,
-  Pressable,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import CLIcon from "@/assets/images/icon_campus.png";
 import ChatFile from "@/components/ChatComponents/ChatFile";
 import { onShare } from "@/utils/share";
-import { longPressAnimation, releaseAnimation } from "@/utils/longPress";
+import LongPressable from "@/components/LongPressable";
 
 const imageUrls = Array(18).fill(CLIcon);
 
 export default function MediaScreen() {
   const { title, color } = useLocalSearchParams();
   const [showDocuments, setShowDocuments] = useState(false);
-  const scales = useRef<Animated.Value[]>(
-    Array.from({ length: 18 }, () => new Animated.Value(1))
-  );
 
   return (
     <View
@@ -54,19 +49,11 @@ export default function MediaScreen() {
             data={imageUrls}
             renderItem={({ item, index }) => {
               return (
-                <Animated.View
-                  style={[{ transform: [{ scale: scales.current[index] }] }]}
+                <LongPressable
+                  onLongPress={() => onShare({ message: "", uri: "Test Campus Logo URI" })}
                 >
-                  <Pressable
-                    onLongPress={() => {
-                      onShare({ message: "", uri: "Test Campus Logo URI" });
-                      longPressAnimation(index, scales, 1.05, 200, true);
-                    }}
-                    onPressOut={() => releaseAnimation(index, scales, 200)}
-                  >
-                    <Image key={index} style={styles.image} source={item} />
-                  </Pressable>
-                </Animated.View>
+                  <Image key={index} style={styles.image} source={item} />
+                </LongPressable>
               );
             }}
             contentContainerStyle={{

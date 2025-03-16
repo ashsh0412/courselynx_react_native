@@ -5,15 +5,11 @@
  *
  * You can use this custom switch component instead. Avoid using the default switch component.
  */
-
-import { useRef } from "react";
-import {
-  Animated,
-  TouchableOpacity,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-} from "react-native";
+import { useContext } from "react";
+import { StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
+import Animated, { useSharedValue, withTiming, useAnimatedStyle } from "react-native-reanimated";
+import * as Haptics from 'expo-haptics';
+import { HapticContext } from "@/contexts/HapticContext";
 
 interface SwitchProps {
   value: boolean;
@@ -23,18 +19,20 @@ interface SwitchProps {
 }
 
 const Switch: React.FC<SwitchProps> = ({ value, onValueChange, switchStyle, thumbStyle }) => {
-  
-  const translateX = useRef(new Animated.Value(value ? 20 : 0)).current;
+  const { isHapticEnabled } = useContext(HapticContext);
+  const translateX = useSharedValue(value ? 20 : 0);
 
   const toggleSwitch = () => {
-    const newValue = !value;
-    Animated.timing(translateX, {
-      toValue: newValue ? 20 : 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-    onValueChange(newValue);
+    isHapticEnabled && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    translateX.value = withTiming(value ? 0 : 20, { duration: 200 });
+    onValueChange(!value);
   };
+
+  const thumbStyleAnimated = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
 
   return (
     <TouchableOpacity
@@ -49,7 +47,7 @@ const Switch: React.FC<SwitchProps> = ({ value, onValueChange, switchStyle, thum
       <Animated.View
         style={[
           styles.switchThumb,
-          { transform: [{ translateX }] },
+          thumbStyleAnimated,
           value && styles.switchThumbOn,
           thumbStyle,
         ]}
