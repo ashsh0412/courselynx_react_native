@@ -1,51 +1,50 @@
-import React from "react";
+import { useContext } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { HapticContext } from "@/contexts/HapticContext";
 
 interface NavBarProps {
-  activeScreen: string;
-  setActiveScreen: (screen: string) => void;
+  activeScreen: number;
+  setActiveScreen: (screen: number) => void;
 }
 
 export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
+  const { isHapticEnabled } = useContext(HapticContext);
 
   const tabs = [
-    { name: "Chats", activeIcon: "chatbubble-ellipses" as const, inactiveIcon: "chatbubble-ellipses-outline" as const },
-    { name: "Courses", activeIcon: "book" as const, inactiveIcon: "book-outline" as const },
+    { name: "Chats", href: "/home/addChat" as const, activeIcon: "chatbubble-ellipses" as const, inactiveIcon: "chatbubble-ellipses-outline" as const },
+    { name: "Courses", href: "/home/addCourse" as const, activeIcon: "book" as const, inactiveIcon: "book-outline" as const },
   ];
 
-  const handlePress = async (screen: string) => {
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  const handlePress = (screen: number) => {
+    isHapticEnabled && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setActiveScreen(screen);
   };
 
   return (
     <>
       <View style={styles.navContainer}>
-        {tabs.map((tab) => (
-          <Pressable key={tab.name} onPress={() => handlePress(tab.name)}>
-            <View style={styles.navButton}>
-              <Ionicons
-                name={activeScreen === tab.name ? tab.activeIcon : tab.inactiveIcon}
-                size={28}
-                color="#fff"
-              />
-              <Text style={[styles.navText, activeScreen === tab.name && styles.activeText]}>
-                {tab.name}
-              </Text>
-            </View>
+        {tabs.map((tab, index) => (
+          <Pressable
+            key={index}
+            onPress={() => handlePress(index)}
+            style={styles.navButton}
+          >
+            <Ionicons
+              name={activeScreen == index ? tab.activeIcon : tab.inactiveIcon}
+              size={28}
+              color="#fff"
+            />
+            <Text style={[styles.navText, activeScreen == index && styles.activeText]}>
+              {tab.name}
+            </Text>
           </Pressable>
         ))}
       </View>
 
-      <Link
-        href={
-          activeScreen === "Chats" ? "/home/addChat" : "/home/addCourse"
-        }
-        asChild
-      >
+      <Link href={tabs[activeScreen].href} asChild>
         <Pressable style={styles.addCourseButton}>
           <Ionicons name="add" size={34} color="#fff" />
         </Pressable>
