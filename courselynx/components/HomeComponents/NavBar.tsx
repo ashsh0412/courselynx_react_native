@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -27,10 +27,11 @@ export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
     <>
       <View style={styles.navContainer}>
         {tabs.map((tab, index) => (
-          <Pressable
+          <TouchableOpacity
             key={index}
             onPress={() => handlePress(index)}
             style={styles.navButton}
+            activeOpacity={0.6}
           >
             <Ionicons
               name={activeScreen == index ? tab.activeIcon : tab.inactiveIcon}
@@ -40,14 +41,17 @@ export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
             <Text style={[styles.navText, activeScreen == index && styles.activeText]}>
               {tab.name}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         ))}
       </View>
 
-      <Link href={tabs[activeScreen].href} asChild>
-        <Pressable style={styles.addCourseButton}>
+      <Link
+        href={tabs[activeScreen].href}
+        asChild
+      >
+        <TouchableOpacity style={styles.addButton} activeOpacity={0.6}>
           <Ionicons name="add" size={34} color="#fff" />
-        </Pressable>
+        </TouchableOpacity>
       </Link>
     </>
   );
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
   activeText: {
     fontWeight: "bold",
   },
-  addCourseButton: {
+  addButton: {
     position: "absolute",
     bottom: 120,
     right: 20,

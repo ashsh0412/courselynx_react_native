@@ -1,4 +1,4 @@
-import HeaderLogo from "@/components/HeaderLogo";
+import HeaderLogo from "@/components/HeaderComponents/HeaderLogo";
 import TabSelector from "@/components/TabSelector";
 import { useState } from "react";
 import DirectChatTab from "./direct";

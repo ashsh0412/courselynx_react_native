@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/HeaderComponents/Header";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "react-native";
 

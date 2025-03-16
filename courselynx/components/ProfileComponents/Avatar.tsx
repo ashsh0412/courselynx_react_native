@@ -30,6 +30,11 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
   },
+  small_avatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+  },
   editButton: {
     position: "absolute",
     bottom: 5,

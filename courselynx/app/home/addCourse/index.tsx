@@ -1,4 +1,4 @@
-import HeaderLogo from "@/components/HeaderLogo";
+import HeaderLogo from "@/components/HeaderComponents/HeaderLogo";
 import { Text } from 'react-native';
 
 

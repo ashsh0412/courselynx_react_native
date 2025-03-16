@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/HeaderComponents/Header";
 import { useLocalSearchParams } from "expo-router";
 import PublicView from "./public";
 import EditView from "./edit";
