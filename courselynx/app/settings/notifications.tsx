@@ -4,17 +4,20 @@ import Switch from "@/components/Switch";
 import styles from "./settings.styles";
 
 export default function NotificationScreen() {
-  const notifications = {
-    "ALL NOTIFICATIONS": [
-      { label: "Mute", key: "isMuted", value: false },
-      { label: "Vibrate", key: "isVibrate", value: true },
-    ],
-  };
+  const notifications = [
+    {
+      title: "ALL NOTIFICATIONS",
+      items: [
+        { label: "Mute", key: "isMuted", value: false },
+        { label: "Vibrate", key: "isVibrate", value: true },
+      ],
+    },
+  ];
 
   // Build initial state object from toggleItems array
   const [toggleStates, setToggleStates] = useState(() => {
     const initialState: Record<string, boolean> = {};
-    Object.entries(notifications).map(([section, items]) => {
+    notifications.map(({title, items}) => {
       items.forEach((item) => {
         initialState[item.key] = item.value;
       });
@@ -32,13 +35,13 @@ export default function NotificationScreen() {
 
   return (
     <View style={styles.container}>
-      {Object.entries(notifications).map(([section, items], sectionIndex) => (
-        <View key={sectionIndex}>
-          <Text style={styles.sectionTitle}>{section}</Text>
-          
+      {notifications.map(({title, items}) => (
+        <View key={title}>
+          <Text style={styles.sectionTitle}>{title}</Text>
+
           <View style={styles.sectionContainer}>
             {items.map((item, index) => (
-              <View style={[styles.sectionRow, {justifyContent: "space-between"}]} key={index}>
+              <View style={[styles.sectionRow, { justifyContent: "space-between" }]} key={index}>
 
                 <Text style={styles.sectionText}>{item.label}</Text>
                 <Switch
@@ -49,7 +52,7 @@ export default function NotificationScreen() {
               </View>
             ))}
           </View>
-          
+
         </View>
       ))}
     </View>

@@ -11,7 +11,6 @@ import { BlurView } from "expo-blur";
 import {
   Gesture,
   GestureDetector,
-  GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -19,7 +18,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 interface ModalProps {
   onRequestClose: () => void;
@@ -47,20 +46,26 @@ const Modal: React.FC<ModalProps> = ({
     translateY.value = withTiming(modalY, { duration: 200 }, () => runOnJS(onRequestClose)());
   };
 
-  const tapGesture = Gesture.Tap()
-    .onEnd(() => runOnJS(handleCloseModal)());
+  const tabGesture = useMemo(() =>
+    Gesture.Tap()
+      .onEnd(() => { runOnJS(handleCloseModal)(); }),
+    [handleCloseModal]
+  );
 
-  const panGesture = Gesture.Pan()
-    .onChange((event) => {
-      if (event.translationY > 0)
-        translateY.value = event.translationY;
-    })
-    .onEnd((event) => {
-      if (event.translationY * 2 > modalY || event.velocityY > 200)
-        runOnJS(handleCloseModal)();
-      else
-        translateY.value = withTiming(0); // Snap back if not dragged enough
-    });
+  const panGesture = useMemo(() =>
+    Gesture.Pan()
+      .onChange((event) => {
+        if (event.translationY > 0)
+          translateY.value = event.translationY;
+      })
+      .onEnd((event) => {
+        if (event.translationY * 2 > modalY || event.velocityY > 200)
+          runOnJS(handleCloseModal)();
+        else
+          translateY.value = withTiming(0); // Snap back if not dragged enough
+      }),
+    [handleCloseModal]
+  );
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -77,15 +82,11 @@ const Modal: React.FC<ModalProps> = ({
         animationType="slide"
         onRequestClose={handleCloseModal} // Not sure how Android behaves here
       >
-        <GestureHandlerRootView style={{ flex: 1 }}>
-
-          {/* The rest of the screen */}
-          <GestureDetector gesture={tapGesture}>
-            <View style={{ flex: 1 }} />
-          </GestureDetector>
-
-          {/* The modal at the bottom */}
-          <GestureDetector gesture={panGesture}>
+        <GestureDetector gesture={panGesture}>
+          <View style={{ flex: 1 }}>
+            <GestureDetector gesture={tabGesture}>
+              <View style={{ flex: 1 }} />
+            </GestureDetector>
             <Animated.View
               style={[styles.container, modalStyle, animatedStyle]}
               onLayout={(event) => setModalY(event.nativeEvent.layout.height)}
@@ -122,9 +123,8 @@ const Modal: React.FC<ModalProps> = ({
                 </View>
               )}
             </Animated.View>
-          </GestureDetector>
-
-        </GestureHandlerRootView>
+          </View>
+        </GestureDetector>
       </RNModal>
     </BlurView>
   );
