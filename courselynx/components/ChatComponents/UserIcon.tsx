@@ -4,23 +4,37 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 interface UserIconProps {
   id: number;
   uri: string;
-};
+  hasHighlight?: boolean;
+  isMember?: boolean;
+}
 
 const UserIcon: React.FC<UserIconProps> = ({
   id,
   uri,
+  hasHighlight,
+  isMember,
 }) => {
-
   return (
-    <View style={styles.iconContainer}>
-      <View style={styles.iconLeftBorder} />
+    <View
+      style={[
+        styles.iconContainer,
+        isMember && { marginTop: 0, width: 50, height: 50 },
+      ]}
+    >
+      {hasHighlight && <View style={styles.iconLeftBorder} />}
       <TouchableOpacity
-        style={[styles.messageIcon, { backgroundColor: uri }]}
+        style={[
+          styles.messageIcon,
+          { backgroundColor: uri },
+          isMember && { width: 50, height: 50 },
+        ]}
         activeOpacity={0.8}
-        onPress={() => router.push({
-          pathname: "/settings/profile",
-          params: { id: id },
-        })}
+        onPress={() =>
+          router.push({
+            pathname: "/settings/profile",
+            params: { id: id },
+          })
+        }
       />
     </View>
   );

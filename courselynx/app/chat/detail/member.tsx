@@ -2,23 +2,24 @@ import React, { useState } from "react";
 import { View, Text, TextInput, FlatList, StyleSheet } from "react-native";
 import Entypo from "react-native-vector-icons/Entypo";
 import { useLocalSearchParams } from "expo-router";
+import UserCard from "@/components/UserCard";
 
 type Member = {
-  id: string;
+  id: number;
   name: string;
 };
 
 // Mock Data
 const membersData: Member[] = [
-  { id: "1", name: "Albert" },
-  { id: "2", name: "Alberta" },
-  { id: "3", name: "Charlie" },
-  { id: "4", name: "Charlotte" },
-  { id: "5", name: "Mathew" },
-  { id: "6", name: "Nathan" },
-  { id: "7", name: "Albert" },
-  { id: "8", name: "Alberta" },
-  { id: "9", name: "Charlie" },
+  { id: 1, name: "Albert" },
+  { id: 2, name: "Alberta" },
+  { id: 3, name: "Charlie" },
+  { id: 4, name: "Charlotte" },
+  { id: 5, name: "Matthew" },
+  { id: 6, name: "Nathan" },
+  { id: 7, name: "Albert" },
+  { id: 8, name: "Alberta" },
+  { id: 9, name: "Charlie" },
 ];
 //Colors for Members
 const getRandomColor = (): string => {
@@ -39,13 +40,6 @@ export default function MembersScreen() {
 
   const filteredMembers = membersData.filter((member) =>
     member.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const renderItem = ({ item }: { item: Member }) => (
-    <View style={styles.memberItem}>
-      <View style={[styles.circle, { backgroundColor: getRandomColor() }]} />
-      <Text style={styles.memberName}>{item.name}</Text>
-    </View>
   );
 
   return (
@@ -78,11 +72,30 @@ export default function MembersScreen() {
         {/* Members List */}
         <FlatList
           data={filteredMembers}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item, index }) => {
+            return (
+              <>
+                <UserCard
+                  id={item.id}
+                  name={item.name}
+                  uri={getRandomColor()}
+                  hasAdd={true}
+                  inCommon={["COP4020", "STA3032"]}
+                />
+                <UserCard
+                  id={item.id}
+                  name={item.name}
+                  uri={getRandomColor()}
+                  hasAdd={true}
+                  inCommon={["STA3032"]}
+                />
+              </>
+            );
+          }}
           indicatorStyle="black"
           contentContainerStyle={{
-            paddingHorizontal: 22,
+            paddingHorizontal: 11,
           }}
           scrollIndicatorInsets={{ right: 5 }}
           showsVerticalScrollIndicator={true}
