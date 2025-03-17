@@ -21,7 +21,11 @@ const UserIcon: React.FC<UserIconProps> = ({
         isMember && { marginTop: 0, width: 50, height: 50 },
       ]}
     >
-      {hasHighlight && <View style={styles.iconLeftBorder} />}
+      {isMember || (
+        <View
+          style={[styles.iconLeftBorder, { opacity: hasHighlight ? 1 : 0 }]}
+        />
+      )}
       <TouchableOpacity
         style={[
           styles.messageIcon,
