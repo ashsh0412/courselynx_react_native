@@ -20,33 +20,21 @@ const UserCard: React.FC<Props> = ({
   name,
   hasMessage,
   hasAdd,
-  inCommon = [],
+  inCommon,
 }) => {
   const [isAdded, setIsAdded] = useState(false);
-
-  const formatInCommon = (commonArray: string[]) => {
-    let commonString = "";
-    for (const common of commonArray) {
-      commonString += common + ", ";
-    }
-    commonString = commonString.slice(0, -2);
-    if (commonString === "") {
-      commonString = "N/A";
-    }
-    return (
-      <Text style={styles.userCommon}>
-        <Text style={styles.userCommonTop}>{"Top Groups in Common: "}</Text>
-        {commonString}
-      </Text>
-    );
-  };
 
   return (
     <View style={styles.cardContainer}>
       <UserIcon id={id} uri={uri} hasHighlight={false} isMember={true} />
       <View style={styles.userInfo}>
         <Text style={styles.username}>{name}</Text>
-        {formatInCommon(inCommon)}
+        {inCommon && (
+          <Text style={styles.userCommon}>
+            <Text style={styles.userCommonTop}>{"Top Groups in Common:\n"}</Text>
+            {inCommon.join(", ")}
+          </Text>
+        )}
       </View>
       <View style={styles.iconBackground}>
         {hasMessage && (

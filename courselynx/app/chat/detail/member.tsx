@@ -81,14 +81,13 @@ export default function MembersScreen() {
                   name={item.name}
                   uri={getRandomColor()}
                   hasAdd={true}
-                  inCommon={["COP4020", "STA3032"]}
+                  inCommon={["COP4020", "STA3032", "STA3032"]}
                 />
                 <UserCard
                   id={item.id}
                   name={item.name}
                   uri={getRandomColor()}
                   hasAdd={true}
-                  inCommon={["STA3032"]}
                 />
               </>
             );
