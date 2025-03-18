@@ -1,17 +1,10 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  Animated,
-  FlatList,
-} from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import Header from "@/components/Header";
 import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
 import { onShare } from "@/utils/share";
-import { longPressAnimation, releaseAnimation } from "@/utils/longPress";
+import LongPressable from "@/components/LongPressable";
 
 export default function ImagesScreen() {
   const navigation = useNavigation();
@@ -23,10 +16,6 @@ export default function ImagesScreen() {
   const mediaUris = JSON.parse(uris as string);
   const mediaTypes = JSON.parse(types as string);
   const mediaSizes = JSON.parse(sizes as string);
-
-  const scales = useRef<Animated.Value[]>(
-    mediaUris.map(() => new Animated.Value(1))
-  );
 
   const getMediaCountText = () => {
     if (photos && videos) {
@@ -63,37 +52,18 @@ export default function ImagesScreen() {
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.flatListContent}
         renderItem={({ item, index }) => (
-          <Animated.View
-            style={[
-              {
-                marginBottom: 14,
-                width: 345,
-                aspectRatio: mediaSizes[index].width / mediaSizes[index].height,
-              },
-              { transform: [{ scale: scales.current[index] }] },
-            ]}
+          <LongPressable
+            onLongPress={() => onShare({ message: "", uri: item })}
+            style={{ marginBottom: 14 }}
           >
-            <Pressable
-              style={{
-                marginBottom: 14,
-                width: 345,
-                aspectRatio: mediaSizes[index].width / mediaSizes[index].height,
-              }}
-              onLongPress={() => {
-                onShare({ message: "", uri: item });
-                longPressAnimation(index, scales, 1.05, 200, true);
-              }}
-              onPressOut={() => releaseAnimation(index, scales, 200)}
-            >
-              <ChatVisualMedia
-                mediaUri={item}
-                type={mediaTypes[index]}
-                sizing="images"
-                onImages={true}
-                aspect={mediaSizes[index].width / mediaSizes[index].height}
-              />
-            </Pressable>
-          </Animated.View>
+            <ChatVisualMedia
+              mediaUri={item}
+              type={mediaTypes[index]}
+              sizing="images"
+              onImages={true}
+              aspect={mediaSizes[index].width / mediaSizes[index].height}
+            />
+          </LongPressable>
         )}
       />
     </View>

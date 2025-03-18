@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, OpaqueColorValue } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 interface SearchBarProps {
@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: backgroundColor}]}>
+    <View style={[styles.container, { backgroundColor: backgroundColor }]}>
       <Ionicons name="search" size={20} color={iconColor} style={styles.icon} />
       <TextInput
         style={styles.input}
