@@ -41,7 +41,11 @@ export default function SettingLayout() {
         />
         <Stack.Screen
           name="signout"
-          options={{ header: () => <Header title="Sign Out" withBorder /> }}
+          options={{
+            headerShown: false,
+            presentation: "transparentModal",
+            animation: "none",
+          }}
         />
       </Stack>
     </>

@@ -42,13 +42,13 @@ const Modal: React.FC<ModalProps> = ({
   const translateY = useSharedValue(0);
   const [modalY, setModalY] = useState(0); // Modal height
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (onRequestClose: () => void) => {
     translateY.value = withTiming(modalY, { duration: 200 }, () => runOnJS(onRequestClose)());
   };
 
   const tabGesture = useMemo(() =>
     Gesture.Tap()
-      .onEnd(() => { runOnJS(handleCloseModal)(); }),
+      .onEnd(() => { runOnJS(handleCloseModal)(onRequestClose); }),
     [handleCloseModal]
   );
 
@@ -60,7 +60,7 @@ const Modal: React.FC<ModalProps> = ({
       })
       .onEnd((event) => {
         if (event.translationY * 2 > modalY || event.velocityY > 200)
-          runOnJS(handleCloseModal)();
+          runOnJS(handleCloseModal)(onRequestClose);
         else
           translateY.value = withTiming(0); // Snap back if not dragged enough
       }),
@@ -80,7 +80,7 @@ const Modal: React.FC<ModalProps> = ({
       <RNModal
         transparent={true}
         animationType="slide"
-        onRequestClose={handleCloseModal} // Not sure how Android behaves here
+        onRequestClose={() => handleCloseModal(onRequestClose)} // Not sure how Android behaves here
       >
         <GestureDetector gesture={panGesture}>
           <View style={{ flex: 1 }}>
@@ -107,7 +107,7 @@ const Modal: React.FC<ModalProps> = ({
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
                     style={styles.button}
-                    onPress={onPressNo}
+                    onPress={() => handleCloseModal(onPressNo)}
                     activeOpacity={0.7}
                   >
                     <Text style={styles.buttonText}>No</Text>
@@ -115,7 +115,7 @@ const Modal: React.FC<ModalProps> = ({
 
                   <TouchableOpacity
                     style={styles.button}
-                    onPress={onPressYes}
+                    onPress={() => handleCloseModal(onPressYes)}
                     activeOpacity={0.7}
                   >
                     <Text style={styles.buttonText}>Yes</Text>
