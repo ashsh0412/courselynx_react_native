@@ -14,8 +14,8 @@ export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
   const { isHapticEnabled } = useContext(HapticContext);
 
   const tabs = [
-    { name: "Chats", href: "/home/addChat" as const, activeIcon: "chatbubble-ellipses" as const, inactiveIcon: "chatbubble-ellipses-outline" as const },
-    { name: "Courses", href: "/home/addCourse" as const, activeIcon: "book" as const, inactiveIcon: "book-outline" as const },
+    { name: "Chats", href: "/home/addChat", activeIcon: "chatbubble-ellipses", inactiveIcon: "chatbubble-ellipses-outline" },
+    { name: "Courses", href: "/home/addCourse", activeIcon: "book", inactiveIcon: "book-outline" },
   ];
 
   const handlePress = (screen: number) => {
@@ -34,7 +34,7 @@ export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
             activeOpacity={0.6}
           >
             <Ionicons
-              name={activeScreen == index ? tab.activeIcon : tab.inactiveIcon}
+              name={(activeScreen == index ? tab.activeIcon : tab.inactiveIcon) as any}
               size={28}
               color="#fff"
             />
@@ -46,7 +46,7 @@ export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
       </View>
 
       <Link
-        href={tabs[activeScreen].href}
+        href={tabs[activeScreen].href as any}
         asChild
       >
         <TouchableOpacity style={styles.addButton} activeOpacity={0.6}>

@@ -1,13 +1,13 @@
 import { HapticContext } from '@/contexts/HapticContext';
 import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewProps, StyleProp } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 interface TabSelectorProps {
   options: string[];
   selected: number;
-  onSelect: (selectedOption: number) => void;
-  style?: StyleProp<ViewProps>
+  onSelect: (selected: number) => void;
+  style?: StyleProp<ViewStyle>;
 }
 
 const TabSelector: React.FC<TabSelectorProps> = ({ options, selected, onSelect, style }) => {
@@ -29,6 +29,7 @@ const TabSelector: React.FC<TabSelectorProps> = ({ options, selected, onSelect, 
           activeOpacity={0.7}
         >
           <Text
+            numberOfLines={1}
             style={[
               styles.tabText,
               selected == index && styles.selectedTabText,
@@ -47,16 +48,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: 7,
     backgroundColor: "rgba(45, 138, 251, 0.1)",
-    overflow: "hidden",
     padding: 2,
-    marginHorizontal: 6,
+    marginHorizontal: 22,
+    marginVertical: 16,
+    overflow: "hidden",
   },
   tab: {
     flex: 1,
     borderRadius: 7,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 8,
+    padding: 8,
   },
   selectedTab: {
     backgroundColor: "rgba(45, 138, 251, 0.2)",
