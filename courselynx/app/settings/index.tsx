@@ -4,31 +4,37 @@ import { Link } from "expo-router";
 import styles from "./settings.styles";
 
 export default function SettingsScreen() {
-  const settingsOptions = {
-    "ACCOUNT": [
-      { label: "Notifications", icon: "notifications-outline" as const, href: "/settings/notifications" as const },
-      { label: "Security", icon: "shield-checkmark-outline" as const, href: "/settings/security" as const },
-      { label: "Privacy", icon: "lock-closed-outline" as const, href: "/settings/privacy" as const },
-    ],
-    "ACTIONS": [
-      { label: "Report a Problem", icon: "flag-outline" as const, href: "/settings/report" as const },
-      { label: "Delete Account", icon: "person-remove-outline" as const, href: "/settings/delete" as const },
-      { label: "Sign Out", icon: "log-out-outline" as const, href: "/settings/signout" as const },
-    ],
-  };
+  const settingsOptions = [
+    {
+      title: "ACCOUNT",
+      options: [
+        { label: "Notifications", icon: "notifications-outline", href: "/settings/notifications" },
+        { label: "Security", icon: "shield-checkmark-outline", href: "/settings/security" },
+        { label: "Privacy", icon: "lock-closed-outline", href: "/settings/privacy" },
+      ],
+    },
+    {
+      title: "ACTIONS",
+      options: [
+        { label: "Report a Problem", icon: "flag-outline", href: "/settings/report" },
+        { label: "Delete Account", icon: "person-remove-outline", href: "/settings/delete" },
+        { label: "Sign Out", icon: "log-out-outline", href: "/settings/signout" },
+      ],
+    },
+  ];
 
   return (
     <View style={styles.container}>
-      {Object.entries(settingsOptions).map(([section, options]) => (
-        <View key={section}>
-          <Text style={styles.sectionTitle}>{section}</Text>
-          
+      {settingsOptions.map(({title, options}) => (
+        <View key={title}>
+          <Text style={styles.sectionTitle}>{title}</Text>
+
           <View style={styles.sectionContainer}>
             {options.map((item, index) => (
-              <Link href={item.href} key={index} asChild>
+              <Link href={item.href as any} key={index} asChild>
 
-                <TouchableOpacity key={index} style={styles.sectionRow}>
-                  <Ionicons name={item.icon} size={24} />
+                <TouchableOpacity style={styles.sectionRow}>
+                  <Ionicons name={item.icon as any} size={24} />
                   <Text style={styles.sectionText}>{item.label}</Text>
                 </TouchableOpacity>
                 
