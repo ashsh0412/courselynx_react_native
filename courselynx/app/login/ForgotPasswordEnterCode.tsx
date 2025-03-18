@@ -1,17 +1,13 @@
-import React, { useState } from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
-import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
 import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
+import VerficationCode from "@/components/LoginPageComponents/CreateAccountComponents/VerificationCode";
 
-export const SignInPage: React.FC<{
-  onCreateAccount: () => void;
-  onForgotPassword: () => void;
-}> = ({ onCreateAccount, onForgotPassword }) => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
+export const ForgotPasswordEnterCode: React.FC<{
+  onSignIn: () => void;
+  onVerify: () => void;
+}> = ({ onSignIn, onVerify }) => {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -21,41 +17,27 @@ export const SignInPage: React.FC<{
         <View style={styles.blueSection}>
           <View style={styles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Hello there!</Text>
+            <Text style={styles.mainTitle}>You've got mail!</Text>
             <Text style={styles.subHeader}>
-              Enter your school email (.edu) and password to get started.
+              Check your school email (.edu) for the verification code and enter
+              it below.
             </Text>
           </View>
         </View>
         <View style={styles.formWrapper}>
           <View style={styles.whiteContainer}>
             <View style={styles.form}>
-              <InputField
-                label="School Email"
-                value={email}
-                onChangeText={setEmail}
-                placeholder="email@ufl.edu"
-                keyboardType="email-address"
-              />
+              <Text style={styles.label}>Code</Text>
+              <VerficationCode />
               <View style={styles.spacing} />
-              <InputField
-                label="Password"
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Write your password"
-                secureTextEntry
-              />
-              <View style={styles.linkWrapper1}>
-                <LinkText
-                  text="Forgot your password?"
-                  onPress={onForgotPassword}
-                />
-              </View>
-              <Button text="Sign In" onPress={() => ""} />
+              <Button text="Verify" onPress={onVerify} />
               <View style={styles.linkWrapper}>
+                <Text style={styles.backText} onPress={onSignIn}>
+                  Back to Sign In
+                </Text>
                 <LinkText
-                  text="DON'T HAVE AN ACCOUNT? CREATE HERE"
-                  onPress={onCreateAccount}
+                  text="DIDN'T RECEIVE THE CODE?"
+                  onPress={() => console.log("Resend verification code")}
                 />
               </View>
             </View>
@@ -123,10 +105,20 @@ const styles = StyleSheet.create({
   },
   linkWrapper: {
     alignItems: "center",
+    marginTop: 10,
   },
-  linkWrapper1: {
-    alignItems: "flex-end",
+  backText: {
+    color: "#4285F4",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: "400",
+    color: "#666",
+    marginBottom: 10,
+    marginLeft: 13,
   },
 });
 
-export default SignInPage;
+export default ForgotPasswordEnterCode;

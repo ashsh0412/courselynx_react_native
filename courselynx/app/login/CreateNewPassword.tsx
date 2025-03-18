@@ -3,15 +3,13 @@ import { View, StyleSheet, Text, ScrollView } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
 import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
-import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
 
-export const SignInPage: React.FC<{
-  onCreateAccount: () => void;
-  onForgotPassword: () => void;
-}> = ({ onCreateAccount, onForgotPassword }) => {
-  const [email, setEmail] = useState<string>("");
+export const CreateNewPassword: React.FC<{
+  onSignIn: () => void;
+  onContinue: () => void;
+}> = ({ onSignIn, onContinue }) => {
   const [password, setPassword] = useState<string>("");
-
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   return (
     <View style={styles.container}>
       <ScrollView
@@ -21,9 +19,9 @@ export const SignInPage: React.FC<{
         <View style={styles.blueSection}>
           <View style={styles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Hello there!</Text>
+            <Text style={styles.mainTitle}>Forgot Password?</Text>
             <Text style={styles.subHeader}>
-              Enter your school email (.edu) and password to get started.
+              Enter your email to receive a password reset link.
             </Text>
           </View>
         </View>
@@ -31,32 +29,26 @@ export const SignInPage: React.FC<{
           <View style={styles.whiteContainer}>
             <View style={styles.form}>
               <InputField
-                label="School Email"
-                value={email}
-                onChangeText={setEmail}
-                placeholder="email@ufl.edu"
-                keyboardType="email-address"
+                label="New Password"
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Write your new password"
+                secureTextEntry
               />
               <View style={styles.spacing} />
               <InputField
-                label="Password"
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Write your password"
+                label="Confirm New Password"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                placeholder="Confirm your new password"
                 secureTextEntry
               />
-              <View style={styles.linkWrapper1}>
-                <LinkText
-                  text="Forgot your password?"
-                  onPress={onForgotPassword}
-                />
-              </View>
-              <Button text="Sign In" onPress={() => ""} />
+              <View style={styles.spacing} />
+              <Button text="Update Password" onPress={onContinue} />
               <View style={styles.linkWrapper}>
-                <LinkText
-                  text="DON'T HAVE AN ACCOUNT? CREATE HERE"
-                  onPress={onCreateAccount}
-                />
+                <Text style={styles.backText} onPress={onSignIn}>
+                  Back to Sign In
+                </Text>
               </View>
             </View>
           </View>
@@ -123,10 +115,13 @@ const styles = StyleSheet.create({
   },
   linkWrapper: {
     alignItems: "center",
+    marginTop: 10,
   },
-  linkWrapper1: {
-    alignItems: "flex-end",
+  backText: {
+    color: "#4285F4",
+    fontSize: 14,
+    fontWeight: "600",
   },
 });
 
-export default SignInPage;
+export default CreateNewPassword;
