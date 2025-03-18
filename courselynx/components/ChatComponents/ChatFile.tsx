@@ -1,9 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  ActivityIndicator,
-} from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import PDF from "@/assets/svg/filePdf.svg";
 import Check from "@/assets/svg/fileCheck.svg";
 import { useEffect, useState } from "react";
@@ -52,60 +47,60 @@ const ChatFile: React.FC<Props> = ({ name, size, uri, id, onDetail }) => {
   }, []);
 
   return (
-    <LongPressable
-      onLongPress={() => onShare({ message: "", uri: uri })}
-    >
-      <View style={styles.fileRow}>
-        <PDF width={onDetail ? 37 : 30} height={onDetail ? 37 : 30} />
-        <View style={styles.fileTextCol}>
-          <Text style={[styles.fileName, onDetail && { fontSize: 13 }]}>
-            {name}
-          </Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={[styles.fileSize, onDetail && { fontSize: 11 }]}>
-              {formatFileSize(sizeAmount)}
-              {" of "}
-              {formatFileSize(size)}
-              {!onDetail && " •  "}
+    <LongPressable onLongPress={() => onShare({ message: "", uri: uri })}>
+      <View style={styles.fileContent}>
+        <View style={styles.fileRow}>
+          <PDF width={onDetail ? 37 : 30} height={onDetail ? 37 : 30} />
+          <View style={styles.fileTextCol}>
+            <Text style={[styles.fileName, onDetail && { fontSize: 13 }]}>
+              {name}
             </Text>
-            {!onDetail && (
-              <>
-                {loadVisible ? (
-                  <ActivityIndicator
-                    animating
-                    color={"#2D8AFB"}
-                    size={8}
-                    style={{ transform: [{ scale: 0.5 }] }}
-                  />
-                ) : (
-                  <Check
-                    width={9}
-                    height={9}
-                    style={{ alignSelf: "center" }}
-                  />
-                )}
-                <Text style={styles.fileLoadText}>
-                  {loadVisible ? "  Uploading..." : "  Sent"}
-                </Text>
-              </>
-            )}
+            <View style={{ flexDirection: "row" }}>
+              <Text style={[styles.fileSize, onDetail && { fontSize: 11 }]}>
+                {formatFileSize(sizeAmount)}
+                {" of "}
+                {formatFileSize(size)}
+                {!onDetail && " •  "}
+              </Text>
+              {!onDetail && (
+                <>
+                  {loadVisible ? (
+                    <ActivityIndicator
+                      animating
+                      color={"#2D8AFB"}
+                      size={8}
+                      style={{ transform: [{ scale: 0.5 }] }}
+                    />
+                  ) : (
+                    <Check
+                      width={9}
+                      height={9}
+                      style={{ alignSelf: "center" }}
+                    />
+                  )}
+                  <Text style={styles.fileLoadText}>
+                    {loadVisible ? "  Uploading..." : "  Sent"}
+                  </Text>
+                </>
+              )}
+            </View>
           </View>
         </View>
-      </View>
-      <View
-        style={[
-          styles.progressBarContainer,
-          onDetail && { width: 336 },
-          { display: loadVisible ? "flex" : "none" },
-        ]}
-      >
-        <ProgressBar
-          progress={loadAmount}
-          width={onDetail ? 336 : 276}
-          height={4}
-          color="#2D8AFB"
-          borderWidth={0}
-        />
+        <View
+          style={[
+            styles.progressBarContainer,
+            onDetail && { width: 336 },
+            { display: loadVisible ? "flex" : "none" },
+          ]}
+        >
+          <ProgressBar
+            progress={loadAmount}
+            width={onDetail ? 336 : 276}
+            height={4}
+            color="#2D8AFB"
+            borderWidth={0}
+          />
+        </View>
       </View>
     </LongPressable>
   );
