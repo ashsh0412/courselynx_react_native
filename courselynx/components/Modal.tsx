@@ -37,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({
   hasButtonYesNo = false,
   onPressNo = () => { },
   onPressYes = () => { },
-  modalStyle = {},
+  modalStyle,
 }) => {
   const translateY = useSharedValue(0);
   const [modalY, setModalY] = useState(0); // Modal height

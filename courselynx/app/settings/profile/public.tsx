@@ -30,7 +30,7 @@ export default function PublicView({ userProfile }: { userProfile: ProfileProps 
       <View style={[styles.container, styles.lightBackgroundColor]}>
         {/* Profile Header */}
         <View style={[styles.profileContainer, styles.horizontalContainer]}>
-          <Avatar src={userProfile.avatar} />
+          <Avatar uri={userProfile.avatar} isBig />
 
           <View>
             <Text style={styles.name}>{userProfile.name}</Text>

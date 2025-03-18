@@ -1,22 +1,31 @@
-import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Image, TouchableOpacity, StyleSheet, StyleProp, ImageStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 interface AvatarProps {
-  src: string;
+  uri: string;
   hasEditBtn?: boolean;
-  onEdit?: () => void;
+  setUri?: (uri: string) => void;
+  isBig?: boolean;
+  isSmall?: boolean;
+  style?: StyleProp<ImageStyle>;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
-  src,
-  hasEditBtn,
-  onEdit,
+  uri,
+  hasEditBtn = false,
+  setUri = () => { },
+  isBig = false,
+  isSmall = false,
+  style,
 }) => {
   return (
     <View>
-      <Image source={{ uri: src }} style={styles.avatar} />
+      <Image
+        source={{ uri: uri }}
+        style={[styles.avatar, isBig && styles.big_avatar, isSmall && styles.small_avatar, style]}
+      />
       {hasEditBtn &&
-        <TouchableOpacity style={styles.editButton} onPress={onEdit}>
+        <TouchableOpacity style={styles.editButton} onPress={() => setUri("h")}>
           <Ionicons name="pencil" size={18} color="white" />
         </TouchableOpacity>
       }
@@ -26,6 +35,11 @@ const Avatar: React.FC<AvatarProps> = ({
 
 const styles = StyleSheet.create({
   avatar: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+  },
+  big_avatar: {
     width: 150,
     height: 150,
     borderRadius: 75,

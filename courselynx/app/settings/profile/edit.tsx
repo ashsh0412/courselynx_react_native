@@ -19,16 +19,12 @@ export default function EditView({ userProfile }: { userProfile: ProfileProps })
     console.log("Save");
   }
 
-  const editAvatar = () => {
-    console.log("Edit avatar");
-  }
-
   return (
     <>
       <ScrollView contentContainerStyle={[styles.container, styles.lightBackgroundColor]} automaticallyAdjustKeyboardInsets={true}>
         {/* Profile Image */}
         <View style={styles.profileContainer}>
-          <Avatar src={avatar} hasEditBtn onEdit={() => setAvatar} />
+          <Avatar uri={avatar} hasEditBtn setUri={setAvatar} isBig />
         </View>
 
         {/* Input Fields */}
