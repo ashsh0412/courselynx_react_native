@@ -13,6 +13,7 @@ import {
   GestureDetector,
 } from "react-native-gesture-handler";
 import Animated, {
+  Easing,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -43,7 +44,11 @@ const Modal: React.FC<ModalProps> = ({
   const [modalY, setModalY] = useState(0); // Modal height
 
   const handleCloseModal = (onRequestClose: () => void) => {
-    translateY.value = withTiming(modalY, { duration: 200 }, () => runOnJS(onRequestClose)());
+    translateY.value = withTiming(
+      modalY,
+      { duration: 200, easing: Easing.linear },
+      () => runOnJS(onRequestClose)()
+    );
   };
 
   const tabGesture = useMemo(() =>
@@ -62,7 +67,10 @@ const Modal: React.FC<ModalProps> = ({
         if (event.translationY * 2 > modalY || event.velocityY > 200)
           runOnJS(handleCloseModal)(onRequestClose);
         else
-          translateY.value = withTiming(0); // Snap back if not dragged enough
+          translateY.value = withTiming(
+            0,
+            { duration: 200, easing: Easing.out(Easing.quad) }
+          ); // Snap back if not dragged enough
       }),
     [handleCloseModal]
   );

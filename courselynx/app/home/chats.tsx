@@ -56,113 +56,111 @@ export default function ChatsTab() {
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <ScrollView style={styles.chatList}>
-          {chats.map((chat) => (
-            <Swipeable
-              key={chat.id}
-              ref={(ref) => (swipeRefs.current[chat.id] = ref)}
-              renderRightActions={renderRightActions}
-              overshootRight={false}
-              rightThreshold={5}
-              onSwipeableWillOpen={() => {
-                Object.keys(swipeRefs.current).forEach((key) => {
-                  if (parseInt(key) !== chat.id) {
-                    swipeRefs.current[parseInt(key)]?.close();
+    <View style={styles.container}>
+      <ScrollView style={styles.chatList}>
+        {chats.map((chat) => (
+          <Swipeable
+            key={chat.id}
+            ref={(ref) => (swipeRefs.current[chat.id] = ref)}
+            renderRightActions={renderRightActions}
+            overshootRight={false}
+            rightThreshold={5}
+            onSwipeableWillOpen={() => {
+              Object.keys(swipeRefs.current).forEach((key) => {
+                if (parseInt(key) !== chat.id) {
+                  swipeRefs.current[parseInt(key)]?.close();
+                }
+              });
+              activeSwipeRef.current = chat.id;
+              setActiveSwipe(chat.id);
+            }}
+            onSwipeableClose={() => {
+              setActiveSwipe(null);
+              activeSwipeRef.current = null;
+            }}
+          >
+            <View pointerEvents={activeSwipe ? "none" : "auto"}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  if (activeSwipeRef.current === null) {
+                    router.push({
+                      pathname: "/chat",
+                      params: { title: chat.name, color: chat.color },
+                    });
                   }
-                });
-                activeSwipeRef.current = chat.id;
-                setActiveSwipe(chat.id);
-              }}
-              onSwipeableClose={() => {
-                setActiveSwipe(null);
-                activeSwipeRef.current = null;
-              }}
-            >
-              <View pointerEvents={activeSwipe ? "none" : "auto"}>
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    if (activeSwipeRef.current === null) {
-                      router.push({
-                        pathname: "/chat",
-                        params: { title: chat.name, color: chat.color },
-                      });
-                    }
-                  }}
-                >
-                  <View style={[styles.chatItem, { backgroundColor: "#fff" }]}>
-                    <View
-                      style={[styles.chatIcon, { backgroundColor: chat.color || "#000" }]}
-                    />
-                    <View style={styles.chatInfo}>
-                      <Text style={[styles.chatName, chat.unread > 0 ? styles.boldText : null]}>
-                        {chat.name}
-                      </Text>
-                      <Text style={[styles.chatMessage, chat.unread > 0 ? styles.boldText : null]}>
-                        {chat.message}
-                      </Text>
-                    </View>
-                    <View style={styles.chatMeta}>
-                      <Text style={[styles.chatTime, chat.unread > 0 ? styles.boldText : null]}>
-                        {chat.time}
-                      </Text>
-                      {chat.unread > 0 && (
-                        <View style={styles.unreadBadge}>
-                          <Text style={styles.unreadText}>{chat.unread}</Text>
-                        </View>
-                      )}
-                    </View>
+                }}
+              >
+                <View style={[styles.chatItem, { backgroundColor: "#fff" }]}>
+                  <View
+                    style={[styles.chatIcon, { backgroundColor: chat.color || "#000" }]}
+                  />
+                  <View style={styles.chatInfo}>
+                    <Text style={[styles.chatName, chat.unread > 0 ? styles.boldText : null]}>
+                      {chat.name}
+                    </Text>
+                    <Text style={[styles.chatMessage, chat.unread > 0 ? styles.boldText : null]}>
+                      {chat.message}
+                    </Text>
                   </View>
-                </TouchableWithoutFeedback>
-              </View>
-            </Swipeable>
-          ))}
-        </ScrollView>
-
-        {/* Modal for muting chat's notifications */}
-        <Modal
-          visible={muteModalVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setMuteModalVisible(false)}
-        >
-          <TouchableWithoutFeedback onPress={() => setMuteModalVisible(false)}>
-            <View style={styles.modalOverlay}>
-              <TouchableWithoutFeedback>
-                <View style={styles.modalContent}>
-                  <Text style={styles.modalTitle}>Mute chat's notifications for:</Text>
-                  {["1 hour", "3 hours", "8 hours", "1 day", "7 days", "Always"].map((option, index, arr) => (
-                    <TouchableOpacity
-                      key={option}
-                      onPress={() => onSelectMuteOption(option)}
-                      style={[
-                        styles.modalOption,
-                        index < arr.length - 1 ? styles.modalOptionSeparator : null,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.modalOptionText,
-                          option === "Always" ? styles.alwaysOption : null,
-                        ]}
-                      >
-                        {option}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <View style={styles.chatMeta}>
+                    <Text style={[styles.chatTime, chat.unread > 0 ? styles.boldText : null]}>
+                      {chat.time}
+                    </Text>
+                    {chat.unread > 0 && (
+                      <View style={styles.unreadBadge}>
+                        <Text style={styles.unreadText}>{chat.unread}</Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
               </TouchableWithoutFeedback>
             </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-      </View>
-    </GestureHandlerRootView>
+          </Swipeable>
+        ))}
+      </ScrollView>
+
+      {/* Modal for muting chat's notifications */}
+      <Modal
+        visible={muteModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setMuteModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setMuteModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Mute chat's notifications for:</Text>
+                {["1 hour", "3 hours", "8 hours", "1 day", "7 days", "Always"].map((option, index, arr) => (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={() => onSelectMuteOption(option)}
+                    style={[
+                      styles.modalOption,
+                      index < arr.length - 1 ? styles.modalOptionSeparator : null,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.modalOptionText,
+                        option === "Always" ? styles.alwaysOption : null,
+                      ]}
+                    >
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { flex: 1 },
   chatList: { paddingTop: 12 },
   chatItem: {
     flexDirection: "row",

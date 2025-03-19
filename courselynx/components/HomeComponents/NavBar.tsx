@@ -20,11 +20,12 @@ const NavBar: React.FC<NavBarProps> = ({ activeScreen, setActiveScreen }) => {
 
   const handlePress = (screen: number) => {
     isHapticEnabled && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setActiveScreen(screen);
+    if (screen != activeScreen)
+      setActiveScreen(screen);
   };
 
   return (
-    <>
+    <View>
       <View style={styles.navContainer}>
         {tabs.map((tab, index) => (
           <TouchableOpacity
@@ -53,7 +54,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeScreen, setActiveScreen }) => {
           <Ionicons name="add" size={34} color="#fff" />
         </TouchableOpacity>
       </Link>
-    </>
+    </View>
   );
 }
 

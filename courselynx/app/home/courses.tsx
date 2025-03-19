@@ -13,20 +13,24 @@ interface Course {
 
 export default function CoursesTab() {
   return (
-    <FlatList
-      numColumns={2}
-      data={courses}
-      renderItem={({ item }) => <View style={{ flex: 0.5 }}><CourseCard {...item} /></View>}
-      keyExtractor={(item) => item.id.toString()}
-      style={styles.container}
-    />
+    <View style={styles.container}>
+      <FlatList
+        numColumns={2}
+        data={courses}
+        renderItem={({ item }) => <View style={{ flex: 0.5 }}><CourseCard {...item} /></View>}
+        keyExtractor={(item) => item.id.toString()}
+        style={styles.courseList}
+      />
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 5,
   },
+  courseList: {
+    flex: 1,
+    paddingHorizontal: 5,
+  }
 });
