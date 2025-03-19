@@ -48,7 +48,7 @@ const Modal: React.FC<ModalProps> = ({
 
   const tabGesture = useMemo(() =>
     Gesture.Tap()
-      .onEnd(() => { runOnJS(handleCloseModal)(onRequestClose); }),
+      .onEnd(() => runOnJS(handleCloseModal)(onRequestClose)),
     [handleCloseModal]
   );
 

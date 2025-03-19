@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: -7,
     width: 4,
-    backgroundColor: "#2D8AFB",
+    backgroundColor: "rgba(45, 138, 251, 1)",
     borderRadius: 2,
   },
 });

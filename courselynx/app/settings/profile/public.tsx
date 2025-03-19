@@ -1,24 +1,25 @@
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "@/components/Button";
 import styles from "./profile.styles";
 import Avatar from "@/components/ProfileComponents/Avatar";
 import { ProfileProps } from ".";
+import ProfileIcon from "@/components/ProfileComponents/ProfileIcon";
 
 export default function PublicView({ userProfile }: { userProfile: ProfileProps }) {
   const socials = [
-    { name: "LinkedIn", id: "linkedin" as const, icon: "logo-linkedin" as const, color: "#0A66C2" },
-    { name: "Discord", id: "discord" as const, icon: "logo-discord" as const, color: "#5865F2" },
+    { name: "LinkedIn", id: "linkedin" as const, icon: "logo-linkedin", color: "#0A66C2" },
+    { name: "Discord", id: "discord" as const, icon: "logo-discord", color: "#5865F2" },
   ];
 
   const groupsInCommon = [
-    { name: "Business and Finance", color: "#D78787" },
-    { name: "Statistics", color: "#8DC78B" },
-    { name: "Badminton Club", color: "#E18B40" },
-    { name: "Dance1 Club", color: "#D39AD7" },
-    { name: "Dance2 Club", color: "#D39AD7" },
-    { name: "Dance3 Club", color: "#D39AD7" },
-    { name: "Dance4 Club", color: "#D39AD7" },
+    { id: 1, name: "Business and Finance", color: "#D78787" },
+    { id: 2, name: "Statistics", color: "#8DC78B" },
+    { id: 3, name: "Badminton Club", color: "#E18B40" },
+    { id: 4, name: "Dance1 Club", color: "#D39AD7" },
+    { id: 5, name: "Dance2 Club", color: "#D39AD7" },
+    { id: 6, name: "Dance3 Club", color: "#D39AD7" },
+    { id: 7, name: "Dance4 Club", color: "#D39AD7" },
   ];
 
   const messageUser = () => {
@@ -46,12 +47,12 @@ export default function PublicView({ userProfile }: { userProfile: ProfileProps 
         <View style={styles.horizontalContainer}>
           {socials.map((social, index) => (
             <View key={index} style={[styles.item, { width: "48%" }]}>
-              <Ionicons name={social.icon} size={50} color={social.color} />
+              <Ionicons name={social.icon as any} size={50} color={social.color} />
 
               <View>
                 <Text style={styles.label}>{social.name}</Text>
                 <Text style={[styles.text, styles.lightTextColor]}>{
-                  userProfile[social.id] != "" ? "@" + userProfile[social.id] : "N/A"
+                  userProfile[social.id] !== "" ? "@" + userProfile[social.id] : "N/A"
                 }</Text>
               </View>
 
@@ -61,14 +62,17 @@ export default function PublicView({ userProfile }: { userProfile: ProfileProps 
 
         {/* Groups in Common */}
         <Text style={styles.sectionTitle}>Groups in Common [{groupsInCommon.length}]</Text>
-        <ScrollView style={styles.scrollContainer}>
-          {groupsInCommon.map((group, index) => (
-            <View key={index} style={styles.item}>
-              <View style={[styles.groupColor, { backgroundColor: group.color }]} />
-              <Text style={styles.label}>{group.name}</Text>
+        <FlatList
+          data={groupsInCommon}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <ProfileIcon id={item.id} uri={item.color} />
+              <Text style={styles.label}>{item.name}</Text>
             </View>
-          ))}
-        </ScrollView>
+          )}
+          style={styles.scrollContainer}
+        />
       </View>
 
       {/* Extra padding at the bottom to prevent overlap */}

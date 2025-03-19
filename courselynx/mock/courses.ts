@@ -4,7 +4,7 @@ export const courses = [
       name: "Digital Marketing",
       code : "DM101",
       professor : "Professor Name",
-      students : 45,
+      studentCount : 45,
       color : "#f97316",
   },
   {
@@ -12,7 +12,7 @@ export const courses = [
       name: "Business and Finance",
       code : "BF101",
       professor : "Professor Name",
-      students : 187,
+      studentCount : 187,
       color : "#f87171",
   },
   {
@@ -20,7 +20,7 @@ export const courses = [
       name: "Statistics",
       code : "STA101",
       professor : "Professor Name",
-      students : 345,
+      studentCount : 345,
       color: "#34d399",
   },
   {
@@ -28,7 +28,7 @@ export const courses = [
       name: "World History",
       code : "WH101",
       professor : "Professor Name",
-      students : 28,
+      studentCount : 28,
       color : "#facc15",
   },
   {
@@ -36,7 +36,7 @@ export const courses = [
       name: "English",
       code : "ENG101",
       professor : "Professor Name",
-      students : 296,
+      studentCount : 296,
       color : "#f472b6",
   },
 ]
