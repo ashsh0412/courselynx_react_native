@@ -2,9 +2,9 @@ import { View, Text, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "@/components/Button";
 import styles from "./profile.styles";
-import Avatar from "@/components/ProfileComponents/Avatar";
+import Avatar from "@/components/EntityComponents/Avatar";
+import EntityIcon from "@/components/EntityComponents/EntityIcon";
 import { ProfileProps } from ".";
-import ProfileIcon from "@/components/ProfileComponents/ProfileIcon";
 
 export default function PublicView({ userProfile }: { userProfile: ProfileProps }) {
   const socials = [
@@ -67,7 +67,7 @@ export default function PublicView({ userProfile }: { userProfile: ProfileProps 
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.item}>
-              <ProfileIcon id={item.id} uri={item.color} />
+              <EntityIcon id={item.id} uri={item.color} />
               <Text style={styles.label}>{item.name}</Text>
             </View>
           )}

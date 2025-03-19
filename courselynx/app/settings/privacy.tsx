@@ -1,7 +1,7 @@
-import { View, Text, ScrollView, FlatList } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import SearchBar from '@/components/SearchBar';
 import styles from './settings.styles';
-import ProfileCard from '@/components/ProfileComponents/ProfileCard';
+import EntityCard from '@/components/EntityComponents/EntityCard';
 
 const mock = [
   {
@@ -37,12 +37,15 @@ export default function PrivacyScreen() {
       <FlatList
         data={mock}
         renderItem={({ item }) => (
-          <ProfileCard
+          <EntityCard
             id={item.id}
             uri={item.uri}
             name={item.name}
-            hasAdd
-          />
+            hasRemove
+            isCircle
+          >
+            <Text>{item.major + '\n' + item.year}</Text>
+          </EntityCard>
         )}
         keyExtractor={item => item.id.toString()}
         ItemSeparatorComponent={() => <View style={{ height: 6 }} />}

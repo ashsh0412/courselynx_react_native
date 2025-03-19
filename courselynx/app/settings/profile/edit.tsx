@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View, ScrollView } from "react-native";
 import InputField from "@/components/InputField";
 import Button from "@/components/Button";
-import Avatar from "@/components/ProfileComponents/Avatar"
+import Avatar from "@/components/EntityComponents/Avatar"
 import { ProfileProps } from ".";
 import styles from "./profile.styles";
 

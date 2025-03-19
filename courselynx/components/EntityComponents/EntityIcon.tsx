@@ -6,7 +6,7 @@
 import { router } from "expo-router";
 import { View, StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
 
-interface ProfileIconProps {
+interface EntityIconProps {
   id: number;
   uri?: string;
   size?: number;
@@ -15,7 +15,7 @@ interface ProfileIconProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const ProfileIcon: React.FC<ProfileIconProps> = ({
+const EntityIcon: React.FC<EntityIconProps> = ({
   id,
   uri = "",
   size = 40,
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileIcon;
+export default EntityIcon;
