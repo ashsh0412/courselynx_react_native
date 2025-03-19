@@ -5,8 +5,7 @@ interface AvatarProps {
   uri: string;
   hasEditBtn?: boolean;
   setUri?: (uri: string) => void;
-  isBig?: boolean;
-  isSmall?: boolean;
+  size?: number;
   style?: StyleProp<ImageStyle>;
 }
 
@@ -14,18 +13,17 @@ const Avatar: React.FC<AvatarProps> = ({
   uri,
   hasEditBtn = false,
   setUri = () => { },
-  isBig = false,
-  isSmall = false,
+  size = 40,
   style,
 }) => {
   return (
     <View>
       <Image
         source={{ uri: uri }}
-        style={[styles.avatar, isBig && styles.big_avatar, isSmall && styles.small_avatar, style]}
+        style={[{ height: size, width: size, borderRadius: size / 2 }, style]}
       />
       {hasEditBtn &&
-        <TouchableOpacity style={styles.editButton} onPress={() => setUri("h")}>
+        <TouchableOpacity style={styles.editButton} onPress={() => { }}>
           <Ionicons name="pencil" size={18} color="white" />
         </TouchableOpacity>
       }
@@ -34,21 +32,6 @@ const Avatar: React.FC<AvatarProps> = ({
 };
 
 const styles = StyleSheet.create({
-  avatar: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-  },
-  big_avatar: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-  },
-  small_avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-  },
   editButton: {
     position: "absolute",
     bottom: 5,

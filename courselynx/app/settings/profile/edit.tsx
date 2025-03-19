@@ -24,7 +24,7 @@ export default function EditView({ userProfile }: { userProfile: ProfileProps })
       <ScrollView contentContainerStyle={[styles.container, styles.lightBackgroundColor]} automaticallyAdjustKeyboardInsets={true}>
         {/* Profile Image */}
         <View style={styles.profileContainer}>
-          <Avatar uri={avatar} hasEditBtn setUri={setAvatar} isBig />
+          <Avatar uri={avatar} setUri={setAvatar} hasEditBtn size={150} />
         </View>
 
         {/* Input Fields */}
