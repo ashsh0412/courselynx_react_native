@@ -9,9 +9,10 @@ interface ProfileCardProps {
   id: number;
   uri?: string;
   name?: string;
-  text?: string;
+  description?: string;
   hasMessage?: boolean;
   hasAdd?: boolean;
+  hasMinus?: boolean;
   isCircle?: boolean;
 };
 
@@ -19,12 +20,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   id,
   uri = "",
   name = "",
-  text = "",
+  description = "",
   hasMessage = false,
   hasAdd = false,
+  hasMinus = false,
   isCircle = false,
 }) => {
-  const [isAdded, setIsAdded] = useState(false);
+  const [btn, setBtn] = useState(false);
 
   return (
     <View style={styles.cardContainer}>
@@ -32,7 +34,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
       <View style={styles.userInfo}>
         <Text style={styles.username}>{name}</Text>
-        {text}
+        <Text>{description}</Text>
       </View>
 
       <View style={styles.icon}>
@@ -44,18 +46,24 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <Message width={20} height={20} />
           </TouchableOpacity>
         )}
-        {hasAdd && (
+        {(hasAdd || hasMinus) && (
           <TouchableOpacity
             onPress={() => {
-              setIsAdded((prev) => !prev);
+              setBtn((prev) => !prev);
             }}
             activeOpacity={0.6}
           >
-            {isAdded ? (
+            {btn ? (
               <Check height={30} width={30} />
-            ) : (
-              <Plus width={35} height={35} />
-            )}
+            ) :
+              hasAdd ? (
+                <Plus width={35} height={35} />
+              ) :
+                hasMinus ? (
+                  <Plus width={35} height={35} /> // Add minus svg later
+                ) :
+                  (<></>)
+            }
           </TouchableOpacity>
         )}
       </View>
