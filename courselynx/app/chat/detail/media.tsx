@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Image,
   FlatList,
 } from "react-native";
@@ -12,12 +11,13 @@ import CLIcon from "@/assets/images/icon_campus.png";
 import ChatFile from "@/components/ChatComponents/ChatFile";
 import { onShare } from "@/utils/share";
 import LongPressable from "@/components/LongPressable";
+import TabSelector from "@/components/TabSelector";
 
 const imageUrls = Array(18).fill(CLIcon);
 
 export default function MediaScreen() {
   const { title, color } = useLocalSearchParams();
-  const [showDocuments, setShowDocuments] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   return (
     <View
@@ -29,22 +29,13 @@ export default function MediaScreen() {
       <View style={styles.content}>
         <Text style={styles.titleText}>{title}</Text>
 
-        <View style={styles.boxContainer}>
-          <TouchableOpacity
-            style={[styles.box, !showDocuments && styles.activeBox]}
-            onPress={() => setShowDocuments(false)}
-          >
-            <Text style={styles.boxText}>Photos & Videos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.box, showDocuments && styles.activeBox]}
-            onPress={() => setShowDocuments(true)}
-          >
-            <Text style={styles.boxText}>Documents</Text>
-          </TouchableOpacity>
-        </View>
+        <TabSelector
+          options={["Photos & Videos", "Documents"]}
+          selected={selectedTab}
+          onSelect={setSelectedTab}
+        />
 
-        {!showDocuments ? (
+        {!selectedTab ? (
           <FlatList
             data={imageUrls}
             renderItem={({ item, index }) => {
@@ -116,31 +107,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     textAlign: "center",
     color: "#02102E",
-  },
-  boxContainer: {
-    flexDirection: "row",
-    marginTop: 19,
-    borderRadius: 6,
-    overflow: "hidden",
-    paddingBottom: 19,
-  },
-  box: {
-    width: 161,
-    height: 42,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#2D8AFB0D",
-  },
-  activeBox: {
-    backgroundColor: "#2D8AFB1A",
-  },
-  boxText: {
-    fontSize: 14,
-    fontWeight: "500",
-    fontFamily: "Inter",
-    lineHeight: 21,
-    letterSpacing: -0.02,
-    color: "#000",
   },
   imageGrid: {
     flexDirection: "row",

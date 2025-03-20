@@ -1,8 +1,8 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import Search from "../assets/svg/searchChat.svg";
-import Share from "../assets/svg/shareChat.svg";
-import Settings from "../assets/svg/settings.svg";
+import Search from "@/assets/svg/searchChat.svg";
+import Share from "@/assets/svg/shareChat.svg";
+import Settings from "@/assets/svg/settings.svg";
 import { Link, useRouter } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { onShare } from "@/utils/share";

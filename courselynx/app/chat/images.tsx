@@ -1,7 +1,7 @@
 import { useLayoutEffect } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { View, StyleSheet, FlatList } from "react-native";
-import Header from "@/components/Header";
+import Header from "@/components/HeaderComponents/Header";
 import ChatVisualMedia from "@/components/ChatComponents/ChatVisualMedia";
 import { onShare } from "@/utils/share";
 import LongPressable from "@/components/LongPressable";

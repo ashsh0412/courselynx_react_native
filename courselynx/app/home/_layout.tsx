@@ -1,4 +1,4 @@
-import HomeHeader from "@/components/HomeComponents/Header";
+import HeaderHome from "@/components/HeaderComponents/HeaderHome";
 import { Stack } from "expo-router";
 import { StatusBar } from "react-native";
 
@@ -9,7 +9,7 @@ export default function SettingLayout() {
       <Stack>
         <Stack.Screen
           name="index"
-          options={{ header: () => <HomeHeader /> }}
+          options={{ header: () => <HeaderHome /> }}
         />
         <Stack.Screen
           name="addChat"
