@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View, ScrollView } from "react-native";
 import InputField from "@/components/InputField";
 import Button from "@/components/Button";
-import Avatar from "@/components/ProfileComponents/Avatar"
+import Avatar from "@/components/EntityComponents/Avatar"
 import { ProfileProps } from ".";
 import styles from "./profile.styles";
 
@@ -19,16 +19,12 @@ export default function EditView({ userProfile }: { userProfile: ProfileProps })
     console.log("Save");
   }
 
-  const editAvatar = () => {
-    console.log("Edit avatar");
-  }
-
   return (
     <>
       <ScrollView contentContainerStyle={[styles.container, styles.lightBackgroundColor]} automaticallyAdjustKeyboardInsets={true}>
         {/* Profile Image */}
         <View style={styles.profileContainer}>
-          <Avatar src={avatar} hasEditBtn onEdit={() => setAvatar} />
+          <Avatar uri={avatar} setUri={setAvatar} hasEditBtn size={150} />
         </View>
 
         {/* Input Fields */}

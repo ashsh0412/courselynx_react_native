@@ -10,7 +10,7 @@ interface NavBarProps {
   setActiveScreen: (screen: number) => void;
 }
 
-export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
+const NavBar: React.FC<NavBarProps> = ({ activeScreen, setActiveScreen }) => {
   const { isHapticEnabled } = useContext(HapticContext);
 
   const tabs = [
@@ -20,11 +20,12 @@ export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
 
   const handlePress = (screen: number) => {
     isHapticEnabled && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setActiveScreen(screen);
+    if (screen != activeScreen)
+      setActiveScreen(screen);
   };
 
   return (
-    <>
+    <View>
       <View style={styles.navContainer}>
         {tabs.map((tab, index) => (
           <TouchableOpacity
@@ -53,31 +54,26 @@ export default function NavBar({ activeScreen, setActiveScreen }: NavBarProps) {
           <Ionicons name="add" size={34} color="#fff" />
         </TouchableOpacity>
       </Link>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   navContainer: {
     position: "absolute",
-    bottom: 40,
-    left: 20,
-    right: 20,
+    bottom: 35,
+    left: "5%",
+    right: "5%",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
     height: 60,
-    gap: 40,
-    paddingHorizontal: 10,
-    backgroundColor: "#3B82F6",
+    paddingHorizontal: "5%",
+    backgroundColor: "rgba(45, 138, 251, 1)",
     borderRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 8,
   },
   navButton: {
+    flex: 1,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
@@ -92,18 +88,15 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 120,
-    right: 20,
+    bottom: 115,
+    right: "5%",
     width: 55,
     height: 55,
     borderRadius: 12,
-    backgroundColor: "#3B82F6",
+    backgroundColor: "rgba(45, 138, 251, 1)",
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 8,
   },
 });
+
+export default NavBar;
