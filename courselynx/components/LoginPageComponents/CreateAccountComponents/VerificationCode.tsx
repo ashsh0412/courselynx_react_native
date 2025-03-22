@@ -3,12 +3,12 @@ import { View, TextInput, StyleSheet } from "react-native";
 
 interface VerficationCodeProps {
   length?: number;
-  onComplete?: (code: string) => void;
+  onChange?: (code: string) => void;
 }
 
 const VerficationCode: React.FC<VerficationCodeProps> = ({
   length = 6,
-  onComplete,
+  onChange,
 }) => {
   const [code, setCode] = useState<string[]>(new Array(length).fill(""));
   const inputs = useRef<(TextInput | null)[]>([]);
@@ -23,9 +23,7 @@ const VerficationCode: React.FC<VerficationCodeProps> = ({
     setCode(newCode);
 
     const fullCode = newCode.join("");
-    if (fullCode.length === length && !newCode.includes("")) {
-      onComplete?.(fullCode);
-    }
+    onChange?.(fullCode);
 
     if (text && index < length - 1) {
       inputs.current[index + 1]?.focus();
@@ -33,8 +31,15 @@ const VerficationCode: React.FC<VerficationCodeProps> = ({
   };
 
   const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === "Backspace" && !code[index] && index > 0) {
-      inputs.current[index - 1]?.focus();
+    const newCode = [...code];
+    if (e.nativeEvent.key === "Backspace"){
+      if(code[index]) {
+        newCode[index] = "";
+        setCode(newCode);
+        onChange?.(newCode.join(""));
+      } else if (index > 0) {
+        inputs.current[index - 1]?.focus();
+      }
     }
   };
 
@@ -62,18 +67,17 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 8,
+    gap: 3,
   },
   input: {
-    width: 50,
+    width: 58,
     height: 50,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "#CCCCCC",
-    borderRadius: 8,
-    fontSize: 24,
-    fontWeight: "bold",
+    borderRadius: 12,
+    fontSize: 20,
     color: "#000",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#FFF",
   },
   filledInput: {
     borderColor: "#4285F4",

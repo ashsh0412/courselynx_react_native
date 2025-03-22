@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
 import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
 import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
-import VerficationCode from "@/components/LoginPageComponents/CreateAccountComponents/VerificationCode";
+import VerificationCode from "@/components/LoginPageComponents/CreateAccountComponents/VerificationCode";
 
 export const ForgotPasswordEnterCode: React.FC<{
   onSignIn: () => void;
   onVerify: () => void;
 }> = ({ onSignIn, onVerify }) => {
+  const [code, setCode] = useState("");
   return (
     <View style={styles.container}>
       <ScrollView
@@ -28,17 +30,24 @@ export const ForgotPasswordEnterCode: React.FC<{
           <View style={styles.whiteContainer}>
             <View style={styles.form}>
               <Text style={styles.label}>Code</Text>
-              <VerficationCode />
+              <VerificationCode onChange={(enteredCode) => setCode(enteredCode)}/>
               <View style={styles.spacing} />
-              <Button text="Verify" onPress={onVerify} />
+              <Button
+                text="Verify"
+                onPress={onVerify}
+                disabled={code.length < 6}
+                />
               <View style={styles.linkWrapper}>
+                <View style={styles.resendWrapper}>
+                  <Text style={styles.infoText}>DIDN'T RECEIVE EMAIL? </Text>
+                  <LinkText
+                    text="RESEND CODE"
+                    onPress={() => console.log("Resend verification code")}
+                  />
+                </View>
                 <Text style={styles.backText} onPress={onSignIn}>
                   Back to Sign In
                 </Text>
-                <LinkText
-                  text="DIDN'T RECEIVE THE CODE?"
-                  onPress={() => console.log("Resend verification code")}
-                />
               </View>
             </View>
           </View>
@@ -107,17 +116,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
   },
+  resendWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: -10,
+  },
+  infoText: {
+    fontSize: 14,
+    color: "#808080",
+  },
   backText: {
     color: "#4285F4",
     fontSize: 14,
     fontWeight: "600",
+    marginTop: 10,
   },
   label: {
     fontSize: 13,
     fontWeight: "400",
     color: "#666",
     marginBottom: 10,
-    marginLeft: 13,
+    marginLeft: 2,
   },
 });
 

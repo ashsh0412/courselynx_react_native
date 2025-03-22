@@ -4,11 +4,16 @@ import { TouchableOpacity, Text, StyleSheet } from "react-native";
 interface ButtonProps {
   text: string;
   onPress: () => void;
+  disabled?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({ text, onPress }) => {
+export const Button: React.FC<ButtonProps> = ({ text, onPress, disabled = false }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, disabled ? styles.disabledButton : styles.enabledButton]}
+      onPress={disabled ? undefined : onPress}
+      disabled={disabled}
+    >
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );
@@ -16,12 +21,18 @@ export const Button: React.FC<ButtonProps> = ({ text, onPress }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#4285F4",
     borderRadius: 12,
     paddingVertical: 17,
     alignItems: "center",
     marginVertical: 15,
     borderWidth: 1,
+  },
+  enabledButton: {
+    backgroundColor: "#4285F4",
+    borderColor: "#FFFFFF",
+  },
+  disabledButton: {
+    backgroundColor: "#9cc7fd",
     borderColor: "#FFFFFF",
   },
   buttonText: {

@@ -19,9 +19,9 @@ export const CreateNewPassword: React.FC<{
         <View style={styles.blueSection}>
           <View style={styles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Forgot Password?</Text>
+            <Text style={styles.mainTitle}>You're almost there!</Text>
             <Text style={styles.subHeader}>
-              Enter your email to receive a password reset link.
+              Create a new password for your account
             </Text>
           </View>
         </View>
@@ -44,7 +44,11 @@ export const CreateNewPassword: React.FC<{
                 secureTextEntry
               />
               <View style={styles.spacing} />
-              <Button text="Update Password" onPress={onContinue} />
+              <Button
+                text="Update Password"
+                onPress={onContinue}
+                disabled={password === "" || confirmPassword === "" || password !== confirmPassword}
+              />
               <View style={styles.linkWrapper}>
                 <Text style={styles.backText} onPress={onSignIn}>
                   Back to Sign In

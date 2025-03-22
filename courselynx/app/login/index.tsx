@@ -7,6 +7,8 @@ import ForgotPassword from "./ForgotPassword";
 import ForgotPasswordEnterCode from "./ForgotPasswordEnterCode";
 import CreateNewPassword from "./CreateNewPassword";
 import SignInPage from "./Signin";
+import PasswordUpdatedScreen from "./ConfirmationPasswordUpdated";
+import AccountCreatedScreen from "./ConfirmationAccountCreated";
 
 type Step =
   | "createAccount"
@@ -15,7 +17,9 @@ type Step =
   | "signIn"
   | "forgotPassword"
   | "forgotPasswordEnterCode"
-  | "createNewPassword";
+  | "createNewPassword"
+  | "passwordUpdated"
+  | "accountCreated";
 
 const LoginPage: React.FC = () => {
   const [step, setStep] = useState<Step>("signIn");
@@ -54,8 +58,16 @@ const LoginPage: React.FC = () => {
       {step === "createNewPassword" && (
         <CreateNewPassword
           onSignIn={() => setStep("signIn")}
-          onContinue={() => console.log("Password changed successfully!")}
+          onContinue={() => setStep("passwordUpdated")}
         />
+      )}
+      {step === "passwordUpdated" && (
+        // Should go to all chats page
+        <PasswordUpdatedScreen onContinue={() => setStep("signIn")} />
+      )}
+      {step === "accountCreated" && (
+        // Should go to all chats page
+        <AccountCreatedScreen onContinue={() => setStep("signIn")} />
       )}
     </>
   );

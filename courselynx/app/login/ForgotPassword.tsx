@@ -19,9 +19,9 @@ export const ForgotPassword: React.FC<{
         <View style={styles.blueSection}>
           <View style={styles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Forgot Password?</Text>
+            <Text style={styles.mainTitle}>We got you!</Text>
             <Text style={styles.subHeader}>
-              Enter your email to receive a password reset link.
+              Enter your school email (.edu) to get a code to update your password
             </Text>
           </View>
         </View>
