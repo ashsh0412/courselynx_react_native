@@ -15,6 +15,7 @@ export const loginStyles = StyleSheet.create({
   },
   headerContainer: {
     paddingHorizontal: 24,
+    marginTop: 20,
   },
   mainTitle: {
     fontSize: 34,

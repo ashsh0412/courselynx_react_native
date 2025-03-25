@@ -4,7 +4,13 @@
  */
 
 import { router } from "expo-router";
-import { View, StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  StyleProp,
+  ViewStyle,
+} from "react-native";
 
 interface EntityIconProps {
   id: number;
@@ -25,13 +31,15 @@ const EntityIcon: React.FC<EntityIconProps> = ({
 }) => {
   return (
     <View>
-      {hasHighlight && (
-        <View style={[styles.highlight, { height: size }]} />
-      )}
+      {hasHighlight && <View style={[styles.highlight, { height: size }]} />}
 
       <TouchableOpacity
         style={[
-          { width: size, height: size, borderRadius: isCircle ? size / 2 : size / 4 },
+          {
+            width: size,
+            height: size,
+            borderRadius: isCircle ? size / 2 : size / 4,
+          },
           style,
           { backgroundColor: uri },
         ]}

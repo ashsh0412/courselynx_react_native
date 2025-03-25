@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
-import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
-import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
-import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
-import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
+import { Logo } from "@/components/LoginPageComponents/Logo";
+import { InputField } from "@/components/LoginPageComponents/InputField";
+import { Button } from "@/components/LoginPageComponents/Button";
+import { LinkText } from "@/components/LoginPageComponents/LinkText";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LoginStackParamList } from "./LoginStackNavigator";
+import { loginStyles } from "./LoginStyles";
 
 type SignInNavigationProp = NativeStackNavigationProp<
   LoginStackParamList,
@@ -20,23 +21,23 @@ const SignInPage: React.FC = () => {
   const navigation = useNavigation<SignInNavigationProp>();
 
   return (
-    <View style={styles.container}>
+    <View style={loginStyles.container}>
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={loginStyles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.blueSection}>
-          <View style={styles.headerContainer}>
+        <View style={loginStyles.blueSection}>
+          <View style={loginStyles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Hello there!</Text>
-            <Text style={styles.subHeader}>
+            <Text style={loginStyles.mainTitle}>Hello there!</Text>
+            <Text style={loginStyles.subHeader}>
               Enter your school email (.edu) and password to get started.
             </Text>
           </View>
         </View>
-        <View style={styles.formWrapper}>
-          <View style={styles.whiteContainer}>
-            <View style={styles.form}>
+        <View style={loginStyles.formWrapper}>
+          <View style={loginStyles.whiteContainer}>
+            <View style={loginStyles.form}>
               <InputField
                 label="School Email"
                 value={email}
@@ -44,7 +45,7 @@ const SignInPage: React.FC = () => {
                 placeholder="email@ufl.edu"
                 keyboardType="email-address"
               />
-              <View style={styles.spacing} />
+              <View style={loginStyles.spacing} />
               <InputField
                 label="Password"
                 value={password}
@@ -59,7 +60,7 @@ const SignInPage: React.FC = () => {
                 />
               </View>
               <Button text="Sign In" onPress={() => console.log("Sign in")} />
-              <View style={styles.linkWrapper}>
+              <View style={loginStyles.linkWrapper}>
                 <LinkText
                   text="DON'T HAVE AN ACCOUNT? CREATE HERE"
                   onPress={() => navigation.navigate("CreateAccount")}
@@ -74,63 +75,6 @@ const SignInPage: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#4285F4",
-  },
-  content: {
-    flexGrow: 1,
-  },
-  blueSection: {
-    backgroundColor: "#4285F4",
-    paddingTop: 20,
-    paddingBottom: 30,
-  },
-  headerContainer: {
-    paddingHorizontal: 24,
-  },
-  mainTitle: {
-    fontSize: 34,
-    fontWeight: "700",
-    color: "#FFFFFF",
-  },
-  subHeader: {
-    color: "#FFFFFF",
-    fontSize: 13,
-    marginTop: 12,
-    opacity: 0.9,
-  },
-  formWrapper: {
-    backgroundColor: "#4285F4",
-  },
-  whiteContainer: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 24,
-    paddingTop: 30,
-    paddingBottom: 40,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  form: {
-    width: "100%",
-    maxWidth: 400,
-    alignSelf: "center",
-    height: "100%",
-  },
-  spacing: {
-    height: 16,
-  },
-  linkWrapper: {
-    alignItems: "center",
-  },
   linkWrapper1: {
     alignItems: "flex-end",
   },

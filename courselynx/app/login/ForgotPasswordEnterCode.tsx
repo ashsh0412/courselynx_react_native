@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
-import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
-import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
-import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
-import VerficationCode from "@/components/LoginPageComponents/CreateAccountComponents/VerificationCode";
+import { Logo } from "@/components/LoginPageComponents/Logo";
+import { Button } from "@/components/LoginPageComponents/Button";
+import { LinkText } from "@/components/LoginPageComponents/LinkText";
+import VerficationCode from "@/components/LoginPageComponents/VerificationCode";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LoginStackParamList } from "./LoginStackNavigator";

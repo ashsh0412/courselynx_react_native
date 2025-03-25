@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
-import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
-import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
-import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
+import { Logo } from "@/components/LoginPageComponents/Logo";
+import { InputField } from "@/components/LoginPageComponents/InputField";
+import { Button } from "@/components/LoginPageComponents/Button";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoginStackParamList } from "./LoginStackNavigator"; // 경로는 프로젝트에 맞게 조정
+import { LoginStackParamList } from "./LoginStackNavigator";
 import { loginStyles } from "./LoginStyles";
 
 type CreateNewPasswordNavigationProp = NativeStackNavigationProp<
@@ -55,7 +55,7 @@ const CreateNewPassword: React.FC = () => {
               <View style={loginStyles.spacing} />
               <Button
                 text="Update Password"
-                onPress={() => navigation.navigate("SignIn")}
+                onPress={() => navigation.navigate("SignIn")} // Change it to boarding page later
               />
               <View style={loginStyles.linkWrapper}>
                 <Text

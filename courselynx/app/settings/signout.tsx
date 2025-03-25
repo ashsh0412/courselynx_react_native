@@ -1,35 +1,11 @@
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import Modal from "@/components/Modal";
+import LoginStackNavigator from "../login/LoginStackNavigator";
 
-export default function SignoutScreen() {
-  const router = useRouter();
-  const [isModalVisible, setModalVisible] = useState(true);
-
-  const handleCloseModal = () => {
-    setModalVisible(false);
-    setTimeout(() => {
-      router.back();
-    }, 100);
-  };
-
-  const handleSignout = () => {
-    console.log("Sign out...");
-  };
-
-  const signoutMessage = "Are you sure you want to sign out?";
-
+const SignOutPage: React.FC = () => {
   return (
     <>
-      {isModalVisible && (
-        <Modal
-          onRequestClose={handleCloseModal}
-          text={signoutMessage}
-          hasButtonYesNo
-          onPressNo={handleCloseModal}
-          onPressYes={handleSignout}
-        />
-      )}
+      <LoginStackNavigator />
     </>
   );
-}
+};
+
+export default SignOutPage;

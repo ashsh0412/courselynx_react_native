@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
-import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
-import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
-import { CheckboxField } from "@/components/LoginPageComponents/CreateAccountComponents/CheckboxField";
-import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
-import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
+import { Logo } from "@/components/LoginPageComponents/Logo";
+import { InputField } from "@/components/LoginPageComponents/InputField";
+import { CheckboxField } from "@/components/LoginPageComponents/CheckboxField";
+import { Button } from "@/components/LoginPageComponents/Button";
+import { LinkText } from "@/components/LoginPageComponents/LinkText";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoginStackParamList } from "./LoginStackNavigator"; // 경로 상황에 맞게 수정
+import { LoginStackParamList } from "./LoginStackNavigator";
 import { loginStyles } from "./LoginStyles";
 
 type CreateAccountNavigationProp = NativeStackNavigationProp<

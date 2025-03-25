@@ -12,7 +12,11 @@ interface EntityCardProps {
   hasAdd?: boolean;
   hasRemove?: boolean;
   isCircle?: boolean;
-};
+  color?: string;
+  useIcon?: boolean;
+  onRemove?: () => void;
+  onAdd?: () => void;
+}
 
 const EntityCard: React.FC<EntityCardProps> = ({
   id,
@@ -23,49 +27,56 @@ const EntityCard: React.FC<EntityCardProps> = ({
   hasAdd = false,
   hasRemove = false,
   isCircle = false,
+  color,
+  useIcon = true,
+  onRemove,
+  onAdd,
 }) => {
   const [btn, setBtn] = useState(false);
 
+  const handlePress = () => {
+    if (hasRemove && onRemove) {
+      onRemove();
+    } else if (hasAdd && onAdd) {
+      onAdd();
+    } else {
+      setBtn((prev) => !prev);
+    }
+  };
+
   return (
     <View style={styles.cardContainer}>
-      <EntityIcon id={id} uri={uri} size={50} isCircle={isCircle} />
+      {useIcon !== false ? (
+        <EntityIcon id={id} uri={uri} size={50} isCircle={isCircle} />
+      ) : (
+        color && <View style={[styles.colorBox, { backgroundColor: color }]} />
+      )}
 
       <View style={styles.text}>
         <Text style={styles.name}>{name}</Text>
         {children}
       </View>
 
-      {(hasMessage || hasAdd || hasRemove) &&
+      {(hasMessage || hasAdd || hasRemove) && (
         <View style={styles.icon}>
           {hasMessage && (
-            <TouchableOpacity
-              onPress={() => { }}
-              activeOpacity={0.6}
-            >
+            <TouchableOpacity onPress={() => {}} activeOpacity={0.6}>
               <Ionicons name={"chatbox"} size={22} color={"white"} />
             </TouchableOpacity>
           )}
           {(hasAdd || hasRemove) && (
-            <TouchableOpacity
-              onPress={() => {
-                setBtn((prev) => !prev);
-              }}
-              activeOpacity={0.6}
-            >
+            <TouchableOpacity onPress={handlePress} activeOpacity={0.6}>
               {btn ? (
                 <Ionicons name={"checkmark"} size={24} color={"white"} />
-              ) :
-                hasAdd && (
-                  <Ionicons name={"add"} size={26} color={"white"} />
-                ) ||
-                hasRemove && (
-                  <Ionicons name={"remove"} size={26} color={"white"} />
-                )
-              }
+              ) : hasAdd ? (
+                <Ionicons name={"add"} size={26} color={"white"} />
+              ) : (
+                <Ionicons name={"remove"} size={26} color={"white"} />
+              )}
             </TouchableOpacity>
           )}
         </View>
-      }
+      )}
     </View>
   );
 };
@@ -98,5 +109,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+  },
+  colorBox: {
+    width: 50,
+    height: 50,
+    borderRadius: 12,
+    marginRight: 12,
   },
 });

@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from "react-native";
-import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
-import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
-import CourseList from "@/components/LoginPageComponents/CreateAccountComponents/CourseList";
+import { Logo } from "@/components/LoginPageComponents/Logo";
+import { Button } from "@/components/LoginPageComponents/Button";
+import CourseList from "@/components/LoginPageComponents/CourseList";
 import { loginStyles } from "./LoginStyles";
 
 export const ConfirmCoursePage: React.FC = () => {
