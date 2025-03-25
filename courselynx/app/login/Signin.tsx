@@ -4,13 +4,20 @@ import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/L
 import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
 import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LoginStackParamList } from "./LoginStackNavigator";
 
-export const SignInPage: React.FC<{
-  onCreateAccount: () => void;
-  onForgotPassword: () => void;
-}> = ({ onCreateAccount, onForgotPassword }) => {
+type SignInNavigationProp = NativeStackNavigationProp<
+  LoginStackParamList,
+  "SignIn"
+>;
+
+const SignInPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const navigation = useNavigation<SignInNavigationProp>();
 
   return (
     <View style={styles.container}>
@@ -48,14 +55,14 @@ export const SignInPage: React.FC<{
               <View style={styles.linkWrapper1}>
                 <LinkText
                   text="Forgot your password?"
-                  onPress={onForgotPassword}
+                  onPress={() => navigation.navigate("ForgotPassword")}
                 />
               </View>
-              <Button text="Sign In" onPress={() => ""} />
+              <Button text="Sign In" onPress={() => console.log("Sign in")} />
               <View style={styles.linkWrapper}>
                 <LinkText
                   text="DON'T HAVE AN ACCOUNT? CREATE HERE"
-                  onPress={onCreateAccount}
+                  onPress={() => navigation.navigate("CreateAccount")}
                 />
               </View>
             </View>

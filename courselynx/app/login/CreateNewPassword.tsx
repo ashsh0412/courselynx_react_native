@@ -1,33 +1,42 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
 import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LoginStackParamList } from "./LoginStackNavigator"; // 경로는 프로젝트에 맞게 조정
+import { loginStyles } from "./LoginStyles";
 
-export const CreateNewPassword: React.FC<{
-  onSignIn: () => void;
-  onContinue: () => void;
-}> = ({ onSignIn, onContinue }) => {
+type CreateNewPasswordNavigationProp = NativeStackNavigationProp<
+  LoginStackParamList,
+  "CreateNewPassword"
+>;
+
+const CreateNewPassword: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const navigation = useNavigation<CreateNewPasswordNavigationProp>();
+
   return (
-    <View style={styles.container}>
+    <View style={loginStyles.container}>
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={loginStyles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.blueSection}>
-          <View style={styles.headerContainer}>
+        <View style={loginStyles.blueSection}>
+          <View style={loginStyles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Forgot Password?</Text>
-            <Text style={styles.subHeader}>
+            <Text style={loginStyles.mainTitle}>Forgot Password?</Text>
+            <Text style={loginStyles.subHeader}>
               Enter your email to receive a password reset link.
             </Text>
           </View>
         </View>
-        <View style={styles.formWrapper}>
-          <View style={styles.whiteContainer}>
-            <View style={styles.form}>
+        <View style={loginStyles.formWrapper}>
+          <View style={loginStyles.whiteContainer}>
+            <View style={loginStyles.form}>
               <InputField
                 label="New Password"
                 value={password}
@@ -35,7 +44,7 @@ export const CreateNewPassword: React.FC<{
                 placeholder="Write your new password"
                 secureTextEntry
               />
-              <View style={styles.spacing} />
+              <View style={loginStyles.spacing} />
               <InputField
                 label="Confirm New Password"
                 value={confirmPassword}
@@ -43,10 +52,16 @@ export const CreateNewPassword: React.FC<{
                 placeholder="Confirm your new password"
                 secureTextEntry
               />
-              <View style={styles.spacing} />
-              <Button text="Update Password" onPress={onContinue} />
-              <View style={styles.linkWrapper}>
-                <Text style={styles.backText} onPress={onSignIn}>
+              <View style={loginStyles.spacing} />
+              <Button
+                text="Update Password"
+                onPress={() => navigation.navigate("SignIn")}
+              />
+              <View style={loginStyles.linkWrapper}>
+                <Text
+                  style={loginStyles.backText}
+                  onPress={() => navigation.navigate("SignIn")}
+                >
                   Back to Sign In
                 </Text>
               </View>
@@ -57,71 +72,5 @@ export const CreateNewPassword: React.FC<{
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#4285F4",
-  },
-  content: {
-    flexGrow: 1,
-  },
-  blueSection: {
-    backgroundColor: "#4285F4",
-    paddingTop: 20,
-    paddingBottom: 30,
-  },
-  headerContainer: {
-    paddingHorizontal: 24,
-  },
-  mainTitle: {
-    fontSize: 34,
-    fontWeight: "700",
-    color: "#FFFFFF",
-  },
-  subHeader: {
-    color: "#FFFFFF",
-    fontSize: 13,
-    marginTop: 12,
-    opacity: 0.9,
-  },
-  formWrapper: {
-    backgroundColor: "#4285F4",
-  },
-  whiteContainer: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 24,
-    paddingTop: 30,
-    paddingBottom: 40,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  form: {
-    width: "100%",
-    maxWidth: 400,
-    alignSelf: "center",
-    height: "100%",
-  },
-  spacing: {
-    height: 16,
-  },
-  linkWrapper: {
-    alignItems: "center",
-    marginTop: 10,
-  },
-  backText: {
-    color: "#4285F4",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-});
 
 export default CreateNewPassword;
