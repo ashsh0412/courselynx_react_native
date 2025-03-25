@@ -1,14 +1,16 @@
 import React, { useRef, useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 
-interface VerficationCodeProps {
+interface VerificationCodeProps {
   length?: number;
   onChange?: (code: string) => void;
+  onComplete?: (code: string) => void;
 }
 
-const VerficationCode: React.FC<VerficationCodeProps> = ({
+const VerificationCode: React.FC<VerificationCodeProps> = ({
   length = 6,
   onChange,
+  onComplete,
 }) => {
   const [code, setCode] = useState<string[]>(new Array(length).fill(""));
   const inputs = useRef<(TextInput | null)[]>([]);
@@ -25,6 +27,10 @@ const VerficationCode: React.FC<VerficationCodeProps> = ({
     const fullCode = newCode.join("");
     onChange?.(fullCode);
 
+    if (fullCode.length === length && !newCode.includes("") && onComplete) {
+      onComplete(fullCode);
+    }
+
     if (text && index < length - 1) {
       inputs.current[index + 1]?.focus();
     }
@@ -32,13 +38,13 @@ const VerficationCode: React.FC<VerficationCodeProps> = ({
 
   const handleKeyPress = (e: any, index: number) => {
     const newCode = [...code];
-    if (e.nativeEvent.key === "Backspace"){
-      if(code[index]) {
+    if (e.nativeEvent.key === "Backspace" && !code[index] && index > 0) {
+      inputs.current[index - 1]?.focus();
+    } else if (e.nativeEvent.key === "Backspace") {
+      if (code[index]) {
         newCode[index] = "";
         setCode(newCode);
         onChange?.(newCode.join(""));
-      } else if (index > 0) {
-        inputs.current[index - 1]?.focus();
       }
     }
   };
@@ -67,17 +73,18 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 3,
+    gap: 8,
   },
   input: {
-    width: 58,
+    width: 50,
     height: 50,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#CCCCCC",
-    borderRadius: 12,
-    fontSize: 20,
+    borderRadius: 8,
+    fontSize: 24,
+    fontWeight: "bold",
     color: "#000",
-    backgroundColor: "#FFF",
+    backgroundColor: "#F5F5F5",
   },
   filledInput: {
     borderColor: "#4285F4",
@@ -85,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VerficationCode;
+export default VerificationCode;

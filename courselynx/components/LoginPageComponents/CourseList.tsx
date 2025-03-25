@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import EntityCard from "@/components/EntityComponents/EntityCard";
 
 interface Course {
   name: string;
@@ -9,39 +10,20 @@ interface Course {
   color: string;
 }
 
-interface CourseCardProps {
-  course: Course;
-  onRemove: () => void;
+interface CourseListProps {
+  onChangeCourses?: (courses: Course[]) => void;
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ course, onRemove }) => {
-  return (
-    <View style={styles.card}>
-      <View style={[styles.colorBox, { backgroundColor: course.color }]} />
-      <View style={styles.courseInfo}>
-        <Text style={styles.courseName}>{course.name}</Text>
-        <Text style={styles.courseCode}>{course.code}</Text>
-        <Text style={styles.professor}>{course.professor}</Text>
-      </View>
-      <TouchableOpacity onPress={onRemove} style={styles.iconButton}>
-        <Ionicons name="remove-circle" size={24} color="#4285F4" />
-      </TouchableOpacity>
+const AddCourseCard: React.FC<{ onAdd: () => void }> = ({ onAdd }) => (
+  <TouchableOpacity onPress={onAdd} style={styles.card}>
+    <View style={[styles.colorBox, { backgroundColor: "#4285F4" }]}>
+      <Ionicons name="add" size={24} color="white" />
     </View>
-  );
-};
+    <Text style={styles.addText}>Search Course by its Name or Code</Text>
+  </TouchableOpacity>
+);
 
-const AddCourseCard: React.FC<{ onAdd: () => void }> = ({ onAdd }) => {
-  return (
-    <TouchableOpacity onPress={onAdd} style={styles.card}>
-      <View style={[styles.colorBox, { backgroundColor: "#4285F4" }]}>
-        <Ionicons name="add" size={24} color="white" />
-      </View>
-      <Text style={styles.addText}>Search Course by its Name or Code</Text>
-    </TouchableOpacity>
-  );
-};
-
-const CourseList: React.FC = () => {
+const CourseList: React.FC<CourseListProps> = ({ onChangeCourses }) => {
   const [courses, setCourses] = React.useState<Course[]>([
     {
       name: "Digital Marketing",
@@ -70,36 +52,58 @@ const CourseList: React.FC = () => {
   ]);
 
   const removeCourse = (index: number) => {
-    setCourses(courses.filter((_, i) => i !== index));
+    const updated = courses.filter((_, i) => i !== index);
+    setCourses(updated);
   };
 
   const addCourse = () => {
     console.log("Search Course");
-    // 검색 화면 이동 또는 모달 띄우기 처리 가능
   };
+
+  useEffect(() => {
+    if (onChangeCourses) {
+      onChangeCourses(courses);
+    }
+  }, [courses]);
 
   return (
     <View style={styles.listContainer}>
       {courses.map((course, index) => (
-        <CourseCard
-          key={index}
-          course={course}
-          onRemove={() => removeCourse(index)}
-        />
+        <View key={index} style={styles.cardSpacing}>
+          <EntityCard
+            id={index}
+            name={course.name}
+            color={course.color}
+            useIcon={false}
+            hasRemove
+            isCircle={false}
+            onRemove={() => removeCourse(index)}
+          >
+            <Text style={styles.courseCode}>{course.code}</Text>
+            <Text style={styles.professor}>{course.professor}</Text>
+          </EntityCard>
+        </View>
       ))}
-      <AddCourseCard onAdd={addCourse} />
+      <View style={styles.cardSpacing}>
+        <AddCourseCard onAdd={addCourse} />
+      </View>
     </View>
   );
 };
+
+export default CourseList;
 
 const styles = StyleSheet.create({
   listContainer: {
     marginTop: 8,
   },
+  cardSpacing: {
+    marginBottom: 12,
+  },
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F0F7FF", // 약간 연한 파랑 배경
+    backgroundColor: "#F0F7FF",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,
@@ -119,16 +123,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  courseInfo: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  courseName: {
-    fontWeight: "700",
-    fontSize: 15,
-    color: "#222",
-    marginBottom: 2,
-  },
   courseCode: {
     fontSize: 12,
     color: "#555",
@@ -137,9 +131,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#777",
   },
-  iconButton: {
-    padding: 8,
-  },
   addText: {
     marginLeft: 12,
     fontWeight: "600",
@@ -147,5 +138,3 @@ const styles = StyleSheet.create({
     color: "#222",
   },
 });
-
-export default CourseList;

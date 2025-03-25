@@ -1,11 +1,9 @@
-import { StatusBar } from "react-native";
-import LoginPage from "../login";
+import LoginStackNavigator from "../login/LoginStackNavigator";
 
 const SignOutPage: React.FC = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <LoginPage />
+      <LoginStackNavigator />
     </>
   );
 };

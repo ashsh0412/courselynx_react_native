@@ -2,7 +2,7 @@ import { HapticContext } from "@/contexts/HapticContext";
 import { useLocalSearchParams } from "expo-router";
 import React, { useContext, useState } from "react";
 import { View, StyleSheet, Text, Alert, Platform } from "react-native";
-import { Switch } from "react-native-switch";
+import Switch from "@/components/Switch";
 
 export default function NotificationScreen() {
   const { title, color } = useLocalSearchParams();
@@ -29,58 +29,20 @@ export default function NotificationScreen() {
         <View style={styles.notificationContainer}>
           <View style={styles.option}>
             <Text style={styles.optionText}>Mute Notifications</Text>
-            <View
-              style={{
-                borderWidth: 3,
-                borderRadius: 30,
-                borderColor: "#2D8AFB",
-              }}
-            >
-              <Switch
-                value={isEnabledNoti}
-                activeText=""
-                inActiveText=""
-                barHeight={17.5}
-                circleSize={15}
-                circleBorderWidth={0}
-                circleInActiveColor="rgba(45, 138, 251, 0.3)"
-                circleActiveColor="#2D8AFB"
-                backgroundInactive="transparent"
-                backgroundActive="transparent"
-                switchLeftPx={7}
-                switchRightPx={7}
-                onValueChange={() => setIsEnabledNoti(!isEnabledNoti)}
-              />
-            </View>
+            <Switch
+              value={isEnabledNoti}
+              onValueChange={() => setIsEnabledNoti(!isEnabledNoti)}
+            />
           </View>
           <View style={styles.option}>
             <Text style={styles.optionText}>Vibrate</Text>
-            <View
-              style={{
-                borderWidth: 3,
-                borderRadius: 30,
-                borderColor: "#2D8AFB",
+            <Switch
+              value={isHapticEnabled}
+              onValueChange={() => {
+                isHapticEnabled || showAlert();
+                toggleHaptic();
               }}
-            >
-              <Switch
-                activeText=""
-                inActiveText=""
-                barHeight={17.5}
-                circleSize={15}
-                circleBorderWidth={0}
-                circleInActiveColor="rgba(45, 138, 251, 0.3)"
-                circleActiveColor="#2D8AFB"
-                backgroundInactive="transparent"
-                backgroundActive="transparent"
-                switchLeftPx={7}
-                switchRightPx={7}
-                value={isHapticEnabled}
-                onValueChange={() => {
-                  isHapticEnabled || showAlert();
-                  toggleHaptic();
-                }}
-              />
-            </View>
+            />
           </View>
         </View>
       </View>

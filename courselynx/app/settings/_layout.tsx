@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/HeaderComponents/Header";
 import { Stack } from "expo-router";
 import { StatusBar } from "react-native";
 
@@ -41,7 +41,11 @@ export default function SettingLayout() {
         />
         <Stack.Screen
           name="signout"
-          options={{ header: () => <Header title="Sign Out" withBorder /> }}
+          options={{
+            headerShown: false,
+            presentation: "transparentModal",
+            animation: "none",
+          }}
         />
       </Stack>
     </>

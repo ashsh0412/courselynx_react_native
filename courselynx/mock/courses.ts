@@ -1,0 +1,42 @@
+export const courses = [
+  {
+      id: 1,
+      name: "Digital Marketing",
+      code : "DM101",
+      professor : "Professor Name",
+      studentCount : 45,
+      color : "#f97316",
+  },
+  {
+      id: 2,
+      name: "Business and Finance",
+      code : "BF101",
+      professor : "Professor Name",
+      studentCount : 187,
+      color : "#f87171",
+  },
+  {
+      id: 3,
+      name: "Statistics",
+      code : "STA101",
+      professor : "Professor Name",
+      studentCount : 345,
+      color: "#34d399",
+  },
+  {
+      id: 4,
+      name: "World History",
+      code : "WH101",
+      professor : "Professor Name",
+      studentCount : 28,
+      color : "#facc15",
+  },
+  {
+      id: 5,
+      name: "English",
+      code : "ENG101",
+      professor : "Professor Name",
+      studentCount : 296,
+      color : "#f472b6",
+  },
+]

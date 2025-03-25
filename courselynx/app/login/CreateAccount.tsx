@@ -1,39 +1,47 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, ScrollView, Dimensions } from "react-native";
-import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
-import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
-import { CheckboxField } from "@/components/LoginPageComponents/CreateAccountComponents/CheckboxField";
-import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
-import { LinkText } from "@/components/LoginPageComponents/CreateAccountComponents/LinkText";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { Logo } from "@/components/LoginPageComponents/Logo";
+import { InputField } from "@/components/LoginPageComponents/InputField";
+import { CheckboxField } from "@/components/LoginPageComponents/CheckboxField";
+import { Button } from "@/components/LoginPageComponents/Button";
+import { LinkText } from "@/components/LoginPageComponents/LinkText";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LoginStackParamList } from "./LoginStackNavigator";
+import { loginStyles } from "./LoginStyles";
 
-export const CreateAccountPage: React.FC<{
-  onNext: () => void;
-  onSignIn: () => void;
-}> = ({ onNext, onSignIn }) => {
+type CreateAccountNavigationProp = NativeStackNavigationProp<
+  LoginStackParamList,
+  "CreateAccount"
+>;
+
+const CreateAccountPage: React.FC = () => {
+  const navigation = useNavigation<CreateAccountNavigationProp>();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   return (
-    <View style={styles.container}>
+    <View style={loginStyles.container}>
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={loginStyles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.blueSection}>
-          <View style={styles.headerContainer}>
+        <View style={loginStyles.blueSection}>
+          <View style={loginStyles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Get started now!</Text>
-            <Text style={styles.subHeader}>
+            <Text style={loginStyles.mainTitle}>Get started now!</Text>
+            <Text style={loginStyles.subHeader}>
               Create an account with your school email (.edu)
             </Text>
           </View>
         </View>
 
-        <View style={styles.formWrapper}>
-          <View style={styles.whiteContainer}>
-            <View style={styles.form}>
+        <View style={loginStyles.formWrapper}>
+          <View style={loginStyles.whiteContainer}>
+            <View style={loginStyles.form}>
               <InputField
                 label="School Email"
                 value={email}
@@ -41,7 +49,7 @@ export const CreateAccountPage: React.FC<{
                 placeholder="email@ufl.edu"
                 keyboardType="email-address"
               />
-              <View style={styles.spacing} />
+              <View style={loginStyles.spacing} />
               <InputField
                 label="Password"
                 value={password}
@@ -49,7 +57,7 @@ export const CreateAccountPage: React.FC<{
                 placeholder="Write your password"
                 secureTextEntry
               />
-              <View style={styles.spacing} />
+              <View style={loginStyles.spacing} />
               <InputField
                 label="Confirm Password"
                 value={confirmPassword}
@@ -57,7 +65,7 @@ export const CreateAccountPage: React.FC<{
                 placeholder="Confirm your password"
                 secureTextEntry
               />
-              <View style={styles.spacing} />
+              <View style={loginStyles.spacing} />
               <CheckboxField
                 isChecked={isChecked}
                 onToggle={() => setIsChecked(!isChecked)}
@@ -67,7 +75,10 @@ export const CreateAccountPage: React.FC<{
                 By using CourseLynx you agree to our End User Licensing
                 Agreement
               </Text>
-              <Button text="Create Account" onPress={onNext} />
+              <Button
+                text="Create Account"
+                onPress={() => navigation.navigate("CreateProfile")}
+              />
               <View style={styles.divider} />
 
               <View style={styles.loginSection}>
@@ -78,7 +89,10 @@ export const CreateAccountPage: React.FC<{
                   text="SIGN IN WITH GATORLINK"
                   onPress={() => console.log("Gatorlink")}
                 />
-                <LinkText text="SIGN IN WITH EMAIL" onPress={onSignIn} />
+                <LinkText
+                  text="SIGN IN WITH EMAIL"
+                  onPress={() => navigation.navigate("SignIn")}
+                />
               </View>
             </View>
           </View>
@@ -89,60 +103,6 @@ export const CreateAccountPage: React.FC<{
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#4285F4",
-  },
-  content: {
-    flexGrow: 1,
-  },
-  blueSection: {
-    backgroundColor: "#4285F4",
-    paddingTop: 20,
-    paddingBottom: 30,
-  },
-  headerContainer: {
-    paddingHorizontal: 24,
-  },
-  mainTitle: {
-    fontSize: 34,
-    fontWeight: "700",
-    color: "#FFFFFF",
-  },
-  subHeader: {
-    color: "#FFFFFF",
-    fontSize: 13,
-    marginTop: 12,
-    opacity: 0.9,
-  },
-  formWrapper: {
-    backgroundColor: "#4285F4",
-  },
-  whiteContainer: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 24,
-    paddingTop: 30,
-    paddingBottom: 40,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  form: {
-    width: "100%",
-    maxWidth: 400,
-    alignSelf: "center",
-    height: "100%",
-  },
-  spacing: {
-    height: 16,
-  },
   termsText: {
     color: "#4285F4",
     fontSize: 13,

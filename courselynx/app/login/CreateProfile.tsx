@@ -5,47 +5,56 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
-import { Logo } from "@/components/LoginPageComponents/CreateAccountComponents/Logo";
-import { InputField } from "@/components/LoginPageComponents/CreateAccountComponents/InputField";
-import { Button } from "@/components/LoginPageComponents/CreateAccountComponents/Button";
+import { Logo } from "@/components/LoginPageComponents/Logo";
+import { InputField } from "@/components/LoginPageComponents/InputField";
+import { Button } from "@/components/LoginPageComponents/Button";
 import { Ionicons } from "@expo/vector-icons";
-import { Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LoginStackParamList } from "./LoginStackNavigator";
+import { loginStyles } from "./LoginStyles";
 
-export const CreateProfilePage: React.FC<{ onNext: () => void }> = ({
-  onNext,
-}) => {
+type CreateProfileNavigationProp = NativeStackNavigationProp<
+  LoginStackParamList,
+  "CreateProfile"
+>;
+
+const CreateProfilePage: React.FC = () => {
+  const navigation = useNavigation<CreateProfileNavigationProp>();
+
   const [name, setName] = useState<string>("");
   const [major, setMajor] = useState<string>("");
   const [graduationYear, setGraduationYear] = useState<string>("");
+
   const editAvatar = () => {
     console.log("Edit avatar");
   };
 
   return (
-    <View style={styles.container}>
+    <View style={loginStyles.container}>
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={loginStyles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.blueSection}>
-          <View style={styles.headerContainer}>
+        <View style={loginStyles.blueSection}>
+          <View style={loginStyles.headerContainer}>
             <Logo />
-            <Text style={styles.mainTitle}>Let's get to know you!</Text>
-            <Text style={styles.subHeader}>
+            <Text style={loginStyles.mainTitle}>Let's get to know you!</Text>
+            <Text style={loginStyles.subHeader}>
               Create your profile. You can always edit it in the Profile page.
             </Text>
           </View>
         </View>
-        <View style={styles.formWrapper}>
-          <View style={styles.whiteContainer}>
-            <View style={styles.form}>
+        <View style={loginStyles.formWrapper}>
+          <View style={loginStyles.whiteContainer}>
+            <View style={loginStyles.form}>
               <View style={styles.profileContainer}>
                 <Image
                   source={require("../../assets/images/look_beyond.png")}
                   style={styles.avatar}
                 />
-
                 <TouchableOpacity
                   style={styles.editButton}
                   onPress={editAvatar}
@@ -60,14 +69,14 @@ export const CreateProfilePage: React.FC<{ onNext: () => void }> = ({
                 placeholder="Write your name"
                 keyboardType="default"
               />
-              <View style={styles.spacing} />
+              <View style={loginStyles.spacing} />
               <InputField
                 label="Major*"
                 value={major}
                 onChangeText={setMajor}
                 placeholder="Write your major"
               />
-              <View style={styles.spacing} />
+              <View style={loginStyles.spacing} />
               <InputField
                 label="Graduation Year*"
                 value={graduationYear}
@@ -75,8 +84,11 @@ export const CreateProfilePage: React.FC<{ onNext: () => void }> = ({
                 placeholder="Write your graduation year"
                 keyboardType="numeric"
               />
-              <View style={styles.spacing} />
-              <Button text="Create Account" onPress={onNext} />
+              <View style={loginStyles.spacing} />
+              <Button
+                text="Create Account"
+                onPress={() => navigation.navigate("ConfirmCourse")}
+              />
             </View>
           </View>
         </View>
@@ -86,60 +98,6 @@ export const CreateProfilePage: React.FC<{ onNext: () => void }> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#4285F4",
-  },
-  content: {
-    flexGrow: 1,
-  },
-  blueSection: {
-    backgroundColor: "#4285F4",
-    paddingTop: 20,
-    paddingBottom: 30,
-  },
-  headerContainer: {
-    paddingHorizontal: 24,
-  },
-  mainTitle: {
-    fontSize: 34,
-    fontWeight: "700",
-    color: "#FFFFFF",
-  },
-  subHeader: {
-    color: "#FFFFFF",
-    fontSize: 13,
-    marginTop: 12,
-    opacity: 0.9,
-  },
-  formWrapper: {
-    backgroundColor: "#4285F4",
-  },
-  whiteContainer: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 24,
-    paddingTop: 30,
-    paddingBottom: 40,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  form: {
-    width: "100%",
-    maxWidth: 400,
-    alignSelf: "center",
-    height: "100%",
-  },
-  spacing: {
-    height: 16,
-  },
   avatar: {
     width: 150,
     height: 150,

@@ -1,21 +1,21 @@
-import { TouchableOpacity, Text, StyleSheet, StyleProp, TextStyle, ViewStyle, GestureResponderEvent } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, StyleProp, TextStyle, ViewStyle } from "react-native";
 
 interface ButtonProps {
   text: string;
-  onPress: (event: GestureResponderEvent) => void;
-  buttonStyles?: StyleProp<ViewStyle>;
-  textStyles?: StyleProp<TextStyle>;
+  onPress: () => void;
+  buttonStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 const Button: React.FC<ButtonProps> = ({
   text,
   onPress,
-  buttonStyles = {},
-  textStyles = {},
+  buttonStyle,
+  textStyle,
 }) => {
   return (
-    <TouchableOpacity style={[styles.button, buttonStyles]} onPress={onPress}>
-      <Text style={[styles.buttonText, textStyles]}>{text}</Text>
+    <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onPress}>
+      <Text style={[styles.buttonText, textStyle]}>{text}</Text>
     </TouchableOpacity>
   );
 };

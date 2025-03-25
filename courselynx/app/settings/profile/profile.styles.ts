@@ -32,11 +32,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 12,
   },
-  avatar: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-  },
   name: {
     fontSize: 20,
     fontWeight: "bold",
@@ -69,18 +64,6 @@ const styles = StyleSheet.create({
   },
   form: {
     marginBottom: 10,
-  },
-  editButton: {
-    position: "absolute",
-    bottom: 5,
-    left: "50%",
-    transform: [{ translateX: 45 }],
-    backgroundColor: "rgba(45, 138, 251, 1)",
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
   },
   footer: {
     height: 70,

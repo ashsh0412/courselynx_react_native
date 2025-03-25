@@ -5,7 +5,7 @@ export const Logo: React.FC = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../../assets/images/ai.png")}
+        source={require("../../assets/images/ai.png")}
         style={styles.icon}
       />
       <Text style={styles.text}>CourseLynx</Text>

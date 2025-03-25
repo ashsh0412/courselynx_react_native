@@ -1,7 +1,6 @@
 import {
   View,
   Modal as RNModal,
-  Pressable,
   StyleSheet,
   StyleProp,
   ViewStyle,
@@ -9,7 +8,18 @@ import {
   Text,
 } from "react-native";
 import { BlurView } from "expo-blur";
-import GestureRecognizer from "react-native-swipe-gestures";
+import {
+  Gesture,
+  GestureDetector,
+} from "react-native-gesture-handler";
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { useMemo, useState } from "react";
 
 interface ModalProps {
   onRequestClose: () => void;
@@ -18,7 +28,7 @@ interface ModalProps {
   hasButtonYesNo?: boolean;
   onPressNo?: () => void;
   onPressYes?: () => void;
-  modalStyles?: StyleProp<ViewStyle>;
+  modalStyle?: StyleProp<ViewStyle>;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -28,104 +38,151 @@ const Modal: React.FC<ModalProps> = ({
   hasButtonYesNo = false,
   onPressNo = () => { },
   onPressYes = () => { },
-  modalStyles = {}
+  modalStyle,
 }) => {
+  const translateY = useSharedValue(0);
+  const [modalY, setModalY] = useState(0); // Modal height
+
+  const handleCloseModal = (onRequestClose: () => void) => {
+    translateY.value = withTiming(
+      modalY,
+      { duration: 200, easing: Easing.linear },
+      () => runOnJS(onRequestClose)()
+    );
+  };
+
+  const tabGesture = useMemo(() =>
+    Gesture.Tap()
+      .onEnd(() => runOnJS(handleCloseModal)(onRequestClose)),
+    [handleCloseModal]
+  );
+
+  const panGesture = useMemo(() =>
+    Gesture.Pan()
+      .onChange((event) => {
+        if (event.translationY > 0)
+          translateY.value = event.translationY;
+      })
+      .onEnd((event) => {
+        if (event.translationY * 2 > modalY || event.velocityY > 200)
+          runOnJS(handleCloseModal)(onRequestClose);
+        else
+          translateY.value = withTiming(
+            0,
+            { duration: 200, easing: Easing.out(Easing.quad) }
+          ); // Snap back if not dragged enough
+      }),
+    [handleCloseModal]
+  );
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+  }));
+
   return (
     <BlurView
       intensity={15}
       style={styles.blur}
       experimentalBlurMethod="dimezisBlurView"
     >
-      <GestureRecognizer
-        style={{ flex: 1 }}
-        onSwipeDown={onRequestClose}
+      <RNModal
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => handleCloseModal(onRequestClose)} // Not sure how Android behaves here
       >
-        <RNModal
-          transparent={true}
-          animationType="slide"
-          onRequestClose={onRequestClose}
-        >
-          {/* Handles clicks to close modal on click outside of the modal */}
-          <Pressable onPress={onRequestClose} style={{ flex: 1 }} />
-
-          <View style={[styles.container, modalStyles]}>
-            <View style={styles.bar} />
-
-            {text != "" && (
-              <Text style={styles.text}>{text}</Text>
-            )}
-
-            <View>
+        <GestureDetector gesture={panGesture}>
+          <View style={{ flex: 1 }}>
+            <GestureDetector gesture={tabGesture}>
+              <View style={{ flex: 1 }} />
+            </GestureDetector>
+            <Animated.View
+              style={[styles.container, modalStyle, animatedStyle]}
+              onLayout={(event) => setModalY(event.nativeEvent.layout.height)}
+            >
+              <View style={styles.bar} />
+              {text != "" && (
+                <Text
+                  style={[
+                    styles.text,
+                    { marginBottom: !hasButtonYesNo && !children ? 28 : 23 },
+                  ]}
+                >
+                  {text}
+                </Text>
+              )}
               {children}
-            </View>
+              {hasButtonYesNo && (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => handleCloseModal(onPressNo)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.buttonText}>No</Text>
+                  </TouchableOpacity>
 
-            {hasButtonYesNo && (
-              <View style={styles.buttonContainer}>
-
-                <TouchableOpacity style={styles.button} onPress={onPressNo} activeOpacity={0.7}>
-                  <Text style={styles.buttonText}>No</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button} onPress={onPressYes} activeOpacity={0.7}>
-                  <Text style={styles.buttonText}>Yes</Text>
-                </TouchableOpacity>
-
-              </View>
-            )}
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => handleCloseModal(onPressYes)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.buttonText}>Yes</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </Animated.View>
           </View>
-
-        </RNModal>
-      </GestureRecognizer>
+        </GestureDetector>
+      </RNModal>
     </BlurView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   blur: {
     position: "absolute",
+    flexDirection: "column",
     width: "100%",
-    height: "100%",
+    height: "120%",
     backgroundColor: "rgba(217, 217, 217, 0.05)",
     zIndex: 1,
   },
   container: {
-    position: "absolute",
-    bottom: 0,
     width: "100%",
     minHeight: 100,
-    flex: 1,
     backgroundColor: "rgba(45, 138, 251, 0.9)",
     borderRadius: 16,
     alignItems: "center",
-    paddingBottom: 35,
   },
   bar: {
-    width: 40,
+    width: 30,
     height: 3,
     backgroundColor: "#FFFFFF",
     opacity: 0.5,
     borderRadius: 10,
-    margin: 10,
+    marginTop: 9,
+    marginBottom: 12,
   },
   text: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "bold",
     color: "white",
     textAlign: "center",
-    paddingHorizontal: 30,
-    marginBottom: 20,
+    marginHorizontal: 20,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
     width: "100%",
-    gap: 60,
+    gap: 69,
+    marginBottom: 42,
   },
   button: {
     width: 100,
-    height: 35,
+    height: 34,
     borderRadius: 10,
     borderWidth: 1,
+    borderColor: "#375DFB",
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
@@ -135,7 +192,6 @@ const styles = StyleSheet.create({
     color: "rgba(45, 138, 251, 1)",
     fontWeight: "500",
   },
-
 });
 
 export default Modal;
