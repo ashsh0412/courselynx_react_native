@@ -1,13 +1,15 @@
 import React, { useRef, useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 
-interface VerficationCodeProps {
+interface VerificationCodeProps {
   length?: number;
+  onChange?: (code: string) => void;
   onComplete?: (code: string) => void;
 }
 
-const VerficationCode: React.FC<VerficationCodeProps> = ({
+const VerificationCode: React.FC<VerificationCodeProps> = ({
   length = 6,
+  onChange,
   onComplete,
 }) => {
   const [code, setCode] = useState<string[]>(new Array(length).fill(""));
@@ -23,8 +25,10 @@ const VerficationCode: React.FC<VerficationCodeProps> = ({
     setCode(newCode);
 
     const fullCode = newCode.join("");
-    if (fullCode.length === length && !newCode.includes("")) {
-      onComplete?.(fullCode);
+    onChange?.(fullCode);
+
+    if (fullCode.length === length && !newCode.includes("") && onComplete) {
+      onComplete(fullCode);
     }
 
     if (text && index < length - 1) {
@@ -33,8 +37,15 @@ const VerficationCode: React.FC<VerficationCodeProps> = ({
   };
 
   const handleKeyPress = (e: any, index: number) => {
+    const newCode = [...code];
     if (e.nativeEvent.key === "Backspace" && !code[index] && index > 0) {
       inputs.current[index - 1]?.focus();
+    } else if (e.nativeEvent.key === "Backspace") {
+      if (code[index]) {
+        newCode[index] = "";
+        setCode(newCode);
+        onChange?.(newCode.join(""));
+      }
     }
   };
 
@@ -81,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VerficationCode;
+export default VerificationCode;

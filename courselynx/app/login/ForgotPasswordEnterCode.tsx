@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/Logo";
 import { Button } from "@/components/LoginPageComponents/Button";
 import { LinkText } from "@/components/LoginPageComponents/LinkText";
@@ -15,6 +15,7 @@ type ForgotPasswordEnterCodeNavigationProp = NativeStackNavigationProp<
 >;
 
 const ForgotPasswordEnterCode: React.FC = () => {
+  const [code, setCode] = useState("");
   const navigation = useNavigation<ForgotPasswordEnterCodeNavigationProp>();
 
   return (
@@ -37,11 +38,14 @@ const ForgotPasswordEnterCode: React.FC = () => {
           <View style={loginStyles.whiteContainer}>
             <View style={loginStyles.form}>
               <Text style={styles.label}>Code</Text>
-              <VerficationCode />
+              <VerficationCode
+                onChange={(enteredCode) => setCode(enteredCode)}
+              />
               <View style={loginStyles.spacing} />
               <Button
                 text="Verify"
                 onPress={() => navigation.navigate("CreateNewPassword")}
+                disabled={code.length < 6}
               />
               <View style={loginStyles.linkWrapper}>
                 <Text

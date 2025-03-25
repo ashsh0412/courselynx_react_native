@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/Logo";
 import { InputField } from "@/components/LoginPageComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/Button";
@@ -28,9 +28,9 @@ const CreateNewPassword: React.FC = () => {
         <View style={loginStyles.blueSection}>
           <View style={loginStyles.headerContainer}>
             <Logo />
-            <Text style={loginStyles.mainTitle}>Forgot Password?</Text>
+            <Text style={loginStyles.mainTitle}>You're almost there!</Text>
             <Text style={loginStyles.subHeader}>
-              Enter your email to receive a password reset link.
+              Create a new password for your account
             </Text>
           </View>
         </View>
@@ -55,7 +55,12 @@ const CreateNewPassword: React.FC = () => {
               <View style={loginStyles.spacing} />
               <Button
                 text="Update Password"
-                onPress={() => navigation.navigate("SignIn")} // Change it to boarding page later
+                onPress={() => navigation.navigate("SignIn")}
+                disabled={
+                  password === "" ||
+                  confirmPassword === "" ||
+                  password !== confirmPassword
+                }
               />
               <View style={loginStyles.linkWrapper}>
                 <Text
