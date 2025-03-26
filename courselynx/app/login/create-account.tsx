@@ -5,19 +5,10 @@ import { InputField } from "@/components/LoginPageComponents/InputField";
 import { CheckboxField } from "@/components/LoginPageComponents/CheckboxField";
 import { Button } from "@/components/LoginPageComponents/Button";
 import { LinkText } from "@/components/LoginPageComponents/LinkText";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoginStackParamList } from "./LoginStackNavigator";
 import { loginStyles } from "./LoginStyles";
-
-type CreateAccountNavigationProp = NativeStackNavigationProp<
-  LoginStackParamList,
-  "CreateAccount"
->;
+import { router } from "expo-router";
 
 const CreateAccountPage: React.FC = () => {
-  const navigation = useNavigation<CreateAccountNavigationProp>();
-
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -77,7 +68,7 @@ const CreateAccountPage: React.FC = () => {
               </Text>
               <Button
                 text="Create Account"
-                onPress={() => navigation.navigate("CreateProfile")}
+                onPress={() => router.push("/login/create-profile")}
               />
               <View style={styles.divider} />
 
@@ -91,7 +82,7 @@ const CreateAccountPage: React.FC = () => {
                 />
                 <LinkText
                   text="SIGN IN WITH EMAIL"
-                  onPress={() => navigation.navigate("SignIn")}
+                  onPress={() => router.push("/login/signin")}
                 />
               </View>
             </View>

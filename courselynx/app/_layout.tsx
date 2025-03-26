@@ -8,7 +8,7 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     WorkSans_600SemiBold,
   });
-  
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -35,6 +35,12 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="settings"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="login"
               options={{
                 headerShown: false,
               }}

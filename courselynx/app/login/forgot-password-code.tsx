@@ -4,19 +4,10 @@ import { Logo } from "@/components/LoginPageComponents/Logo";
 import { Button } from "@/components/LoginPageComponents/Button";
 import { LinkText } from "@/components/LoginPageComponents/LinkText";
 import VerficationCode from "@/components/LoginPageComponents/VerificationCode";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoginStackParamList } from "./LoginStackNavigator";
 import { loginStyles } from "./LoginStyles";
-
-type ForgotPasswordEnterCodeNavigationProp = NativeStackNavigationProp<
-  LoginStackParamList,
-  "ForgotPasswordEnterCode"
->;
+import { router } from "expo-router";
 
 const ForgotPasswordEnterCode: React.FC = () => {
-  const navigation = useNavigation<ForgotPasswordEnterCodeNavigationProp>();
-
   return (
     <View style={loginStyles.container}>
       <ScrollView
@@ -41,19 +32,25 @@ const ForgotPasswordEnterCode: React.FC = () => {
               <View style={loginStyles.spacing} />
               <Button
                 text="Verify"
-                onPress={() => navigation.navigate("CreateNewPassword")}
+                onPress={() => {
+                  router.replace("/login/create-new-password");
+                }}
               />
               <View style={loginStyles.linkWrapper}>
-                <Text
-                  style={loginStyles.backText}
-                  onPress={() => navigation.navigate("SignIn")}
-                >
-                  Back to Sign In
-                </Text>
                 <LinkText
                   text="DIDN'T RECEIVE THE CODE?"
                   onPress={() => console.log("Resend verification code")}
                 />
+                <View style={loginStyles.spacing} />
+                <Text
+                  style={loginStyles.backText}
+                  onPress={() => {
+                    router.replace("/login");
+                    router.dismiss();
+                  }}
+                >
+                  Back to Sign In
+                </Text>
               </View>
             </View>
           </View>

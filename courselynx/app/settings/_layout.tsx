@@ -11,13 +11,12 @@ export default function SettingLayout() {
           name="index"
           options={{ header: () => <Header title="Settings" withBorder /> }}
         />
-        <Stack.Screen
-          name="profile"
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen
           name="notifications"
-          options={{ header: () => <Header title="Notifications" withBorder /> }}
+          options={{
+            header: () => <Header title="Notifications" withBorder />,
+          }}
         />
         <Stack.Screen
           name="security"
@@ -37,7 +36,9 @@ export default function SettingLayout() {
         />
         <Stack.Screen
           name="delete"
-          options={{ header: () => <Header title="Delete Account" withBorder /> }}
+          options={{
+            header: () => <Header title="Delete Account" withBorder />,
+          }}
         />
         <Stack.Screen
           name="signout"

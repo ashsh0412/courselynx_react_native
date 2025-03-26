@@ -3,19 +3,11 @@ import { View, Text, ScrollView } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/Logo";
 import { InputField } from "@/components/LoginPageComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/Button";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoginStackParamList } from "./LoginStackNavigator";
 import { loginStyles } from "./LoginStyles";
-
-type ForgotPasswordNavigationProp = NativeStackNavigationProp<
-  LoginStackParamList,
-  "ForgotPassword"
->;
+import { router } from "expo-router";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState<string>("");
-  const navigation = useNavigation<ForgotPasswordNavigationProp>();
 
   return (
     <View style={loginStyles.container}>
@@ -45,12 +37,15 @@ const ForgotPassword: React.FC = () => {
               <View style={loginStyles.spacing} />
               <Button
                 text="Continue →"
-                onPress={() => navigation.navigate("ForgotPasswordEnterCode")}
+                onPress={() => router.replace("/login/forgot-password-code")}
               />
               <View style={loginStyles.linkWrapper}>
                 <Text
                   style={loginStyles.backText}
-                  onPress={() => navigation.navigate("SignIn")}
+                  onPress={() => {
+                    router.replace("/login/signin");
+                    router.dismiss();
+                  }}
                 >
                   Back to Sign In
                 </Text>

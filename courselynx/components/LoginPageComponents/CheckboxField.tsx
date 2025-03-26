@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import React from "react";
 import {
   View,
@@ -6,7 +7,6 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
-import { Svg, Path } from "react-native-svg";
 
 interface CheckboxFieldProps {
   isChecked: boolean;
@@ -28,8 +28,6 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({
     Animated.spring(scaleValue, {
       toValue: isChecked ? 1 : 0,
       useNativeDriver: true,
-      tension: 50,
-      friction: 3,
     }).start();
   }, [isChecked]);
 
@@ -55,15 +53,17 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({
             },
           ]}
         >
-          <Svg width={12} height={9} viewBox="0 0 12 9">
-            <Path
-              d="M1 4L4.5 7.5L11 1"
-              stroke="#4A90E2"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              backgroundColor: "#fff",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Feather name="check" size={16} color="#4A90E2" />
+          </View>
         </Animated.View>
       </View>
       <Text
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   },
   checked: {
     backgroundColor: "#FFFFFF",
+    borderColor: "#4A90E2",
   },
   disabled: {
     borderColor: "#D1D1D1",

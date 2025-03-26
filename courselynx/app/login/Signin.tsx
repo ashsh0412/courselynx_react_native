@@ -4,21 +4,12 @@ import { Logo } from "@/components/LoginPageComponents/Logo";
 import { InputField } from "@/components/LoginPageComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/Button";
 import { LinkText } from "@/components/LoginPageComponents/LinkText";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoginStackParamList } from "./LoginStackNavigator";
 import { loginStyles } from "./LoginStyles";
-
-type SignInNavigationProp = NativeStackNavigationProp<
-  LoginStackParamList,
-  "SignIn"
->;
+import { router } from "expo-router";
 
 const SignInPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
-  const navigation = useNavigation<SignInNavigationProp>();
 
   return (
     <View style={loginStyles.container}>
@@ -56,14 +47,14 @@ const SignInPage: React.FC = () => {
               <View style={styles.linkWrapper1}>
                 <LinkText
                   text="Forgot your password?"
-                  onPress={() => navigation.navigate("ForgotPassword")}
+                  onPress={() => router.push("/login/forgot-password")}
                 />
               </View>
               <Button text="Sign In" onPress={() => console.log("Sign in")} />
               <View style={loginStyles.linkWrapper}>
                 <LinkText
                   text="DON'T HAVE AN ACCOUNT? CREATE HERE"
-                  onPress={() => navigation.navigate("CreateAccount")}
+                  onPress={() => router.push("/login/create-account")}
                 />
               </View>
             </View>

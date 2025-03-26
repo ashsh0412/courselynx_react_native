@@ -3,21 +3,12 @@ import { View, Text, ScrollView } from "react-native";
 import { Logo } from "@/components/LoginPageComponents/Logo";
 import { InputField } from "@/components/LoginPageComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/Button";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoginStackParamList } from "./LoginStackNavigator";
 import { loginStyles } from "./LoginStyles";
-
-type CreateNewPasswordNavigationProp = NativeStackNavigationProp<
-  LoginStackParamList,
-  "CreateNewPassword"
->;
+import { router } from "expo-router";
 
 const CreateNewPassword: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-
-  const navigation = useNavigation<CreateNewPasswordNavigationProp>();
 
   return (
     <View style={loginStyles.container}>
@@ -55,12 +46,18 @@ const CreateNewPassword: React.FC = () => {
               <View style={loginStyles.spacing} />
               <Button
                 text="Update Password"
-                onPress={() => navigation.navigate("SignIn")} // Change it to boarding page later
+                onPress={() => {
+                  router.replace("/login");
+                  router.dismiss();
+                }} // Change it to boarding page later
               />
               <View style={loginStyles.linkWrapper}>
                 <Text
                   style={loginStyles.backText}
-                  onPress={() => navigation.navigate("SignIn")}
+                  onPress={() => {
+                    router.replace("/login");
+                    router.dismiss();
+                  }}
                 >
                   Back to Sign In
                 </Text>

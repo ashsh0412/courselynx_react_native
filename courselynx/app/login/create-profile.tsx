@@ -11,19 +11,10 @@ import { Logo } from "@/components/LoginPageComponents/Logo";
 import { InputField } from "@/components/LoginPageComponents/InputField";
 import { Button } from "@/components/LoginPageComponents/Button";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoginStackParamList } from "./LoginStackNavigator";
 import { loginStyles } from "./LoginStyles";
-
-type CreateProfileNavigationProp = NativeStackNavigationProp<
-  LoginStackParamList,
-  "CreateProfile"
->;
+import { router } from "expo-router";
 
 const CreateProfilePage: React.FC = () => {
-  const navigation = useNavigation<CreateProfileNavigationProp>();
-
   const [name, setName] = useState<string>("");
   const [major, setMajor] = useState<string>("");
   const [graduationYear, setGraduationYear] = useState<string>("");
@@ -87,7 +78,7 @@ const CreateProfilePage: React.FC = () => {
               <View style={loginStyles.spacing} />
               <Button
                 text="Create Account"
-                onPress={() => navigation.navigate("ConfirmCourse")}
+                onPress={() => router.push("/login/confirm-course")}
               />
             </View>
           </View>

@@ -1,11 +1,12 @@
-import LoginStackNavigator from "../login/LoginStackNavigator";
+import { useEffect } from "react";
+import { router } from "expo-router";
 
 const SignOutPage: React.FC = () => {
-  return (
-    <>
-      <LoginStackNavigator />
-    </>
-  );
+  useEffect(() => {
+    router.replace("/login");
+  }, []);
+
+  return null;
 };
 
 export default SignOutPage;
